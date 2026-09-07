@@ -15,7 +15,7 @@ function HomePage() {
 
   return (
     <div>
-      <section className="bg-[#1B1712] text-[#F2EEE4] pt-5 overflow-hidden">
+      <section className="bg-[#1B1712] text-[#F2EEE4] pt-5 sm:pt-4 overflow-hidden">
 
         {/* Hero Section */}
         <div className="max-w mx-auto px-6 sm:px-8 grid grid-cols-1 md:grid-cols-[1.05fr_0.95fr] gap-10 md:gap-14 items-center">
