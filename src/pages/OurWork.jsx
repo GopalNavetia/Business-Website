@@ -1,7 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TriangleAlert, SquareTerminal, BadgeCheck } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 function OurWork() {
+    const location = useLocation();
+
+    useEffect(() => {
+        const targetId = location.hash.slice(1);
+
+        // Open Our Work at the top first
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "instant",
+        });
+
+        if (!targetId) return;
+
+        const timer = setTimeout(() => {
+            document.getElementById(targetId)?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [location.hash]);
+
     const buildStandards = [
         {
             number: "01",
@@ -32,6 +57,7 @@ function OurWork() {
     const projectCategories = [
         {
             number: "01/06",
+            slug: "business-websites",
             title: "Business Websites",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
@@ -45,6 +71,7 @@ function OurWork() {
         },
         {
             number: "02/06",
+            slug: "portfolios",
             title: "Professional Portfolios",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
@@ -58,6 +85,7 @@ function OurWork() {
         },
         {
             number: "03/06",
+            slug: "management-systems",
             title: "Custom Management Systems",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
@@ -71,6 +99,7 @@ function OurWork() {
         },
         {
             number: "04/06",
+            slug: "cafes-menus",
             title: "Cafés & Food Menus",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
@@ -84,6 +113,7 @@ function OurWork() {
         },
         {
             number: "05/06",
+            slug: "ngos-community",
             title: "NGOs & Community Platforms",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
@@ -97,6 +127,7 @@ function OurWork() {
         },
         {
             number: "06/06",
+            slug: "gym-fitness",
             title: "Gyms & Fitness Booking",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
@@ -130,12 +161,14 @@ function OurWork() {
                                 We design and build fast, custom websites and digital tools that streamline your business operations and convert traffic into growth.
                             </p>
 
-                            <button
-                                type="button"
-                                className="mt-6 rounded-full bg-[#B8862E] px-6 py-3 text-sm font-semibold text-[#1B1712] transition hover:bg-[#D2A64F]"
+                            <a
+                                href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center mt-6 px-6 py-3 sm:px-5 sm:py-3 rounded-[7px] font-semibold text-sm sm:text-base bg-[#B8862E] text-[#1B1712] transition-colors hover:bg-[#c99636]"
                             >
                                 Start a project
-                            </button>
+                            </a>
                         </div>
 
                         {/* Build Standards Box */}
@@ -211,7 +244,10 @@ function OurWork() {
                                         </span>
                                     </div>
 
-                                    <h3 className="mt-6 font-serif text-lg font-bold text-[#1B1712]">
+                                    <h3
+                                        id={category.slug}
+                                        className="scroll-mt-24 mt-6 font-serif text-lg font-bold text-[#1B1712]"
+                                    >
                                         {category.title}
                                     </h3>
 
@@ -260,6 +296,30 @@ function OurWork() {
                         })}
                     </div>
                 </div>
+
+                {/* Final CTA */}
+                <div className="bg-[#B8862E] px-6 py-8 pb-11 text-[#1B1712] sm:px-8 sm:py-10 sm:pb-14">
+                    <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="max-w-xl">
+                            <h2 className="max-w-lg font-serif text-2xl font-semibold leading-tight sm:text-3xl lg:text-4xl">
+                                Need a clean website or a custom system? <br />Let’s talk.
+                            </h2>
+
+                            <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#1B1712]/80 sm:text-base">
+                                Bring us your business bottleneck. We’ll tell you honestly whether you need a website, a custom system, or just a smarter setup.
+                            </p>
+                        </div>
+
+                        <a
+                            href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
+                            target="_blank"
+                            className="inline-flex w-fit items-center justify-center rounded-[7px] bg-[#1B1712] px-7 py-3.5 text-sm font-semibold text-[#F2EEE4] transition-colors hover:bg-[#241F17] sm:px-8 sm:text-base"
+                        >
+                            Start a project
+                        </a>
+                    </div>
+                </div>
+
             </section>
         </div>
     );

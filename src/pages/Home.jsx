@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Briefcase,
   SquareUser,
@@ -35,7 +36,7 @@ function HomePage() {
                 href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-10 py-3 sm:px-6 sm:py-3.5 rounded-[7px] font-semibold text-sm sm:text-base bg-[#B8862E] text-[#1B1712] transition-colors hover:bg-[#c99636]"
+                className="inline-flex items-center justify-center px-6 py-3 sm:px-5 sm:py-1 rounded-[7px] font-semibold text-sm sm:text-base bg-[#B8862E] text-[#1B1712] transition-colors hover:bg-[#c99636]"
               >
                 Start a project
               </a>
@@ -136,36 +137,42 @@ function HomePage() {
               {
                 icon: Briefcase,
                 title: "Business Websites",
+                slug: "business-websites",
                 description:
                   "A straightforward, professional site for founders and small businesses who need to be found and trusted online.",
               },
               {
                 icon: SquareUser,
                 title: "Portfolios",
+                slug: "portfolios",
                 description:
                   "For doctors, consultants, and professionals who need a page that builds credibility before the first call.",
               },
               {
                 icon: PanelLeft,
                 title: "Management Systems",
+                slug: "management-systems",
                 description:
                   "Booking, scheduling, and admin tools built around how you actually run your day, not a generic dashboard.",
               },
               {
                 icon: Coffee,
                 title: "Cafés & Menus",
+                slug: "cafes-menus",
                 description:
                   "Fast, mobile-first menus and ordering pages that actually work for someone standing at your counter.",
               },
               {
                 icon: Heart,
                 title: "NGOs & Community",
+                slug: "ngos-community",
                 description:
                   "Trust-building, donation-ready sites for organisations that need people to believe them at first glance.",
               },
               {
                 icon: Dumbbell,
                 title: "Gyms & Fitness",
+                slug: "gym-fitness",
                 description:
                   "Class schedules, memberships, and bookings handled properly, without paying a monthly fee for someone else’s software.",
               },
@@ -196,12 +203,12 @@ function HomePage() {
                     {project.description}
                   </p>
 
-                  <a
-                    href="#work"
+                  <Link
+                    to={`/our-work#${project.slug}`}
                     className="mt-auto pt-7 text-sm font-medium text-[#B8862E] transition-colors hover:text-[#8B5F1E]"
                   >
-                    View work →
-                  </a>
+                    Read more →
+                  </Link>
                 </div>
               );
             })}
@@ -283,7 +290,7 @@ function HomePage() {
             </div>
 
             <a
-              href="#"
+              href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
               className="inline-flex w-fit items-center justify-center rounded-[7px] bg-[#1B1712] px-7 py-3.5 text-sm font-semibold text-[#F2EEE4] transition-colors hover:bg-[#241F17] sm:px-8 sm:text-base"
             >
               Start a project

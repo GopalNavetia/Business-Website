@@ -1,7 +1,17 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Footer() {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+        });
+    }, [location.pathname]);
 
     const navItems = [
         { label: "Home", path: "/" },
