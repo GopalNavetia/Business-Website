@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Briefcase,
   SquareUser,
@@ -10,6 +11,7 @@ import {
 
 function HomePage() {
   const [activeCard, setActiveCard] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -21,7 +23,7 @@ function HomePage() {
           {/* Copy Column */}
           <div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold leading-[1.15] tracking-tight">
-              Custom Websites That <br /><span className="text-[#B8862E]">Actually Bring You <br /> Leads.</span>
+              Custom Websites <br />That <span className="text-[#B8862E]">Actually Bring You <br /> Leads.</span>
             </h1>
             <p className="mt-4 text-base sm:text-lg text-[#F2EEE4]/60 max-w-[52ch] leading-relaxed">
               We handle your design, custom code, and Google search rankings under one roof so you can focus on running your business.
@@ -37,12 +39,13 @@ function HomePage() {
               >
                 Start a project
               </a>
-              <a
-                href="#work"
-                className="inline-flex items-center justify-center px-10 py-3 sm:px-6 sm:py-3.5 rounded-[7px] font-semibold text-sm sm:text-base border border-[#F2EEE4]/35 text-[#F2EEE4] transition-colors hover:border-[#B8862E] hover:text-[#B8862E]"
+              <button
+                type="button"
+                onClick={() => navigate("/our-work")}
+                className="inline-flex items-center justify-center px-10 py-3 sm:px-6 sm:py-3.5 rounded-[7px] font-semibold text-sm sm:text-base border border-[#F2EEE4]/35 text-[#F2EEE4] transition-colors hover:border-[#B8862E] hover:text-[#B8862E] cursor-pointer"
               >
                 See our work
-              </a>
+              </button>
             </div>
 
             {/* Trust Line */}
@@ -83,29 +86,29 @@ function HomePage() {
         {/* Credibility */}
         <div className="border-y border-[#1B1712]/10 bg-[#F2EEE4] text-[#1B1712] mx-auto grid max-w grid-cols-1 gap-6 px-6 py-7 sm:px-8 md:grid-cols-3 md:gap-12 md:py-10">
           <div>
-            <h3 className="font-serif text-base font-semibold text-[#B8862E]">
+            <h3 className="font-serif text-lg font-semibold text-[#B8862E] sm:text-xl">
               Conversion-first design
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-[#1B1712]/80">
+            <p className="mt-2 text-base leading-relaxed text-[#1B1712]/80 sm:text-lg">
               Pages built to turn visitors into leads, supported by SEO and content
               that brings them there.
             </p>
           </div>
 
           <div>
-            <h3 className="font-serif text-base font-semibold text-[#B8862E]">
+            <h3 className="font-serif text-lg font-semibold text-[#B8862E] sm:text-xl">
               Built around how people find you
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-[#1B1712]/80">
+            <p className="mt-2 text-base leading-relaxed text-[#1B1712]/80 sm:text-lg">
               Your digital presence works across Google, social, and referrals.
             </p>
           </div>
 
           <div>
-            <h3 className="font-serif text-base font-semibold text-[#B8862E]">
+            <h3 className="font-serif text-lg font-semibold text-[#B8862E] sm:text-xl">
               Strategy behind every decision
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-[#1B1712]/80">
+            <p className="mt-2 text-base leading-relaxed text-[#1B1712]/80 sm:text-lg">
               Design, marketing, and UX work as one system—not three separate
               services.
             </p>
@@ -114,7 +117,7 @@ function HomePage() {
 
         {/* Niche Bento Box */}
         <div className="bg-[#F2EEE4] text-[#1B1712] mx-0 px-6 py-8 pb-11 sm:px-8 sm:py-9 sm:pb-14">
-          <div className=" max-w-4xl text-center sm:text-left">
+          <div className=" max-w-4xl text-left">
             <h2 className="font-serif text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl">
               Six kinds of projects.{" "}
               <span className="text-[#B8862E]">

@@ -1,6 +1,5 @@
 function OurWork(){
-    return(
-        hello)
+    return <>Our Work</>
 }
 
 export default OurWork;

@@ -1,6 +1,5 @@
 function Services(){
-    return(
-        hello)
+    return <>Services</>
 }
 
 export default Services;
