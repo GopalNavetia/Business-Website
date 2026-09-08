@@ -75,13 +75,13 @@ function OurWork() {
             title: "Professional Portfolios",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
-                "Medical and consultancy sites often feature cluttered layouts that overwhelm patients, causing them to abandon the page before booking.",
+                "Independent professionals and consultants often present static, resume-style sites that fail to demonstrate authority or capture direct business leads.",
             build: "THE BUILD",
             buildText:
-                "A structured user interface engineered strictly around visual hierarchy, comfortable touch-targets, and direct booking pathways.",
+                "A highly structured visual showcase engineered around decision-maker scanning habits, clear typography, and integrated inquiry forms.",
             value: "BUSINESS VALUE",
             valueText:
-                "Minimizes user friction to guide prospective patients smoothly from landing to confirmed appointment.",
+                "Eliminates the generalist dilemma by positioning your experience as a strategic asset, turning casual visitors into qualified inquiries.",
         },
         {
             number: "03/06",
@@ -103,13 +103,13 @@ function OurWork() {
             title: "Cafés & Food Menus",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
-                "Clunky, slow-loading PDF menus that require constant zooming and pinch-gestures, destroying the customer experience on mobile.",
+                "Relying on heavy, slow-loading PDF menus that block local search engine indexing and frustrate on-the-go customers trying to load menus on weak mobile connections.",
             build: "THE BUILD",
             buildText:
-                "Ultra-lightweight digital menu pages styled with high readability and optimized for outdoor, high-contrast mobile screens.",
+                "Ultra-lightweight progressive digital menu pages designed for high readability and optimized for outdoor, high-contrast mobile screens.",
             value: "BUSINESS VALUE",
             valueText:
-                "Bypasses heavy app downloads, allowing tables to scan, browse, and choose their meals in seconds.",
+                "Eliminates download friction, allowing tables to scan, browse, and choose their meals in seconds.",
         },
         {
             number: "05/06",
@@ -117,13 +117,13 @@ function OurWork() {
             title: "NGOs & Community Platforms",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
-                "Relying on third-party donation forms that charge high monthly subscription fees and redirect donors to unfamiliar, untrustworthy payment pages.",
+                "Operating with outdated layouts or disjointed third-party forms that fail to establish institutional trust, while forcing donors onto jarring, unfamiliar external payment screens.",
             build: "THE BUILD",
             buildText:
-                "Direct integration of secure, serverless API payment gateways built natively into your custom web architecture.",
+                "Secure, custom-designed non-profit platforms with unified payment gateway integrations that keep donors on your trusted domain throughout the contribution flow.",
             value: "BUSINESS VALUE",
             valueText:
-                "Ensures 100% of donor funding goes directly to your cause while completely bypassing platform transaction fees.",
+                "Establishes immediate credibility to drive higher average donation sizes, while eliminating expensive monthly platform subscription overhead.",
         },
         {
             number: "06/06",
@@ -131,7 +131,7 @@ function OurWork() {
             title: "Gyms & Fitness Booking",
             bottleneck: "THE BOTTLENECK",
             bottleneckText:
-                "Gym owners trapped paying high monthly SaaS subscription fees to third-party portals just to manage simple member schedules and class rosters.",
+                "Gym owners trapped paying expensive, recurring monthly subscription fees to third-party scheduling portals just to manage simple member schedules and class rosters.",
             build: "THE BUILD",
             buildText:
                 "A private, self-hosted scheduling system built around automated member lists and real-time class booking.",
@@ -267,7 +267,7 @@ function OurWork() {
 
                                         {/* Build */}
                                         <div className="flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
-                                            <SquareTerminal className="h-5 w-5 shrink-0 text-amber-700 mt-0.5" strokeWidth={1.5} />
+                                            <SquareTerminal className="h-5 w-5 shrink-0 text-[#B8862E] mt-0.5" strokeWidth={1.5} />
                                             <div className="flex-1">
                                                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
                                                     {category.build}
