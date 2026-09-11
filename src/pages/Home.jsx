@@ -317,24 +317,57 @@ function HomePage() {
 
     useLayoutEffect(() => {
         const context = gsap.context(() => {
-            const content = gsap.utils.toArray(".team-reveal");
+            const badge = teamSectionRef.current.querySelector(".team-badge");
+            const words = gsap.utils.toArray(".team-word");
+            const italic = teamSectionRef.current.querySelector(".team-italic");
+            const subheading = teamSectionRef.current.querySelector(".team-subheading");
+            const cards = gsap.utils.toArray(".team-card");
+            const photos = gsap.utils.toArray(".team-photo");
+            const directBadges = gsap.utils.toArray(".team-direct-badge");
+            const roles = gsap.utils.toArray(".team-role");
+            const bios = gsap.utils.toArray(".team-bio");
 
-            gsap.fromTo(
-                content,
-                { y: 28, autoAlpha: 0 },
-                {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.7,
-                    stagger: 0.14,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: teamSectionRef.current,
-                        start: "top 78%",
-                        toggleActions: "play none none none",
+            if (prefersReducedMotion) {
+                gsap.set(italic, { autoAlpha: 1, clearProps: "textShadow" });
+                gsap.set([photos, directBadges, roles, bios], { clearProps: "clipPath,filter,transform" });
+                gsap.set(photos, { autoAlpha: 1 });
+                gsap.set(directBadges, { autoAlpha: 1 });
+                gsap.fromTo(
+                    [badge, teamSectionRef.current.querySelector(".team-heading"), subheading, ...cards],
+                    { autoAlpha: 0 },
+                    {
+                        autoAlpha: 1,
+                        duration: 0.55,
+                        stagger: 0.1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: teamSectionRef.current,
+                            start: "top 78%",
+                            toggleActions: "play none none none",
+                        },
                     },
+                );
+                return;
+            }
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: teamSectionRef.current,
+                    start: "top 78%",
+                    toggleActions: "play none none none",
                 },
-            );
+            });
+
+            timeline
+                .fromTo(badge, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" })
+                .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.42, stagger: 0.035, ease: "power3.out" }, "+=0.04")
+                .fromTo(italic, { autoAlpha: 0, textShadow: "0 0 0 rgba(217, 155, 75, 0)" }, { autoAlpha: 1, textShadow: "0 0 20px rgba(217, 155, 75, 0.28)", duration: 0.32, ease: "power3.out" }, "-=0.06")
+                .fromTo(subheading, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.32, ease: "power3.out" }, "+=0.06")
+                .fromTo(cards, { y: 14, scale: 0.94, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 0.48, stagger: 0.1, ease: "power3.out" }, "+=0.06")
+                .fromTo(photos, { clipPath: "inset(100% 0 0 0)", filter: "grayscale(1)" }, { clipPath: "inset(0% 0 0 0)", filter: "grayscale(0)", duration: 0.42, stagger: 0.1, ease: "power3.out" }, "-=0.38")
+                .fromTo(directBadges, { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.34, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.08")
+                .fromTo(roles, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, stagger: 0.1, ease: "power3.out" }, "-=0.12")
+                .fromTo(bios, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, stagger: 0.1, ease: "power3.out" }, "-=0.1");
         }, teamSectionRef);
 
         return () => context.revert();
@@ -343,56 +376,62 @@ function HomePage() {
     useLayoutEffect(() => {
         const context = gsap.context(() => {
             const panel = partnerSectionRef.current.querySelector(".partner-panel");
-            const content = gsap.utils.toArray(".partner-reveal");
+            const badge = partnerSectionRef.current.querySelector(".partner-badge");
+            const heading = partnerSectionRef.current.querySelector(".partner-heading");
+            const copy = partnerSectionRef.current.querySelector(".partner-copy");
             const checks = gsap.utils.toArray(".partner-check");
+            const checkIcons = gsap.utils.toArray(".partner-check-icon");
+            const checkLabels = gsap.utils.toArray(".partner-check-label");
+            const partnerCard = partnerSectionRef.current.querySelector(".partner-card");
+            const logo = partnerSectionRef.current.querySelector(".partner-logo");
+            const nestedCard = partnerSectionRef.current.querySelector(".partner-nested-card");
+            const verified = partnerSectionRef.current.querySelector(".partner-verified");
+            const verifiedIcon = partnerSectionRef.current.querySelector(".partner-verified-icon");
 
-            gsap.fromTo(
-                panel,
-                { y: 30, autoAlpha: 0 },
-                {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.75,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: partnerSectionRef.current,
-                        start: "top 82%",
-                        toggleActions: "play none none none",
+            if (prefersReducedMotion) {
+                gsap.set([...checkIcons, verifiedIcon], { strokeDashoffset: 0 });
+                gsap.fromTo(
+                    [badge, heading, copy, ...checks, partnerCard],
+                    { autoAlpha: 0 },
+                    {
+                        autoAlpha: 1,
+                        duration: 0.55,
+                        stagger: 0.1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: partnerSectionRef.current,
+                            start: "top 78%",
+                            toggleActions: "play none none none",
+                        },
                     },
+                );
+                return;
+            }
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: partnerSectionRef.current,
+                    start: "top 78%",
+                    toggleActions: "play none none none",
                 },
-            );
-            gsap.fromTo(
-                content,
-                { y: 18, autoAlpha: 0 },
-                {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.55,
-                    stagger: 0.12,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: partnerSectionRef.current,
-                        start: "top 78%",
-                        toggleActions: "play none none none",
-                    },
-                },
-            );
-            gsap.fromTo(
-                checks,
-                { x: -8, autoAlpha: 0 },
-                {
-                    x: 0,
-                    autoAlpha: 1,
-                    duration: 0.4,
-                    stagger: 0.1,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: partnerSectionRef.current,
-                        start: "top 72%",
-                        toggleActions: "play none none none",
-                    },
-                },
-            );
+            });
+            timeline
+                .fromTo(badge, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" })
+                .fromTo(heading, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.36, ease: "power3.out" }, "+=0.04")
+                .fromTo(copy, { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.32, ease: "power3.out" }, "-=0.16")
+                .fromTo(partnerCard, { y: 22, rotationY: 6, autoAlpha: 0, transformPerspective: 900 }, { y: 0, rotationY: 0, autoAlpha: 1, duration: 0.48, ease: "power3.out" }, "-=0.3")
+                .fromTo(logo, { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.32")
+                .fromTo(nestedCard, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.36, ease: "power3.out" }, "-=0.12");
+
+            checks.forEach((check, index) => {
+                timeline
+                    .fromTo(checkIcons[index], { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.28, ease: "power3.out" }, `-=${index ? 0.12 : 0.04}`)
+                    .fromTo(checkLabels[index], { y: 4, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.24, ease: "power3.out" }, "-=0.12");
+            });
+
+            timeline
+                .fromTo(verified, { scale: 1.15, rotation: -4, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.34, ease: "back.out(1.8)" }, "+=0.02")
+                .fromTo(verifiedIcon, { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.24, ease: "power3.out" }, "-=0.2");
         }, partnerSectionRef);
 
         return () => context.revert();
@@ -788,15 +827,18 @@ function HomePage() {
                 className="border-t border-[#E8DECB] bg-[#F0EBD9] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
             >
                 <div className="mx-auto max-w-6xl">
-                    <div className="team-reveal mx-auto mb-10 max-w-3xl text-center md:mb-14">
-                        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/30 bg-[#D99B4B]/15 px-3.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#B87C2B]">
+                    <div className="mx-auto mb-10 max-w-3xl text-center md:mb-14">
+                        <span className="team-badge mb-4 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/30 bg-[#D99B4B]/15 px-3.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#B87C2B]">
                             <span className="h-1.5 w-1.5 rounded-full bg-[#B87C2B]" />
                             Direct technical access
                         </span>
-                        <h2 className="font-serif text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl">
-                            The team building <span className="text-[#B87C2B] italic">your platform</span>
+                        <h2 className="team-heading font-serif text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl">
+                            <span className="team-word-clip"><span className="team-word">The</span></span>{" "}
+                            <span className="team-word-clip"><span className="team-word">team</span></span>{" "}
+                            <span className="team-word-clip"><span className="team-word">building</span></span>{" "}
+                            <span className="team-italic text-[#B87C2B] italic">your platform</span>
                         </h2>
-                        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#181614]/70 sm:text-lg">
+                        <p className="team-subheading mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#181614]/70 sm:text-lg">
                             Direct access to the engineers designing, coding, and scaling your platform.
                         </p>
                     </div>
@@ -819,27 +861,27 @@ function HomePage() {
                         ].map((member) => (
                             <article
                                 key={member.name}
-                                className="team-reveal group rounded-2xl border border-[#E8DECB] bg-white p-5 transition-shadow hover:shadow-xl sm:p-7"
+                                className="team-card group rounded-2xl border border-[#E8DECB] bg-white p-5 sm:p-7"
                             >
-                                <div className="mb-6 aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
+                                <div className="team-photo-frame mb-6 aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
                                     <img
                                         src={member.image}
                                         alt={`${member.name} - ${member.role}`}
-                                        className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] ${member.name === "Vatsal" ? "scale-[1.06]" : ""}`}
+                                        className={`team-photo h-full w-full object-cover ${member.name === "Vatsal" ? "scale-[1.06]" : ""}`}
                                     />
                                 </div>
                                 <div className="mb-3 flex items-start justify-between gap-3">
                                     <h3 className="font-serif text-2xl font-bold text-[#181614]">
                                         {member.name}
                                     </h3>
-                                    <span className="shrink-0 rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 font-mono text-xs font-semibold text-emerald-700">
+                                    <span className="team-direct-badge shrink-0 rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 font-mono text-xs font-semibold text-emerald-700">
                                         {member.badge}
                                     </span>
                                 </div>
-                                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#B87C2B]">
+                                <p className="team-role mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#B87C2B]">
                                     {member.role}
                                 </p>
-                                <p className="text-sm leading-relaxed text-[#181614]/70">
+                                <p className="team-bio text-sm leading-relaxed text-[#181614]/70">
                                     {member.bio}
                                 </p>
                             </article>
@@ -856,15 +898,15 @@ function HomePage() {
             >
                 <div className="partner-panel mx-auto max-w-5xl rounded-3xl border border-[#E8DECB] bg-[#F6F1E8] p-6 transition-shadow duration-500 hover:shadow-xl sm:p-8 lg:p-10">
                     <div className="grid items-center gap-8 lg:grid-cols-7 lg:gap-12">
-                        <div className="partner-reveal lg:col-span-4">
-                            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/30 bg-[#D99B4B]/15 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#B87C2B]">
+                        <div className="partner-copy-column lg:col-span-4">
+                            <span className="partner-badge mb-4 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/30 bg-[#D99B4B]/15 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#B87C2B]">
                                 <span className="h-1.5 w-1.5 rounded-full bg-[#B87C2B]" />
                                 Strategic alliance · Partnership with Growthonixs
                             </span>
-                            <h3 className="font-serif text-2xl font-bold leading-tight sm:text-3xl">
+                            <h3 className="partner-heading font-serif text-2xl font-bold leading-tight sm:text-3xl">
                                 Development meets digital marketing
                             </h3>
-                            <p className="mt-3 text-sm leading-relaxed text-[#181614]/70 sm:text-base">
+                            <p className="partner-copy mt-3 text-sm leading-relaxed text-[#181614]/70 sm:text-base">
                                 For projects that need more than a website, Anchorworks partners
                                 directly with Growthonixs. Together, we pair custom engineering
                                 with complete digital marketing under one roof.
@@ -872,15 +914,15 @@ function HomePage() {
                             <div className="mt-5 grid grid-cols-1 gap-3 border-t border-[#E8DECB] pt-4 sm:grid-cols-3">
                                 {["SEO & Google Rankings", "AEO Optimization", "Video Production"].map((item) => (
                                     <div key={item} className="partner-check flex items-center gap-2 font-mono text-xs font-medium text-[#181614]/80 transition-transform duration-300 hover:translate-x-1">
-                                        <Check className="h-4 w-4 shrink-0 text-emerald-600" />
-                                        {item}
+                                        <Check className="partner-check-icon h-4 w-4 shrink-0 text-emerald-600" />
+                                        <span className="partner-check-label">{item}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="partner-reveal lg:col-span-3">
-                            <div className="rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 text-center">
-                                <div className="mb-4 flex items-center justify-center gap-2">
+                        <div className="partner-card-column lg:col-span-3">
+                            <div className="partner-card rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 text-center">
+                                <div className="partner-logo mb-4 flex items-center justify-center gap-2">
                                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#D99B4B] font-mono text-sm font-bold text-[#131210] shadow-sm">
                                         GX
                                     </div>
@@ -891,7 +933,7 @@ function HomePage() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mb-4 flex aspect-[16/10] w-full flex-col items-center justify-center rounded-xl border border-[#E8DECB] bg-white p-4 shadow-sm">
+                                <div className="partner-nested-card mb-4 flex aspect-[16/10] w-full flex-col items-center justify-center rounded-xl border border-[#E8DECB] bg-white p-4 shadow-sm">
                                     <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full border border-[#E8DECB] bg-[#F6F1E8] font-serif text-lg font-bold text-[#B87C2B]">
                                         GX
                                     </div>
@@ -900,8 +942,8 @@ function HomePage() {
                                         Partner headshot / team showcase slot
                                     </div>
                                 </div>
-                                <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-[10px] font-semibold text-emerald-600">
-                                    <Check className="h-3.5 w-3.5" />
+                                <span className="partner-verified inline-flex items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-[10px] font-semibold text-emerald-600">
+                                    <Check className="partner-verified-icon h-3.5 w-3.5" />
                                     Verified growth partner
                                 </span>
                             </div>

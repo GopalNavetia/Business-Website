@@ -100,6 +100,54 @@
     display: inline-block;
 }
 
+.team-word-clip {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
+.team-word {
+    display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .team-italic {
+        opacity: 0;
+    }
+}
+
+.team-card {
+    transform: translateZ(0);
+    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.team-card:hover {
+    transform: translateY(-6px);
+    border-color: #D4923A;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
+}
+
+.team-photo {
+    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), filter 600ms ease;
+}
+
+.team-card:hover .team-photo {
+    transform: scale(1.04);
+}
+
+.partner-check-icon,
+.partner-verified-icon {
+    fill: none;
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+}
+
+.partner-card {
+    transform-style: preserve-3d;
+}
+
 .cta-check {
     fill: none;
     stroke-dasharray: 20;
@@ -254,6 +302,20 @@
         box-shadow: none;
     }
 
+    .team-card,
+    .team-card:hover,
+    .team-photo,
+    .team-card:hover .team-photo,
+    .partner-card {
+        transform: none;
+        transition: none;
+    }
+
+    .team-photo {
+        clip-path: inset(0 0 0 0);
+        filter: grayscale(0);
+    }
+
     .process-line {
         stroke-dashoffset: 0;
     }
@@ -284,6 +346,11 @@
     }
 
     .cta-check {
+        stroke-dashoffset: 0;
+    }
+
+    .partner-check-icon,
+    .partner-verified-icon {
         stroke-dashoffset: 0;
     }
 }
