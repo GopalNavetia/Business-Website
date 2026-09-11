@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+.wireframe-grid {
+    background-size: 32px 32px;
+    background-image:
+        linear-gradient(to right, rgba(217, 155, 75, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(217, 155, 75, 0.05) 1px, transparent 1px);
+}
+
+@keyframes soft-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .hero-mockup-float {
+        animation: soft-float 8s ease-in-out infinite;
+    }
+}
