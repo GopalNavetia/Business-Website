@@ -1,4 +1,8 @@
+import { useLayoutEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { prefersReducedMotion } from "../motion";
 import {
     ArrowRight,
     BarChart3,
@@ -12,6 +16,8 @@ import {
     SquareUser,
     Zap,
 } from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
     {
@@ -101,16 +107,17 @@ const processSteps = [
     },
 ];
 
-function HeroMockup() {
+function HeroMockup({ mockupRef, badgeRef, progressRef }) {
     return (
-        <div className="hero-mockup-float pointer-events-none relative mx-auto max-w-2xl select-none pt-8">
+        <div ref={mockupRef} className="hero-mockup-float pointer-events-none relative mx-auto max-w-2xl select-none pt-8">
             <div className="absolute -left-3 top-0 z-10 flex items-center gap-3 rounded-xl border border-[#D99B4B]/50 bg-[#1E1C18]/95 px-4 py-2.5 shadow-xl sm:-left-8">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#D99B4B]/20 text-[#D99B4B]">
+                <div ref={badgeRef} className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[#D99B4B]/20 text-[#D99B4B]">
+                    <span ref={progressRef} className="hero-badge-progress absolute inset-0 rounded-lg" />
                     <BarChart3 className="h-4 w-4" />
                 </div>
                 <div>
                     <div className="font-mono text-sm font-bold leading-tight text-[#D99B4B]">
-                        +184% Avg Lead Surge
+                        +<span data-lead-count>0</span>% Avg Lead Surge
                     </div>
                     <div className="font-mono text-[10px] uppercase tracking-wider text-[#8A857B]">
                         Verified performance
@@ -187,51 +194,392 @@ function HeroMockup() {
 
 function HomePage() {
     const navigate = useNavigate();
+    const heroRef = useRef(null);
+    const spotlightRef = useRef(null);
+    const headlineRef = useRef(null);
+    const italicHeadlineRef = useRef(null);
+    const subheadingRef = useRef(null);
+    const ctasRef = useRef(null);
+    const quoteRef = useRef(null);
+    const mockupRef = useRef(null);
+    const badgeRef = useRef(null);
+    const progressRef = useRef(null);
+    const featureSectionRef = useRef(null);
+    const projectsSectionRef = useRef(null);
+    const processSectionRef = useRef(null);
+    const ctaSectionRef = useRef(null);
+    const startProjectRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const hero = heroRef.current;
+        let removePointerListener = () => {};
+        const context = gsap.context(() => {
+            const words = gsap.utils.toArray(".hero-word");
+            const ctas = gsap.utils.toArray(".hero-cta");
+            const leadCount = { value: 0 };
+
+            if (prefersReducedMotion) {
+                gsap.fromTo(
+                    [headlineRef.current, subheadingRef.current, ctasRef.current, quoteRef.current, mockupRef.current],
+                    { autoAlpha: 0 },
+                    { autoAlpha: 1, duration: 0.7, stagger: 0.08, ease: "power3.out" },
+                );
+                return;
+            }
+
+            const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+            timeline
+                .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.7, stagger: 0.05, ease: "power3.out" })
+                .fromTo(italicHeadlineRef.current, { autoAlpha: 0.65 }, { autoAlpha: 1, duration: 0.55 }, "-=0.15")
+                .fromTo(subheadingRef.current, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, "+=0.15")
+                .fromTo(ctas, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" }, "-=0.2")
+                .fromTo(quoteRef.current, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6 }, "-=0.2")
+                .fromTo(mockupRef.current, { y: 40, rotateX: 8, autoAlpha: 0, transformPerspective: 900 }, { y: 0, rotateX: 0, autoAlpha: 1, duration: 0.7, ease: "power3.out" }, "-=0.1")
+                .to(leadCount, { value: 184, duration: 0.7, ease: "power3.out", onUpdate: () => {
+                    const value = Math.round(leadCount.value);
+                    const count = mockupRef.current?.querySelector("[data-lead-count]");
+                    if (count) count.textContent = value;
+                    if (progressRef.current) progressRef.current.style.setProperty("--progress", `${(value / 184) * 100}%`);
+                } }, "-=0.35");
+
+            gsap.to(mockupRef.current, { y: -5, rotationZ: 0.5, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: timeline.duration() });
+            gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+
+            const onPointerMove = (event) => {
+                const bounds = hero.getBoundingClientRect();
+                gsap.to(spotlightRef.current, { x: event.clientX - bounds.left, y: event.clientY - bounds.top, duration: 0.6, ease: "power2.out" });
+            };
+            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                hero.addEventListener("pointermove", onPointerMove);
+                removePointerListener = () => hero.removeEventListener("pointermove", onPointerMove);
+            }
+        }, heroRef);
+
+        return () => {
+            removePointerListener();
+            context.revert();
+        };
+    }, []);
+
+    useLayoutEffect(() => {
+        const context = gsap.context(() => {
+            const cards = gsap.utils.toArray(".feature-card");
+            const icons = gsap.utils.toArray(".feature-icon");
+
+            if (prefersReducedMotion) {
+                gsap.fromTo(cards, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.55, stagger: 0.15, ease: "power3.out", scrollTrigger: {
+                    trigger: featureSectionRef.current,
+                    start: "top 82%",
+                    toggleActions: "play none none none",
+                } });
+                return;
+            }
+
+            gsap.fromTo(
+                cards,
+                { y: 34, rotateX: 9, scale: 0.97, autoAlpha: 0, transformPerspective: 900 },
+                {
+                    y: 0,
+                    rotateX: 0,
+                    scale: 1,
+                    autoAlpha: 1,
+                    duration: 0.7,
+                    stagger: 0.14,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: featureSectionRef.current,
+                        start: "top 82%",
+                        toggleActions: "play none none none",
+                    },
+                },
+            );
+            gsap.fromTo(
+                icons,
+                { rotation: -8, scale: 0.78, autoAlpha: 0 },
+                { rotation: 0, scale: 1, autoAlpha: 1, duration: 0.65, stagger: 0.14, ease: "power3.out", scrollTrigger: {
+                    trigger: featureSectionRef.current,
+                    start: "top 82%",
+                    toggleActions: "play none none none",
+                } },
+            );
+        }, featureSectionRef);
+
+        return () => context.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const cta = ctaSectionRef.current;
+        let removeMagneticListeners = () => {};
+        const context = gsap.context(() => {
+            const words = gsap.utils.toArray(".cta-word");
+            const buttons = gsap.utils.toArray(".cta-button");
+            const checks = gsap.utils.toArray(".cta-check");
+            const labels = gsap.utils.toArray(".cta-badge-label");
+            const badges = gsap.utils.toArray(".cta-trust-badge");
+
+            if (prefersReducedMotion) {
+                gsap.set(checks, { strokeDashoffset: 0 });
+                gsap.fromTo(
+                    [cta.querySelector(".cta-heading"), cta.querySelector(".cta-copy"), ...buttons, ...badges],
+                    { autoAlpha: 0 },
+                    { autoAlpha: 1, duration: 0.65, stagger: 0.1, ease: "power3.out", scrollTrigger: {
+                        trigger: cta,
+                        start: "top 78%",
+                        toggleActions: "play none none none",
+                    } },
+                );
+                return;
+            }
+
+            gsap.to(cta, {
+                backgroundPosition: "100% 50%",
+                duration: 18,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+            });
+
+            const entrance = gsap.timeline({
+                scrollTrigger: {
+                    trigger: cta,
+                    start: "top 78%",
+                    toggleActions: "play none none none",
+                },
+            });
+            entrance
+                .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.7, stagger: 0.05, ease: "power3.out" })
+                .fromTo(cta.querySelector(".cta-copy"), { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: "power3.out" }, "-=0.15")
+                .fromTo(buttons, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.55, stagger: 0.1, ease: "power3.out" }, "-=0.2");
+            badges.forEach((badge, index) => {
+                entrance
+                    .fromTo(checks[index], { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, `+=${index ? 0.15 : 0.1}`)
+                    .fromTo(labels[index], { x: -6, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.12");
+            });
+
+            const button = startProjectRef.current;
+            const onPointerMove = (event) => {
+                const bounds = button.getBoundingClientRect();
+                const offsetX = Math.max(-18, Math.min(18, (event.clientX - (bounds.left + bounds.width / 2)) * 0.22));
+                const offsetY = Math.max(-18, Math.min(18, (event.clientY - (bounds.top + bounds.height / 2)) * 0.22));
+                gsap.to(button, { x: offsetX, y: offsetY, duration: 0.35, ease: "power3.out" });
+            };
+            const onPointerLeave = () => gsap.to(button, { x: 0, y: 0, duration: 0.6, ease: "power3.out" });
+            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                button.addEventListener("pointermove", onPointerMove);
+                button.addEventListener("pointerleave", onPointerLeave);
+                removeMagneticListeners = () => {
+                    button.removeEventListener("pointermove", onPointerMove);
+                    button.removeEventListener("pointerleave", onPointerLeave);
+                };
+            }
+        }, ctaSectionRef);
+
+        return () => {
+            removeMagneticListeners();
+            context.revert();
+        };
+    }, []);
+
+    const handleStartProjectClick = (event) => {
+        if (prefersReducedMotion) return;
+
+        event.preventDefault();
+        const button = event.currentTarget;
+        const bounds = button.getBoundingClientRect();
+        const ripple = document.createElement("span");
+        ripple.className = "cta-ripple";
+        ripple.style.left = `${event.clientX - bounds.left}px`;
+        ripple.style.top = `${event.clientY - bounds.top}px`;
+        button.appendChild(ripple);
+        gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, { scale: 16, autoAlpha: 0, duration: 0.42, ease: "power2.out", onComplete: () => {
+            ripple.remove();
+            window.location.href = button.href;
+        } });
+    };
+
+    useLayoutEffect(() => {
+        const context = gsap.context(() => {
+            const words = gsap.utils.toArray(".projects-word");
+            const cards = gsap.utils.toArray(".project-card");
+
+            if (prefersReducedMotion) {
+                gsap.fromTo(
+                    [...words, ...cards],
+                    { autoAlpha: 0 },
+                    {
+                        autoAlpha: 1,
+                        duration: 0.55,
+                        stagger: 0.08,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: projectsSectionRef.current,
+                            start: "top 78%",
+                            toggleActions: "play none none none",
+                        },
+                    },
+                );
+                return;
+            }
+
+            gsap.fromTo(words, { yPercent: 110 }, {
+                yPercent: 0,
+                duration: 0.65,
+                stagger: 0.05,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: projectsSectionRef.current,
+                    start: "top 78%",
+                    toggleActions: "play none none none",
+                },
+            });
+            gsap.fromTo(cards, {
+                y: (index) => (index % 2 === 0 ? 10 : 2),
+                scale: 0.92,
+                autoAlpha: 0,
+                rotateX: 6,
+                transformPerspective: 900,
+            }, {
+                y: 0,
+                scale: 1,
+                autoAlpha: 1,
+                rotateX: 0,
+                duration: 0.75,
+                stagger: { each: 0.18, grid: "auto", from: "start" },
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: projectsSectionRef.current.querySelector(".project-grid"),
+                    start: "top 82%",
+                    toggleActions: "play none none none",
+                },
+            });
+        }, projectsSectionRef);
+
+        return () => context.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const context = gsap.context(() => {
+            const line = processSectionRef.current.querySelector(".process-line");
+            const markers = gsap.utils.toArray(".process-marker");
+            const dormantOverlays = gsap.utils.toArray(".process-marker-dormant");
+            const pings = gsap.utils.toArray(".process-ping");
+            const cards = gsap.utils.toArray(".process-card");
+            const badges = gsap.utils.toArray(".process-badge");
+            const deliverables = gsap.utils.toArray(".process-deliverable");
+
+            if (prefersReducedMotion) {
+                gsap.set(line, { strokeDashoffset: 0 });
+                gsap.set(markers, { autoAlpha: 1 });
+                gsap.set(dormantOverlays, { autoAlpha: 0 });
+                gsap.fromTo(
+                    cards,
+                    { y: 12, autoAlpha: 0 },
+                    {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.55,
+                        stagger: 0.12,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: processSectionRef.current,
+                            start: "top 78%",
+                            toggleActions: "play none none none",
+                        },
+                    },
+                );
+                return;
+            }
+
+            gsap.fromTo(cards, {
+                yPercent: (index) => (index % 2 === 0 ? -1.5 : 1.5),
+            }, {
+                yPercent: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: processSectionRef.current,
+                    start: "top 72%",
+                    toggleActions: "play none none none",
+                },
+            });
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: processSectionRef.current,
+                    start: "top 72%",
+                    end: "bottom 78%",
+                    scrub: true,
+                },
+            });
+
+            timeline.fromTo(line, { strokeDashoffset: 100 }, { strokeDashoffset: 0, ease: "none", duration: 1 }, 0);
+            markers.forEach((marker, index) => {
+                const point = index / markers.length;
+                timeline.to(marker, { autoAlpha: 1, scale: 1.08, duration: 0.08, ease: "power2.out" }, point);
+                timeline.to(dormantOverlays[index], { autoAlpha: 0, duration: 0.08, ease: "power2.out" }, point);
+                timeline.to(marker, { scale: 1, duration: 0.12, ease: "power2.out" }, point + 0.08);
+                timeline.fromTo(pings[index], { scale: 0.65, autoAlpha: 0.75 }, { scale: 2.2, autoAlpha: 0, duration: 0.28, ease: "power2.out" }, point);
+                timeline.fromTo(cards[index], { x: -30, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.18, ease: "power3.out" }, point + 0.06);
+                timeline.fromTo(badges[index], { rotationX: -75, scale: 0.8, autoAlpha: 0 }, { rotationX: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out" }, point + 0.12);
+                timeline.fromTo(deliverables[index], { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.14, ease: "power3.out" }, point + 0.3);
+            });
+        }, processSectionRef);
+
+        return () => context.revert();
+    }, []);
 
     return (
         <div className="bg-[#131210] text-[#F6F1E8]">
             {/* Hero Section */}
-            <section className="wireframe-grid relative overflow-hidden bg-[#131210] px-5 pb-14 pt-14 sm:px-8 md:pb-20 md:pt-20">
+            <section ref={heroRef} className="wireframe-grid hero-section relative overflow-hidden bg-[#131210] px-5 pb-14 pt-14 sm:px-8 md:pb-20 md:pt-20">
+                <div ref={spotlightRef} className="hero-spotlight pointer-events-none absolute left-0 top-0 z-0" />
+                <div className="hero-grid-drift pointer-events-none absolute inset-0 z-0" />
                 <div className="pointer-events-none absolute left-1/2 top-1/4 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-[#D99B4B]/10 blur-[130px]" />
                 <div className="relative z-10 mx-auto max-w-4xl text-center">
-                    <h1 className="font-serif text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-[4.5rem]">
-                        Custom Websites That
+                    <h1 ref={headlineRef} className="font-serif text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-[4.5rem]">
+                        <span className="hero-word-clip"><span className="hero-word">Custom</span></span>{" "}
+                        <span className="hero-word-clip"><span className="hero-word">Websites</span></span>{" "}
+                        <span className="hero-word-clip"><span className="hero-word">That</span></span>
                         <br />
-                        <span className="text-[#D99B4B] italic">
-                            Actually Bring You Leads.
+                        <span ref={italicHeadlineRef} className="text-[#D99B4B] italic">
+                            <span className="hero-word-clip"><span className="hero-word">Actually</span></span>{" "}
+                            <span className="hero-word-clip"><span className="hero-word">Bring</span></span>{" "}
+                            <span className="hero-word-clip"><span className="hero-word">You</span></span>{" "}
+                            <span className="hero-word-clip"><span className="hero-word">Leads.</span></span>
                         </span>
                     </h1>
-                    <p className="mx-auto mb-7 mt-5 max-w-2xl text-base leading-relaxed text-[#8A857B] sm:text-lg md:text-xl">
+                    <p ref={subheadingRef} className="mx-auto mb-7 mt-5 max-w-2xl text-base leading-relaxed text-[#8A857B] sm:text-lg md:text-xl">
                         We handle your design, custom code, and Google search rankings under
                         one roof so you can focus on running your business.
                     </p>
-                    <div className="mb-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                    <div ref={ctasRef} className="mb-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
                         <a
                             href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
                             target="_blank"
                             rel="noreferrer"
-                            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#D99B4B] px-9 py-4 text-base font-semibold text-[#131210] transition-colors hover:bg-[#ECC187] sm:w-auto"
+                            className="hero-cta flex w-full items-center justify-center gap-2 rounded-lg bg-[#D99B4B] px-9 py-4 text-base font-semibold text-[#131210] transition-colors hover:bg-[#ECC187] sm:w-auto"
                         >
                             Start a project <ArrowRight className="h-4 w-4" />
                         </a>
                         <button
                             type="button"
                             onClick={() => navigate("/our-work")}
-                            className="w-full rounded-lg border border-[#E8DECB]/30 bg-[#22201C]/30 px-8 py-4 text-base font-semibold transition-colors hover:border-[#D99B4B]/60 hover:bg-[#22201C] sm:w-auto"
+                            className="hero-cta w-full rounded-lg border border-[#E8DECB]/30 bg-[#22201C]/30 px-8 py-4 text-base font-semibold transition-colors hover:border-[#D99B4B]/60 hover:bg-[#22201C] sm:w-auto"
                         >
                             See our work
                         </button>
                     </div>
-                    <p className="mx-auto mb-9 max-w-lg text-sm italic tracking-wide text-[#8A857B]">
+                    <p ref={quoteRef} className="mx-auto mb-9 max-w-lg text-sm italic tracking-wide text-[#8A857B]">
                         “We learn how your business actually makes money first, then build a
                         custom online engine to help you scale it.”
                     </p>
-                    <HeroMockup />
+                    <HeroMockup mockupRef={mockupRef} badgeRef={badgeRef} progressRef={progressRef} />
                 </div>
             </section>
 
             {/* Value Pillars Section */}
-            <section className="border-t border-[#D99B4B]/20 bg-[#1A1916] px-5 py-14 sm:px-8 md:py-16">
+            <section ref={featureSectionRef} className="feature-section border-t border-[#D99B4B]/20 bg-[#1A1916] px-5 py-14 sm:px-8 md:py-16">
                 <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
                     {[
                         [
@@ -255,10 +603,10 @@ function HomePage() {
                     ].map(([Icon, label, title, description]) => (
                         <div
                             key={label}
-                            className="group rounded-2xl border border-[#D99B4B]/20 bg-[#1C1B18] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#D99B4B]/60 hover:bg-[#23211D]"
+                            className="feature-card group rounded-2xl border border-[#D99B4B]/20 bg-[#1C1B18] p-6"
                         >
                             <div className="mb-4 flex items-center justify-between gap-3">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#D99B4B]/30 bg-[#D99B4B]/15 text-[#D99B4B]">
+                                <div className="feature-icon flex h-10 w-10 items-center justify-center rounded-lg border border-[#D99B4B]/30 bg-[#D99B4B]/15 text-[#D99B4B]">
                                     <Icon className="h-5 w-5" />
                                 </div>
                                 <span className="rounded border border-[#D99B4B]/20 bg-[#D99B4B]/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-[#D99B4B]">
@@ -278,16 +626,22 @@ function HomePage() {
 
             {/* Projects Catalog Section */}
             <section
+                ref={projectsSectionRef}
                 id="projects"
                 className="bg-[#F6F1E8] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
             >
                 <div className="mx-auto max-w-6xl">
-                    <div className="mx-auto mb-10 max-w-2xl text-center">
+                    <div className="projects-heading mx-auto mb-10 max-w-2xl text-center">
                         <h2 className="font-serif text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl">
                             Six kinds of projects.
                             <br />
-                            <span className="text-[#B87C2B] italic">
-                                One team building all of them.
+                                <span className="projects-word-clip text-[#B87C2B] italic">
+                                    <span className="projects-word">One</span>{" "}
+                                    <span className="projects-word">team</span>{" "}
+                                    <span className="projects-word">building</span>{" "}
+                                    <span className="projects-word">all</span>{" "}
+                                    <span className="projects-word">of</span>{" "}
+                                    <span className="projects-word">them.</span>
                             </span>
                         </h2>
                         <p className="mt-4 text-sm leading-relaxed text-[#181614]/70 sm:text-base">
@@ -295,12 +649,12 @@ function HomePage() {
                             picturing and we&apos;ll help you figure out the rest.
                         </p>
                     </div>
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="project-grid grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                         {projects.map(
                             ({ icon: Icon, title, slug, label, description }) => (
                                 <article
                                     key={title}
-                                    className="group flex min-h-[280px] flex-col justify-between rounded-2xl border border-[#E8DECB] bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D99B4B]/60 hover:shadow-xl sm:p-7"
+                                    className="project-card group flex min-h-[280px] flex-col justify-between rounded-2xl border border-[#E8DECB] bg-white p-6 sm:p-7"
                                 >
                                     <div>
                                         <div className="mb-5 flex items-center justify-between gap-3">
@@ -323,7 +677,7 @@ function HomePage() {
                                         className="flex items-center border-t border-[#E8DECB]/70 pt-4 text-sm font-bold text-[#B87C2B]"
                                     >
                                         Read more{" "}
-                                        <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1.5" />
+                                        <ArrowRight className="project-arrow ml-1.5 h-4 w-4" />
                                     </a>
                                 </article>
                             ),
@@ -334,6 +688,7 @@ function HomePage() {
 
             {/* Process Section */}
             <section
+                ref={processSectionRef}
                 id="process"
                 className="bg-[#F0EBD9] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
             >
@@ -350,28 +705,33 @@ function HomePage() {
                             site — nothing skipped, nothing assumed.
                         </p>
                     </div>
-                    <div className="relative space-y-5 sm:pl-10">
-                        <div className="absolute bottom-6 left-4 top-6 hidden w-0.5 bg-[#B87C2B] sm:block" />
+                    <div className="process-timeline relative space-y-5 sm:pl-10">
+                        <svg className="process-line-wrap pointer-events-none absolute bottom-6 left-12 top-6 hidden w-0.5 sm:block" viewBox="0 0 1 100" preserveAspectRatio="none" aria-hidden="true">
+                            <path className="process-line-track" d="M 0.5 0 V 100" />
+                            <path className="process-line" pathLength="100" d="M 0.5 0 V 100" />
+                        </svg>
                         {processSteps.map((step, index) => (
                             <div
                                 key={step.phase}
-                                className="relative rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 shadow-sm transition-all hover:border-[#B87C2B] hover:shadow-lg sm:p-7"
+                                className="process-card relative rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 shadow-sm transition-all hover:border-[#B87C2B] hover:shadow-lg sm:p-7"
                             >
-                                <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full border-4 border-[#F0EBD9] bg-[#B87C2B] font-mono text-xs font-bold text-white sm:absolute sm:-left-10 sm:top-8 sm:mb-0">
-                                    0{index + 1}
+                                <div className="process-marker mb-4 flex h-8 w-8 items-center justify-center rounded-full border-4 border-[#F0EBD9] font-mono text-xs font-bold text-white sm:absolute sm:-left-10 sm:top-8 sm:mb-0">
+                                    <span className="process-marker-dormant absolute inset-0 rounded-full bg-[#8A857B]" />
+                                    <span className="process-ping absolute inset-0 rounded-full border-2 border-[#D4923A]" />
+                                    <span className="relative z-10">0{index + 1}</span>
                                 </div>
                                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                                     <h3 className="font-serif text-xl font-semibold sm:text-2xl">
                                         {step.title}
                                     </h3>
-                                    <span className="rounded-full bg-[#D99B4B]/15 px-3 py-1 font-mono text-xs font-semibold text-[#B87C2B]">
+                                    <span className="process-badge rounded-full bg-[#D99B4B]/15 px-3 py-1 font-mono text-xs font-semibold text-[#B87C2B]">
                                         {step.phase}
                                     </span>
                                 </div>
                                 <p className="mb-4 text-sm leading-relaxed text-[#181614]/80 sm:text-base">
                                     {step.description}
                                 </p>
-                                <div className="flex flex-wrap items-center gap-2 border-t border-[#E8DECB]/70 pt-3 font-mono text-xs text-[#181614]/70">
+                                <div className="process-deliverable flex flex-wrap items-center gap-2 border-t border-[#E8DECB]/70 pt-3 font-mono text-xs text-[#181614]/70">
                                     <span className="font-bold text-[#B87C2B]">
                                         ● Deliverable:
                                     </span>
@@ -385,14 +745,20 @@ function HomePage() {
 
             {/* Call To Action Section */}
             <section
+                ref={ctaSectionRef}
                 id="contact"
-                className="bg-[#D99B4B] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
+                className="cta-section px-5 py-14 text-[#181614] sm:px-8 md:py-20"
             >
                 <div className="mx-auto max-w-4xl text-center">
-                    <h2 className="font-serif text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
-                        Got a project worth building properly?
+                    <h2 className="cta-heading font-serif text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
+                        <span className="cta-word-clip"><span className="cta-word">Got</span></span>{" "}
+                        <span className="cta-word-clip"><span className="cta-word">a</span></span>{" "}
+                        <span className="cta-word-clip"><span className="cta-word">project</span></span>{" "}
+                        <span className="cta-word-clip"><span className="cta-word">worth</span></span>{" "}
+                        <span className="cta-word-clip"><span className="cta-word">building</span></span>{" "}
+                        <span className="cta-word-clip"><span className="cta-word">properly?</span></span>
                     </h2>
-                    <p className="mx-auto mb-7 mt-4 max-w-2xl text-base leading-relaxed text-[#181614]/90 sm:text-lg md:text-xl">
+                    <p className="cta-copy mx-auto mb-7 mt-4 max-w-2xl text-base leading-relaxed text-[#181614]/90 sm:text-lg md:text-xl">
                         Tell us what you&apos;re trying to fix or build — we&apos;ll tell
                         you honestly whether it needs a website, a system, or just a better
                         one.
@@ -400,7 +766,9 @@ function HomePage() {
                     <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                         <a
                             href="mailto:hello@anchorworks.studio?subject=New%20project%20enquiry"
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
+                            ref={startProjectRef}
+                            onClick={handleStartProjectClick}
+                            className="cta-button cta-magnetic relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
                         >
                             Start a project <ArrowRight className="h-5 w-5 text-[#D99B4B]" />
                         </a>
@@ -408,7 +776,7 @@ function HomePage() {
                             href="https://wa.me/917011042987"
                             target="_blank"
                             rel="noreferrer"
-                            className="w-full rounded-xl border border-[#181614]/30 bg-[#181614]/10 px-7 py-4 text-sm font-bold transition-colors hover:bg-[#181614]/20 sm:w-auto"
+                            className="cta-button cta-consult w-full rounded-xl border border-[#181614]/30 bg-[#181614]/10 px-7 py-4 text-sm font-bold transition-colors hover:bg-[#181614]/20 sm:w-auto"
                         >
                             Direct WhatsApp / Consult
                         </a>
@@ -419,9 +787,9 @@ function HomePage() {
                             "24h Response Guarantee",
                             "Zero Vendor Lock-In",
                         ].map((item) => (
-                            <span key={item} className="flex items-center gap-1.5">
-                                <Check className="h-3.5 w-3.5" />
-                                {item}
+                            <span key={item} className="cta-trust-badge flex items-center gap-1.5">
+                                <Check className="cta-check h-3.5 w-3.5" />
+                                <span className="cta-badge-label">{item}</span>
                             </span>
                         ))}
                     </div>
