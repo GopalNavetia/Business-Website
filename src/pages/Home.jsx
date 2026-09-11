@@ -206,13 +206,15 @@ function HomePage() {
     const progressRef = useRef(null);
     const featureSectionRef = useRef(null);
     const projectsSectionRef = useRef(null);
+    const teamSectionRef = useRef(null);
+    const partnerSectionRef = useRef(null);
     const processSectionRef = useRef(null);
     const ctaSectionRef = useRef(null);
     const startProjectRef = useRef(null);
 
     useLayoutEffect(() => {
         const hero = heroRef.current;
-        let removePointerListener = () => {};
+        let removePointerListener = () => { };
         const context = gsap.context(() => {
             const words = gsap.utils.toArray(".hero-word");
             const ctas = gsap.utils.toArray(".hero-cta");
@@ -235,12 +237,14 @@ function HomePage() {
                 .fromTo(ctas, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" }, "-=0.2")
                 .fromTo(quoteRef.current, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6 }, "-=0.2")
                 .fromTo(mockupRef.current, { y: 40, rotateX: 8, autoAlpha: 0, transformPerspective: 900 }, { y: 0, rotateX: 0, autoAlpha: 1, duration: 0.7, ease: "power3.out" }, "-=0.1")
-                .to(leadCount, { value: 184, duration: 0.7, ease: "power3.out", onUpdate: () => {
-                    const value = Math.round(leadCount.value);
-                    const count = mockupRef.current?.querySelector("[data-lead-count]");
-                    if (count) count.textContent = value;
-                    if (progressRef.current) progressRef.current.style.setProperty("--progress", `${(value / 184) * 100}%`);
-                } }, "-=0.35");
+                .to(leadCount, {
+                    value: 184, duration: 0.7, ease: "power3.out", onUpdate: () => {
+                        const value = Math.round(leadCount.value);
+                        const count = mockupRef.current?.querySelector("[data-lead-count]");
+                        if (count) count.textContent = value;
+                        if (progressRef.current) progressRef.current.style.setProperty("--progress", `${(value / 184) * 100}%`);
+                    }
+                }, "-=0.35");
 
             gsap.to(mockupRef.current, { y: -5, rotationZ: 0.5, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: timeline.duration() });
             gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
@@ -267,11 +271,13 @@ function HomePage() {
             const icons = gsap.utils.toArray(".feature-icon");
 
             if (prefersReducedMotion) {
-                gsap.fromTo(cards, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.55, stagger: 0.15, ease: "power3.out", scrollTrigger: {
-                    trigger: featureSectionRef.current,
-                    start: "top 82%",
-                    toggleActions: "play none none none",
-                } });
+                gsap.fromTo(cards, { autoAlpha: 0 }, {
+                    autoAlpha: 1, duration: 0.55, stagger: 0.15, ease: "power3.out", scrollTrigger: {
+                        trigger: featureSectionRef.current,
+                        start: "top 82%",
+                        toggleActions: "play none none none",
+                    }
+                });
                 return;
             }
 
@@ -296,11 +302,13 @@ function HomePage() {
             gsap.fromTo(
                 icons,
                 { rotation: -8, scale: 0.78, autoAlpha: 0 },
-                { rotation: 0, scale: 1, autoAlpha: 1, duration: 0.65, stagger: 0.14, ease: "power3.out", scrollTrigger: {
-                    trigger: featureSectionRef.current,
-                    start: "top 82%",
-                    toggleActions: "play none none none",
-                } },
+                {
+                    rotation: 0, scale: 1, autoAlpha: 1, duration: 0.65, stagger: 0.14, ease: "power3.out", scrollTrigger: {
+                        trigger: featureSectionRef.current,
+                        start: "top 82%",
+                        toggleActions: "play none none none",
+                    }
+                },
             );
         }, featureSectionRef);
 
@@ -308,8 +316,91 @@ function HomePage() {
     }, []);
 
     useLayoutEffect(() => {
+        const context = gsap.context(() => {
+            const content = gsap.utils.toArray(".team-reveal");
+
+            gsap.fromTo(
+                content,
+                { y: 28, autoAlpha: 0 },
+                {
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.7,
+                    stagger: 0.14,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: teamSectionRef.current,
+                        start: "top 78%",
+                        toggleActions: "play none none none",
+                    },
+                },
+            );
+        }, teamSectionRef);
+
+        return () => context.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const context = gsap.context(() => {
+            const panel = partnerSectionRef.current.querySelector(".partner-panel");
+            const content = gsap.utils.toArray(".partner-reveal");
+            const checks = gsap.utils.toArray(".partner-check");
+
+            gsap.fromTo(
+                panel,
+                { y: 30, autoAlpha: 0 },
+                {
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.75,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: partnerSectionRef.current,
+                        start: "top 82%",
+                        toggleActions: "play none none none",
+                    },
+                },
+            );
+            gsap.fromTo(
+                content,
+                { y: 18, autoAlpha: 0 },
+                {
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.55,
+                    stagger: 0.12,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: partnerSectionRef.current,
+                        start: "top 78%",
+                        toggleActions: "play none none none",
+                    },
+                },
+            );
+            gsap.fromTo(
+                checks,
+                { x: -8, autoAlpha: 0 },
+                {
+                    x: 0,
+                    autoAlpha: 1,
+                    duration: 0.4,
+                    stagger: 0.1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: partnerSectionRef.current,
+                        start: "top 72%",
+                        toggleActions: "play none none none",
+                    },
+                },
+            );
+        }, partnerSectionRef);
+
+        return () => context.revert();
+    }, []);
+
+    useLayoutEffect(() => {
         const cta = ctaSectionRef.current;
-        let removeMagneticListeners = () => {};
+        let removeMagneticListeners = () => { };
         const context = gsap.context(() => {
             const words = gsap.utils.toArray(".cta-word");
             const buttons = gsap.utils.toArray(".cta-button");
@@ -322,11 +413,13 @@ function HomePage() {
                 gsap.fromTo(
                     [cta.querySelector(".cta-heading"), cta.querySelector(".cta-copy"), ...buttons, ...badges],
                     { autoAlpha: 0 },
-                    { autoAlpha: 1, duration: 0.65, stagger: 0.1, ease: "power3.out", scrollTrigger: {
-                        trigger: cta,
-                        start: "top 78%",
-                        toggleActions: "play none none none",
-                    } },
+                    {
+                        autoAlpha: 1, duration: 0.65, stagger: 0.1, ease: "power3.out", scrollTrigger: {
+                            trigger: cta,
+                            start: "top 78%",
+                            toggleActions: "play none none none",
+                        }
+                    },
                 );
                 return;
             }
@@ -391,10 +484,12 @@ function HomePage() {
         ripple.style.left = `${event.clientX - bounds.left}px`;
         ripple.style.top = `${event.clientY - bounds.top}px`;
         button.appendChild(ripple);
-        gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, { scale: 16, autoAlpha: 0, duration: 0.42, ease: "power2.out", onComplete: () => {
-            ripple.remove();
-            window.location.href = button.href;
-        } });
+        gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, {
+            scale: 16, autoAlpha: 0, duration: 0.42, ease: "power2.out", onComplete: () => {
+                ripple.remove();
+                window.location.href = button.href;
+            }
+        });
     };
 
     useLayoutEffect(() => {
@@ -635,13 +730,13 @@ function HomePage() {
                         <h2 className="font-serif text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl">
                             Six kinds of projects.
                             <br />
-                                <span className="projects-word-clip text-[#B87C2B] italic">
-                                    <span className="projects-word">One</span>{" "}
-                                    <span className="projects-word">team</span>{" "}
-                                    <span className="projects-word">building</span>{" "}
-                                    <span className="projects-word">all</span>{" "}
-                                    <span className="projects-word">of</span>{" "}
-                                    <span className="projects-word">them.</span>
+                            <span className="projects-word-clip text-[#B87C2B] italic">
+                                <span className="projects-word">One</span>{" "}
+                                <span className="projects-word">team</span>{" "}
+                                <span className="projects-word">building</span>{" "}
+                                <span className="projects-word">all</span>{" "}
+                                <span className="projects-word">of</span>{" "}
+                                <span className="projects-word">them.</span>
                             </span>
                         </h2>
                         <p className="mt-4 text-sm leading-relaxed text-[#181614]/70 sm:text-base">
@@ -686,11 +781,140 @@ function HomePage() {
                 </div>
             </section>
 
+            {/* Team Section */}
+            <section
+                ref={teamSectionRef}
+                id="team"
+                className="border-t border-[#E8DECB] bg-[#F0EBD9] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
+            >
+                <div className="mx-auto max-w-6xl">
+                    <div className="team-reveal mx-auto mb-10 max-w-3xl text-center md:mb-14">
+                        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/30 bg-[#D99B4B]/15 px-3.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#B87C2B]">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#B87C2B]" />
+                            Direct technical access
+                        </span>
+                        <h2 className="font-serif text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl">
+                            The team building <span className="text-[#B87C2B] italic">your platform</span>
+                        </h2>
+                        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#181614]/70 sm:text-lg">
+                            Direct access to the engineers designing, coding, and scaling your platform.
+                        </p>
+                    </div>
+                    <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+                        {[
+                            {
+                                name: "Gopal Navetia",
+                                role: "Lead Full-Stack Architect",
+                                badge: "Direct lead",
+                                image: "/gopal.png",
+                                bio: "Builds dependable digital systems from the first wireframe to the final deployment, with a focus on speed, clarity, and measurable growth.",
+                            },
+                            {
+                                name: "Vatsal Gupta",
+                                role: "Product & Experience Engineer",
+                                badge: "Direct lead",
+                                image: "/vatsal.png",
+                                bio: "Shapes the product experience around real customer journeys, turning complex requirements into interfaces people can use immediately.",
+                            },
+                        ].map((member) => (
+                            <article
+                                key={member.name}
+                                className="team-reveal group rounded-2xl border border-[#E8DECB] bg-white p-5 transition-shadow hover:shadow-xl sm:p-7"
+                            >
+                                <div className="mb-6 aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
+                                    <img
+                                        src={member.image}
+                                        alt={`${member.name} - ${member.role}`}
+                                        className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] ${member.name === "Vatsal" ? "scale-[1.06]" : ""}`}
+                                    />
+                                </div>
+                                <div className="mb-3 flex items-start justify-between gap-3">
+                                    <h3 className="font-serif text-2xl font-bold text-[#181614]">
+                                        {member.name}
+                                    </h3>
+                                    <span className="shrink-0 rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 font-mono text-xs font-semibold text-emerald-700">
+                                        {member.badge}
+                                    </span>
+                                </div>
+                                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#B87C2B]">
+                                    {member.role}
+                                </p>
+                                <p className="text-sm leading-relaxed text-[#181614]/70">
+                                    {member.bio}
+                                </p>
+                            </article>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Partner Section */}
+            <section
+                ref={partnerSectionRef}
+                id="partner"
+                className="bg-[#F0EBD9] px-5 pb-14 text-[#181614] sm:px-8 md:pb-20"
+            >
+                <div className="partner-panel mx-auto max-w-5xl rounded-3xl border border-[#E8DECB] bg-[#F6F1E8] p-6 transition-shadow duration-500 hover:shadow-xl sm:p-8 lg:p-10">
+                    <div className="grid items-center gap-8 lg:grid-cols-7 lg:gap-12">
+                        <div className="partner-reveal lg:col-span-4">
+                            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/30 bg-[#D99B4B]/15 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#B87C2B]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#B87C2B]" />
+                                Strategic alliance · Partnership with Growthonixs
+                            </span>
+                            <h3 className="font-serif text-2xl font-bold leading-tight sm:text-3xl">
+                                Development meets digital marketing
+                            </h3>
+                            <p className="mt-3 text-sm leading-relaxed text-[#181614]/70 sm:text-base">
+                                For projects that need more than a website, Anchorworks partners
+                                directly with Growthonixs. Together, we pair custom engineering
+                                with complete digital marketing under one roof.
+                            </p>
+                            <div className="mt-5 grid grid-cols-1 gap-3 border-t border-[#E8DECB] pt-4 sm:grid-cols-3">
+                                {["SEO & Google Rankings", "AEO Optimization", "Video Production"].map((item) => (
+                                    <div key={item} className="partner-check flex items-center gap-2 font-mono text-xs font-medium text-[#181614]/80 transition-transform duration-300 hover:translate-x-1">
+                                        <Check className="h-4 w-4 shrink-0 text-emerald-600" />
+                                        {item}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="partner-reveal lg:col-span-3">
+                            <div className="rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 text-center">
+                                <div className="mb-4 flex items-center justify-center gap-2">
+                                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#D99B4B] font-mono text-sm font-bold text-[#131210] shadow-sm">
+                                        GX
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="font-serif text-lg font-bold leading-tight">GROWTHONIXS</div>
+                                        <div className="font-mono text-[9px] uppercase tracking-wider text-[#8A857B]">
+                                            Digital marketing &amp; growth agency
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mb-4 flex aspect-[16/10] w-full flex-col items-center justify-center rounded-xl border border-[#E8DECB] bg-white p-4 shadow-sm">
+                                    <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full border border-[#E8DECB] bg-[#F6F1E8] font-serif text-lg font-bold text-[#B87C2B]">
+                                        GX
+                                    </div>
+                                    <div className="font-serif text-sm font-bold">Marketing &amp; Media Team</div>
+                                    <div className="mt-0.5 font-mono text-[10px] text-[#8A857B]">
+                                        Partner headshot / team showcase slot
+                                    </div>
+                                </div>
+                                <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-[10px] font-semibold text-emerald-600">
+                                    <Check className="h-3.5 w-3.5" />
+                                    Verified growth partner
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Process Section */}
             <section
                 ref={processSectionRef}
                 id="process"
-                className="bg-[#F0EBD9] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
+                className="border-t border-[#E8DECB] bg-[#F0EBD9] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
             >
                 <div className="mx-auto max-w-4xl">
                     <div className="mb-10">
