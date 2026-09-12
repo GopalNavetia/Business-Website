@@ -385,11 +385,14 @@ function HomePage() {
             const partnerCard = partnerSectionRef.current.querySelector(".partner-card");
             const logo = partnerSectionRef.current.querySelector(".partner-logo");
             const nestedCard = partnerSectionRef.current.querySelector(".partner-nested-card");
+            const partnerPhoto = partnerSectionRef.current.querySelector(".partner-photo");
+            const partnerRole = partnerSectionRef.current.querySelector(".partner-role");
             const verified = partnerSectionRef.current.querySelector(".partner-verified");
             const verifiedIcon = partnerSectionRef.current.querySelector(".partner-verified-icon");
 
             if (prefersReducedMotion) {
                 gsap.set([...checkIcons, verifiedIcon], { strokeDashoffset: 0 });
+                gsap.set(partnerPhoto, { autoAlpha: 1, clearProps: "clipPath,filter,transform" });
                 gsap.fromTo(
                     [badge, heading, copy, ...checks, partnerCard],
                     { autoAlpha: 0 },
@@ -421,7 +424,22 @@ function HomePage() {
                 .fromTo(copy, { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.32, ease: "power3.out" }, "-=0.16")
                 .fromTo(partnerCard, { y: 22, rotationY: 6, autoAlpha: 0, transformPerspective: 900 }, { y: 0, rotationY: 0, autoAlpha: 1, duration: 0.48, ease: "power3.out" }, "-=0.3")
                 .fromTo(logo, { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.32")
-                .fromTo(nestedCard, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.36, ease: "power3.out" }, "-=0.12");
+                .fromTo(nestedCard, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.36, ease: "power3.out" }, "-=0.12")
+                .fromTo(
+                    partnerPhoto,
+                    { clipPath: "inset(100% 0 0 0)", filter: "grayscale(1)" },
+                    {
+                        clipPath: "inset(0% 0 0 0)",
+                        filter: "grayscale(0)",
+                        duration: 0.42,
+                        ease: "power3.out",
+                        onComplete: () => {
+                            gsap.set(partnerPhoto, { clearProps: "clipPath,filter,transform" });
+                        }
+                    },
+                    "-=0.2"
+                )
+                .fromTo(partnerRole, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, ease: "power3.out" }, "-=0.1");
 
             checks.forEach((check, index) => {
                 timeline
@@ -917,13 +935,14 @@ function HomePage() {
                                 ))}
                             </div>
                         </div>
+                        {/* Partner Section JSX Snippet */}
                         <div className="partner-card-column lg:col-span-3">
-                            <div className="partner-card rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 text-center">
+                            <div className="partner-card group rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 text-center shadow-sm transition-all duration-300 hover:border-[#B87C2B]/40 hover:shadow-xl">
                                 <div className="partner-logo mb-4 flex items-center justify-center gap-2">
                                     <img
                                         src="/partnerLogo.png"
                                         alt="Partner Logo - Growthonixs"
-                                        className="team-photo h-9 w-9 object-cover rounded-lg shadow-sm"
+                                        className="partner-logo-img h-9 w-9 object-cover rounded-lg shadow-sm"
                                     />
                                     <div className="text-left">
                                         <div className="font-serif text-lg font-bold leading-tight">GROWTHONICX</div>
@@ -933,16 +952,16 @@ function HomePage() {
                                     </div>
                                 </div>
                                 <div className="partner-nested-card mb-4 flex aspect-[16/10] w-full flex-col items-center justify-center rounded-xl border border-[#E8DECB] bg-white p-4 shadow-sm">
-                                    <div className="team-photo-frame  aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
+                                    <div className="partner-photo-frame aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
                                         <img
-                                            src={"/kunal.png"}
-                                            alt={`Kunal - Founder & CEO of Growthonixs`}
-                                            className={`team-photo h-full w-full object-cover`}
+                                            src="/kunal.png"
+                                            alt="Kunal - Founder & CEO of Growthonixs"
+                                            className="partner-photo h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                         />
                                     </div>
                                 </div>
                                 <div className="mb-3 flex items-start justify-between gap-3">
-                                    <h3 className="font-serif text-2xl font-bold text-[#181614]">
+                                    <h3 className="font-serif text-2xl font-bold text-[#181614] transition-colors group-hover:text-[#B87C2B]">
                                         Kunal Sahni
                                     </h3>
                                     <span className="partner-verified inline-flex items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-[10px] font-semibold text-emerald-600">
@@ -950,7 +969,7 @@ function HomePage() {
                                         Verified partner
                                     </span>
                                 </div>
-                                <p className="team-role mb-3 font-mono text-xs font-semibold uppercase justify-self-start tracking-wider text-[#B87C2B]">
+                                <p className="partner-role mb-3 font-mono text-xs font-semibold uppercase justify-self-start tracking-wider text-[#B87C2B]">
                                     Growth & Performance Marketing Lead
                                 </p>
                             </div>
