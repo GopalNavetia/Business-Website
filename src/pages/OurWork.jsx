@@ -233,7 +233,7 @@ function OurWork() {
             gsap.timeline({ defaults: { ease: "power3.out" } })
                 .fromTo(heroBadge, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45 })
                 .fromTo(heroWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" }, "-=0.08")
-                .fromTo(heroItalic, { autoAlpha: 0, textShadow: "0 0 0 rgba(217, 155, 75, 0)" }, { autoAlpha: 1, textShadow: "0 0 22px rgba(217, 155, 75, 0.32)", duration: 0.45 }, "-=0.1")
+                .fromTo(heroItalic, { autoAlpha: 0, textShadow: "0 0 0 rgba(217, 155, 75, 0)" }, { autoAlpha: 1, duration: 0.45 }, "-=0.1")
                 .fromTo(heroCopy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.12")
                 .fromTo(heroCta, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.55, ease: "back.out(1.7)" }, "-=0.14")
                 .fromTo(standards, { x: 30, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.55 }, "-=0.2")
@@ -482,7 +482,7 @@ function OurWork() {
                         <span className="capability-eyebrow mb-4 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-[#B87C2B]">
                             <span className="h-px w-4 bg-[#B87C2B]" />
                             Flexible capability playbooks
-                        </span>
+                        </span> 
                         <h2 className="capability-heading font-serif text-4xl font-semibold leading-[1.08] sm:text-5xl md:text-6xl">
                             Six Core Capabilities.
                             <br />

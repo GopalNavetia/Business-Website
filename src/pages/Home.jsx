@@ -920,29 +920,39 @@ function HomePage() {
                         <div className="partner-card-column lg:col-span-3">
                             <div className="partner-card rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 text-center">
                                 <div className="partner-logo mb-4 flex items-center justify-center gap-2">
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#D99B4B] font-mono text-sm font-bold text-[#131210] shadow-sm">
-                                        GX
-                                    </div>
+                                    <img
+                                        src="/partnerLogo.png"
+                                        alt="Partner Logo - Growthonixs"
+                                        className="team-photo h-9 w-9 object-cover rounded-lg shadow-sm"
+                                    />
                                     <div className="text-left">
-                                        <div className="font-serif text-lg font-bold leading-tight">GROWTHONIXS</div>
+                                        <div className="font-serif text-lg font-bold leading-tight">GROWTHONICX</div>
                                         <div className="font-mono text-[9px] uppercase tracking-wider text-[#8A857B]">
                                             Digital marketing &amp; growth agency
                                         </div>
                                     </div>
                                 </div>
                                 <div className="partner-nested-card mb-4 flex aspect-[16/10] w-full flex-col items-center justify-center rounded-xl border border-[#E8DECB] bg-white p-4 shadow-sm">
-                                    <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full border border-[#E8DECB] bg-[#F6F1E8] font-serif text-lg font-bold text-[#B87C2B]">
-                                        GX
-                                    </div>
-                                    <div className="font-serif text-sm font-bold">Marketing &amp; Media Team</div>
-                                    <div className="mt-0.5 font-mono text-[10px] text-[#8A857B]">
-                                        Partner headshot / team showcase slot
+                                    <div className="team-photo-frame  aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
+                                        <img
+                                            src={"/kunal.png"}
+                                            alt={`Kunal - Founder & CEO of Growthonixs`}
+                                            className={`team-photo h-full w-full object-cover`}
+                                        />
                                     </div>
                                 </div>
-                                <span className="partner-verified inline-flex items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-[10px] font-semibold text-emerald-600">
-                                    <Check className="partner-verified-icon h-3.5 w-3.5" />
-                                    Verified growth partner
-                                </span>
+                                <div className="mb-3 flex items-start justify-between gap-3">
+                                    <h3 className="font-serif text-2xl font-bold text-[#181614]">
+                                        Kunal Sahni
+                                    </h3>
+                                    <span className="partner-verified inline-flex items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-[10px] font-semibold text-emerald-600">
+                                        <Check className="partner-verified-icon h-3.5 w-3.5" />
+                                        Verified partner
+                                    </span>
+                                </div>
+                                <p className="team-role mb-3 font-mono text-xs font-semibold uppercase justify-self-start tracking-wider text-[#B87C2B]">
+                                    Growth & Performance Marketing Lead
+                                </p>
                             </div>
                         </div>
                     </div>
