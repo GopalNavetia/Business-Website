@@ -593,7 +593,6 @@ function HomePage() {
 
     useLayoutEffect(() => {
         const context = gsap.context(() => {
-            const line = processSectionRef.current.querySelector(".process-line");
             const markers = gsap.utils.toArray(".process-marker");
             const dormantOverlays = gsap.utils.toArray(".process-marker-dormant");
             const pings = gsap.utils.toArray(".process-ping");
@@ -602,7 +601,6 @@ function HomePage() {
             const deliverables = gsap.utils.toArray(".process-deliverable");
 
             if (prefersReducedMotion) {
-                gsap.set(line, { strokeDashoffset: 0 });
                 gsap.set(markers, { autoAlpha: 1 });
                 gsap.set(dormantOverlays, { autoAlpha: 0 });
                 gsap.fromTo(
@@ -647,7 +645,6 @@ function HomePage() {
                 },
             });
 
-            timeline.fromTo(line, { strokeDashoffset: 100 }, { strokeDashoffset: 0, ease: "none", duration: 1 }, 0);
             markers.forEach((marker, index) => {
                 const point = index / markers.length;
                 timeline.to(marker, { autoAlpha: 1, scale: 1.08, duration: 0.08, ease: "power2.out" }, point);
@@ -972,10 +969,6 @@ function HomePage() {
                         </p>
                     </div>
                     <div className="process-timeline relative space-y-5 sm:pl-10">
-                        <svg className="process-line-wrap pointer-events-none absolute bottom-6 left-12 top-6 hidden w-0.5 sm:block" viewBox="0 0 1 100" preserveAspectRatio="none" aria-hidden="true">
-                            <path className="process-line-track" d="M 0.5 0 V 100" />
-                            <path className="process-line" pathLength="100" d="M 0.5 0 V 100" />
-                        </svg>
                         {processSteps.map((step, index) => (
                             <div
                                 key={step.phase}

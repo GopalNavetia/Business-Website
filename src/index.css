@@ -206,6 +206,93 @@
     transform: translateX(6px);
 }
 
+.capability-card,
+.guarantee-card {
+    transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 350ms ease,
+        box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.capability-card:hover {
+    transform: translateY(-4px);
+    border-color: #D4923A;
+    box-shadow: 0 0 20px rgba(212, 146, 58, 0.2);
+}
+
+.guarantee-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 26px rgba(24, 22, 20, 0.1);
+}
+
+.guarantee-check {
+    fill: none;
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+}
+
+.capability-word-clip {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
+.capability-word {
+    display: inline-block;
+}
+
+.capability-meta {
+    transition: color 300ms ease;
+}
+
+.capability-card:hover .capability-meta {
+    color: #D4923A;
+}
+
+.ourwork-cta-button {
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 300ms ease,
+        background-color 300ms ease;
+}
+
+.ourwork-cta-button:hover {
+    transform: translateY(-3px);
+}
+
+.ourwork-hero-word-clip {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
+.ourwork-hero-word {
+    display: inline-block;
+}
+
+.ourwork-standard-item {
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 300ms ease,
+        background-color 300ms ease;
+}
+
+.ourwork-standard-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(217, 155, 75, 0.42);
+    background-color: rgba(246, 241, 232, 0.08);
+}
+
+.ourwork-standard-badge {
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 300ms ease,
+        border-color 300ms ease,
+        color 300ms ease;
+}
+
+.ourwork-standard-item:hover .ourwork-standard-badge {
+    border-color: #D99B4B;
+    background-color: rgba(217, 155, 75, 0.24);
+    color: #ECC187;
+}
+
 .feature-card {
     transform-style: preserve-3d;
     transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -230,22 +317,6 @@
     transform: translateY(-2px) rotate(8deg) scale(1.06);
     border-color: #D4923A;
     background-color: rgba(212, 146, 58, 0.24);
-}
-
-.process-line {
-    fill: none;
-    stroke: #D4923A;
-    stroke-width: 1;
-    stroke-linecap: round;
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-}
-
-.process-line-track {
-    fill: none;
-    stroke: rgba(212, 146, 58, 0.56);
-    stroke-width: 1.5;
-    stroke-linecap: round;
 }
 
 .process-marker {
@@ -314,10 +385,6 @@
     .team-photo {
         clip-path: inset(0 0 0 0);
         filter: grayscale(0);
-    }
-
-    .process-line {
-        stroke-dashoffset: 0;
     }
 
     .process-marker {

@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { TriangleAlert, SquareTerminal, BadgeCheck } from "lucide-react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { TriangleAlert, SquareTerminal, BadgeCheck, Check } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { prefersReducedMotion } from "../motion";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function OurWork() {
     const location = useLocation();
@@ -142,43 +147,305 @@ function OurWork() {
     ];
 
     const [activeCard, setActiveCard] = useState(null);
+    const pageRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const hero = pageRef.current.querySelector(".ourwork-hero");
+        let removePointerListener = () => { };
+        const context = gsap.context(() => {
+            const spotlight = pageRef.current.querySelector(".ourwork-hero-spotlight");
+            const grid = pageRef.current.querySelector(".ourwork-hero-grid");
+            const heroBadge = pageRef.current.querySelector(".ourwork-hero-badge");
+            const heroHeading = pageRef.current.querySelector(".ourwork-hero-heading");
+            const heroWords = gsap.utils.toArray(".ourwork-hero-word");
+            const heroItalic = pageRef.current.querySelector(".ourwork-hero-italic");
+            const heroCopy = pageRef.current.querySelector(".ourwork-hero-copy");
+            const heroCta = pageRef.current.querySelector(".ourwork-hero-cta");
+            const standards = pageRef.current.querySelector(".ourwork-standards");
+            const standardItems = gsap.utils.toArray(".ourwork-standard-item");
+            const standardBadges = gsap.utils.toArray(".ourwork-standard-badge");
+            const capabilitySection = pageRef.current.querySelector(".capabilities-section");
+            const capabilityEyebrow = pageRef.current.querySelector(".capability-eyebrow");
+            const capabilityHeading = pageRef.current.querySelector(".capability-heading");
+            const capabilityWords = gsap.utils.toArray(".capability-word");
+            const capabilityCopy = pageRef.current.querySelector(".capability-copy");
+            const capabilityRows = gsap.utils.toArray(".capability-row");
+            const capabilityCards = gsap.utils.toArray(".capability-card");
+            const capabilityBlocks = gsap.utils.toArray(".capability-subblock");
+            const capabilityIcons = gsap.utils.toArray(".capability-subblock-icon");
+            const guaranteeSection = pageRef.current.querySelector(".guarantee-section");
+            const guaranteeHeading = pageRef.current.querySelector(".guarantee-heading");
+            const guaranteeDescription = pageRef.current.querySelector(".guarantee-description");
+            const guaranteeCards = gsap.utils.toArray(".guarantee-card");
+            const guaranteeTags = gsap.utils.toArray(".guarantee-tag");
+            const guaranteePills = gsap.utils.toArray(".guarantee-pill");
+            const guaranteeChecks = gsap.utils.toArray(".guarantee-check");
+            const ctaSection = pageRef.current.querySelector(".ourwork-cta-section");
+            const ctaHeading = pageRef.current.querySelector(".ourwork-cta-heading");
+            const ctaWords = gsap.utils.toArray(".ourwork-cta-word");
+            const ctaCopy = pageRef.current.querySelector(".ourwork-cta-copy");
+            const ctaButtons = gsap.utils.toArray(".ourwork-cta-button");
+            const ctaBadges = gsap.utils.toArray(".ourwork-cta-badge");
+            const ctaChecks = gsap.utils.toArray(".ourwork-cta-check");
+            const ctaLabels = gsap.utils.toArray(".ourwork-cta-label");
+
+            if (prefersReducedMotion) {
+                gsap.set([
+                    hero,
+                    heroBadge,
+                    heroHeading,
+                    ...heroWords,
+                    heroItalic,
+                    heroCopy,
+                    heroCta,
+                    standards,
+                    ...standardItems,
+                    ...standardBadges,
+                    capabilitySection,
+                    capabilityEyebrow,
+                    capabilityHeading,
+                    ...capabilityWords,
+                    capabilityCopy,
+                    ...capabilityCards,
+                    ...capabilityBlocks,
+                    ...capabilityIcons,
+                    guaranteeSection,
+                    guaranteeHeading,
+                    guaranteeDescription,
+                    ...guaranteeCards,
+                    ...guaranteeTags,
+                    ...guaranteePills,
+                    ...guaranteeChecks,
+                    ctaSection,
+                    ctaHeading,
+                    ...ctaWords,
+                    ctaCopy,
+                    ...ctaButtons,
+                    ...ctaBadges,
+                    ...ctaChecks,
+                    ...ctaLabels,
+                ], { autoAlpha: 1, clearProps: "transform,textShadow" });
+                gsap.set(guaranteeChecks, { strokeDashoffset: 0 });
+                gsap.set(ctaChecks, { strokeDashoffset: 0 });
+                return;
+            }
+
+            gsap.timeline({ defaults: { ease: "power3.out" } })
+                .fromTo(heroBadge, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45 })
+                .fromTo(heroWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" }, "-=0.08")
+                .fromTo(heroItalic, { autoAlpha: 0, textShadow: "0 0 0 rgba(217, 155, 75, 0)" }, { autoAlpha: 1, textShadow: "0 0 22px rgba(217, 155, 75, 0.32)", duration: 0.45 }, "-=0.1")
+                .fromTo(heroCopy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.12")
+                .fromTo(heroCta, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.55, ease: "back.out(1.7)" }, "-=0.14")
+                .fromTo(standards, { x: 30, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.55 }, "-=0.2")
+                .fromTo(standardItems, { scale: 0.94, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45, stagger: 0.08 }, "-=0.25")
+                .fromTo(standardBadges, { scale: 0.72, rotation: -8, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.5, stagger: 0.08, ease: "back.out(1.8)" }, "-=0.38");
+
+            gsap.to(grid, { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+
+            const onPointerMove = (event) => {
+                const bounds = hero.getBoundingClientRect();
+                gsap.to(spotlight, {
+                    x: event.clientX - bounds.left,
+                    y: event.clientY - bounds.top,
+                    duration: 0.6,
+                    ease: "power2.out",
+                });
+            };
+
+            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                hero.addEventListener("pointermove", onPointerMove);
+                removePointerListener = () => hero.removeEventListener("pointermove", onPointerMove);
+            }
+
+            const capabilityIntro = gsap.timeline({
+                scrollTrigger: {
+                    trigger: capabilitySection,
+                    start: "top 78%",
+                    toggleActions: "play none none none",
+                },
+            });
+            capabilityIntro
+                .fromTo(capabilityEyebrow, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: "power3.out" })
+                .fromTo(capabilityCopy, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: "power3.out" }, "-=0.2")
+                .fromTo(capabilityWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" }, "-=0.18");
+
+            capabilityRows.forEach((row) => {
+                const cards = gsap.utils.toArray(".capability-card", row);
+                gsap.fromTo(cards,
+                    { y: 24, autoAlpha: 0 },
+                    {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.55,
+                        stagger: 0.15,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: row,
+                            start: "top 82%",
+                            toggleActions: "play none none none",
+                        },
+                    },
+                );
+            });
+
+            capabilityCards.forEach((card) => {
+                const blocks = gsap.utils.toArray(".capability-subblock", card);
+                const icons = gsap.utils.toArray(".capability-subblock-icon", card);
+                const cardTimeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 80%",
+                        toggleActions: "play none none none",
+                    },
+                });
+                cardTimeline
+                    .fromTo(blocks, { x: -10, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.45, stagger: 0.1, ease: "power3.out" })
+                    .fromTo(icons, { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, stagger: 0.1, ease: "back.out(1.6)" }, "-=0.35");
+            });
+
+            const guaranteeTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: guaranteeSection,
+                    start: "top 80%",
+                    toggleActions: "play none none none",
+                },
+            });
+            guaranteeTimeline
+                .fromTo([guaranteeHeading, guaranteeDescription], { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42, stagger: 0.04, ease: "power3.out" })
+                .fromTo(guaranteeCards, { y: 20, scale: 0.95, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 0.45, stagger: 0.11, ease: "power3.out" }, "-=0.12")
+                .fromTo(guaranteeTags, { scale: 0.72, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, stagger: 0.11, ease: "back.out(1.7)" }, "-=0.3")
+                .fromTo(guaranteePills, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.38, stagger: 0.11, ease: "power3.out" }, "-=0.2")
+                .fromTo(guaranteeChecks, { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.38, stagger: 0.11, ease: "power3.out" }, "-=0.28");
+
+            gsap.to(ctaSection, {
+                backgroundPosition: "100% 50%",
+                duration: 18,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+            });
+
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: ctaHeading,
+                    start: "top 82%",
+                    toggleActions: "play none none none",
+                },
+            })
+                .fromTo(ctaWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" })
+                .fromTo(ctaCopy, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: "power3.out" }, "-=0.18")
+                .fromTo(ctaButtons, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.1, ease: "power3.out" }, "-=0.15");
+
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: ctaSection,
+                    start: "top 78%",
+                    toggleActions: "play none none none",
+                },
+            })
+                .fromTo(ctaChecks, { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.38, stagger: 0.15, ease: "power3.out" }, "-=0.05")
+                .fromTo(ctaLabels, { x: -6, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.35, stagger: 0.15, ease: "power3.out" }, "-=0.2");
+
+            const magneticButton = pageRef.current.querySelector(".ourwork-cta-primary");
+            const onMagneticMove = (event) => {
+                const bounds = magneticButton.getBoundingClientRect();
+                const offsetX = Math.max(-18, Math.min(18, (event.clientX - (bounds.left + bounds.width / 2)) * 0.22));
+                const offsetY = Math.max(-18, Math.min(18, (event.clientY - (bounds.top + bounds.height / 2)) * 0.22));
+                gsap.to(magneticButton, { x: offsetX, y: offsetY, duration: 0.35, ease: "power3.out" });
+            };
+            const onMagneticLeave = () => gsap.to(magneticButton, { x: 0, y: 0, duration: 0.6, ease: "power3.out" });
+            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                magneticButton.addEventListener("pointermove", onMagneticMove);
+                magneticButton.addEventListener("pointerleave", onMagneticLeave);
+                removePointerListener = () => {
+                    magneticButton.removeEventListener("pointermove", onMagneticMove);
+                    magneticButton.removeEventListener("pointerleave", onMagneticLeave);
+                };
+            }
+        }, pageRef);
+
+        return () => {
+            removePointerListener();
+            context.revert();
+        };
+    }, []);
+
+    const handleOurWorkCtaClick = (event) => {
+        if (prefersReducedMotion) return;
+
+        event.preventDefault();
+        const button = event.currentTarget;
+        const bounds = button.getBoundingClientRect();
+        const ripple = document.createElement("span");
+        ripple.className = "cta-ripple";
+        ripple.style.left = `${event.clientX - bounds.left}px`;
+        ripple.style.top = `${event.clientY - bounds.top}px`;
+        button.appendChild(ripple);
+        gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, {
+            scale: 16,
+            autoAlpha: 0,
+            duration: 0.42,
+            ease: "power2.out",
+            onComplete: () => {
+                ripple.remove();
+                window.location.href = button.href;
+            },
+        });
+    };
 
     return (
-        <div>
-            <section className="overflow-hidden bg-[#1B1712] text-[#F2EEE4]">
+        <div ref={pageRef}>
+            <section className="ourwork-hero relative overflow-hidden bg-[#131210] text-[#F6F1E8]">
+                <div className="ourwork-hero-spotlight hero-spotlight pointer-events-none absolute left-0 top-0 z-0" />
+                <div className="ourwork-hero-grid hero-grid-drift pointer-events-none absolute inset-0 z-0" />
+                <div className="pointer-events-none absolute left-1/2 top-1/4 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-[#D99B4B]/10 blur-[130px]" />
                 {/* Hero Section */}
-                <div className="mx-auto max-w px-6 py-6 pb-10 sm:px-8 sm:py-10">
+                <div className="relative z-10 mx-auto max-w-7xl px-5 py-14 pb-16 sm:px-8 sm:py-20 md:pb-24">
                     <div className="grid grid-cols-1 items-center gap-9 md:grid-cols-[1.05fr_0.95fr] md:gap-14">
                         {/* Copy Column */}
                         <div>
-                            <h1 className="text-2xl font-serif font-semibold leading-[1.15] tracking-tight sm:text-3xl md:text-4xl">
-                                Custom Web Assets,
+                            <span className="ourwork-hero-badge mb-5 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/40 bg-[#D99B4B]/10 px-3.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#D99B4B]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#D99B4B]" />
+                                Proven architectural archetypes
+                            </span>
+                            <h1 className="ourwork-hero-heading font-serif text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-[4rem]">
+                                <span className="ourwork-hero-word-clip"><span className="ourwork-hero-word">Custom</span></span>{" "}
+                                <span className="ourwork-hero-word-clip"><span className="ourwork-hero-word">Scope.</span></span>
                                 <br />
-                                <span className="text-[#B8862E]">Engineered for Trust.</span>
+                                <span className="ourwork-hero-italic text-[#D99B4B] italic">
+                                    <span className="inline-block sm:whitespace-nowrap">
+                                        <span className="ourwork-hero-word-clip"><span className="ourwork-hero-word">Engineered</span></span>{" "}
+                                        <span className="ourwork-hero-word-clip"><span className="ourwork-hero-word">for</span></span>{" "}
+                                        <span className="ourwork-hero-word-clip"><span className="ourwork-hero-word">Your</span></span>
+                                    </span>
+                                    <br />
+                                    <span className="ourwork-hero-word-clip"><span className="ourwork-hero-word">Exact</span></span>{" "}
+                                    <span className="ourwork-hero-word-clip"><span className="ourwork-hero-word">Workflow.</span></span>
+                                </span>
                             </h1>
 
-                            <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-[#F2EEE4]/60 sm:text-lg">
-                                We design and build fast, custom websites and digital tools that streamline your business operations and convert traffic into growth.
+                            <p className="ourwork-hero-copy mt-5 max-w-[58ch] text-base leading-relaxed text-[#8A857B] sm:text-lg">
+                                We don't force your business into rigid templates or bloated page builders. Whether you need a sub-second marketing site or a custom operational portal, we build only what your business requires.
                             </p>
 
                             <a
                                 href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center mt-6 px-6 py-3 sm:px-5 sm:py-3 rounded-[7px] font-semibold text-sm sm:text-base bg-[#B8862E] text-[#1B1712] transition-colors hover:bg-[#c99636]"
+                                className="ourwork-hero-cta mt-7 inline-flex items-center justify-center gap-2 rounded-lg bg-[#D99B4B] px-9 py-4 text-base font-semibold text-[#131210] transition-colors hover:bg-[#ECC187]"
                             >
-                                Start a project
+                                Start a project <span aria-hidden="true">→</span>
                             </a>
                         </div>
 
                         {/* Build Standards Box */}
-                        <div className="rounded-2xl border border-[#B8862E]/30 bg-[#F2EEE4]/[0.04] p-4 shadow-2xl backdrop-blur-md sm:p-5">
+                        <div className="ourwork-standards rounded-2xl border border-[#D99B4B]/30 bg-[#1A1916]/90 p-4 shadow-2xl backdrop-blur-md sm:p-5 md:min-h-[430px] md:flex md:flex-col md:justify-center">
                             <div className="flex items-center justify-between px-1">
-                                <h2 className="text-xs font-semibold uppercase tracking-wide text-[#B8862E]">
+                                <h2 className="text-xs font-semibold uppercase tracking-wide text-[#D99B4B]">
                                     Build standards
                                 </h2>
 
-                                <span className="text-[9px] uppercase tracking-wide text-[#F2EEE4]/40">
+                                <span className="text-[9px] uppercase tracking-wide text-[#F6F1E8]/40">
                                     Built for growth
                                 </span>
                             </div>
@@ -187,18 +454,18 @@ function OurWork() {
                                 {buildStandards.map((standard) => (
                                     <div
                                         key={standard.number}
-                                        className="flex gap-3 rounded-xl border border-[#F2EEE4]/10 bg-[#F2EEE4]/[0.04] p-3"
+                                        className="ourwork-standard-item flex gap-3 rounded-xl border border-[#F6F1E8]/10 bg-[#F6F1E8]/[0.04] p-3"
                                     >
-                                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#B8862E]/40 bg-[#B8862E]/10 font-serif text-xs font-semibold text-[#B8862E]">
+                                        <span className="ourwork-standard-badge flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#D99B4B]/40 bg-[#D99B4B]/10 font-serif text-xs font-semibold text-[#D99B4B]">
                                             {standard.number}
                                         </span>
 
                                         <div>
-                                            <h3 className="font-serif text-sm font-semibold text-[#F2EEE4]">
+                                            <h3 className="font-serif text-sm font-semibold text-[#F6F1E8]">
                                                 {standard.title}
                                             </h3>
 
-                                            <p className="mt-1 text-xs leading-relaxed text-[#F2EEE4]/55">
+                                            <p className="mt-1 text-xs leading-relaxed text-[#F6F1E8]/55">
                                                 {standard.description}
                                             </p>
                                         </div>
@@ -210,113 +477,196 @@ function OurWork() {
                 </div>
 
                 {/* Category Bento Box Section */}
-                <div className="bg-[#F2EEE4] text-[#1B1712] mx-0 px-6 py-8 pb-11 sm:px-8 sm:py-9 sm:pb-14">
-                    <div className="mx-auto max-w">
-                        <h2 className="max-w-4xl font-serif text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl">
-                            Six kinds of projects.{" "}
-                            <span className="text-[#B8862E]">Built for performance.</span>
+                <div className="capabilities-section bg-[#F6F1E8] px-6 py-14 pb-11 text-[#181614] sm:px-8 sm:py-16 sm:pb-20">
+                    <div className="mx-auto max-w-4xl text-center">
+                        <span className="capability-eyebrow mb-4 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-[#B87C2B]">
+                            <span className="h-px w-4 bg-[#B87C2B]" />
+                            Flexible capability playbooks
+                        </span>
+                        <h2 className="capability-heading font-serif text-4xl font-semibold leading-[1.08] sm:text-5xl md:text-6xl">
+                            Six Core Capabilities.
+                            <br />
+                            <span className="text-[#B87C2B] italic">
+                                <span className="capability-word-clip"><span className="capability-word">Modular</span></span>{" "}
+                                <span className="capability-word-clip"><span className="capability-word">Scope</span></span>{" "}
+                                <span className="capability-word-clip"><span className="capability-word">Built</span></span>{" "}
+                                <span className="capability-word-clip"><span className="capability-word">for</span></span>{" "}
+                                <span className="capability-word-clip"><span className="capability-word">Your</span></span>{" "}
+                                <span className="capability-word-clip"><span className="capability-word">Needs.</span></span>
+                            </span>
                         </h2>
 
-                        <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#1B1712]/70 sm:text-base">
-                            Every build targets specific real-world bottlenecks, replaced with lightweight custom code and clean operational pathways.
+                        <p className="capability-copy mx-auto mt-5 max-w-3xl text-base leading-relaxed text-[#181614]/70 sm:text-lg">
+                            Every business faces distinct operational and marketing friction. Here is how we engineer solutions across our 6 core capabilities, adding technical complexity only when your workflow demands it.
                         </p>
                     </div>
 
-                    <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-                        {projectCategories.map((category) => {
-                            return (
-                                <div
-                                    key={category.number}
-                                    onTouchStart={() => setActiveCard(category.number)}
-                                    onTouchEnd={() => setActiveCard(null)}
-                                    onTouchCancel={() => setActiveCard(null)}
-                                    className={`group flex min-h-[235px] flex-col rounded-lg border bg-white p-7 transition-colors duration-200 sm:min-h-[250px] sm:p-8 ${activeCard === category.number
-                                        ? "border-[#B8862E]"
-                                        : "border-[#B8862E]/25 hover:border-[#B8862E]"
-                                        }`}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-[11px] font-semibold uppercase tracking-widest text-[#B8862E]">
-                                            Archetype {category.number.split("/")[0]}
-                                        </span>
-                                        <span className="text-[10px] font-medium tracking-wide text-[#9B8B7E]">
-                                            {category.number}
-                                        </span>
-                                    </div>
-
-                                    <h3
-                                        id={category.slug}
-                                        className="scroll-mt-24 mt-6 font-serif text-lg font-bold text-[#1B1712]"
+                    <div className="mx-auto mt-8 max-w-5xl space-y-4 sm:space-y-5">
+                        {[0, 2, 4].map((rowStart) => (
+                            <div key={rowStart} className="capability-row grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                                {projectCategories.slice(rowStart, rowStart + 2).map((category) => (
+                                    <div
+                                        key={category.number}
+                                        onTouchStart={() => setActiveCard(category.number)}
+                                        onTouchEnd={() => setActiveCard(null)}
+                                        onTouchCancel={() => setActiveCard(null)}
+                                        className={`capability-card group flex min-h-[235px] flex-col rounded-lg border bg-white p-7 transition-colors duration-200 sm:min-h-[250px] sm:p-8 ${activeCard === category.number
+                                            ? "border-[#B8862E]"
+                                            : "border-[#B8862E]/25 hover:border-[#B8862E]"
+                                            }`}
                                     >
-                                        {category.title}
-                                    </h3>
-
-                                    <div className="mt-5 space-y-4">
-                                        {/* Bottleneck */}
-                                        <div className="flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
-                                            <TriangleAlert className="h-5 w-5 shrink-0 text-[#B8862E] mt-0.5" strokeWidth={1.5} />
-                                            <div className="flex-1">
-                                                <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
-                                                    {category.bottleneck}
-                                                </p>
-                                                <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
-                                                    {category.bottleneckText}
-                                                </p>
-                                            </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="capability-meta text-[11px] font-semibold uppercase tracking-widest text-[#B8862E]">
+                                                Capability {category.number.split("/")[0]}
+                                            </span>
+                                            <span className="capability-meta text-[10px] font-medium tracking-wide text-[#9B8B7E]">
+                                                {category.number}
+                                            </span>
                                         </div>
 
-                                        {/* Build */}
-                                        <div className="flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
-                                            <SquareTerminal className="h-5 w-5 shrink-0 text-[#B8862E] mt-0.5" strokeWidth={1.5} />
-                                            <div className="flex-1">
-                                                <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
-                                                    {category.build}
-                                                </p>
-                                                <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
-                                                    {category.buildText}
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <h3
+                                            id={category.slug}
+                                            className="scroll-mt-24 mt-6 font-serif text-lg font-bold text-[#1B1712]"
+                                        >
+                                            {category.title}
+                                        </h3>
 
-                                        {/* Value */}
-                                        <div className="flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
-                                            <BadgeCheck className="h-5 w-5 shrink-0 text-yellow-600 mt-0.5" strokeWidth={1.5} />
-                                            <div className="flex-1">
-                                                <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
-                                                    {category.value}
-                                                </p>
-                                                <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
-                                                    {category.valueText}
-                                                </p>
+                                        <div className="mt-5 space-y-4">
+                                            {/* Bottleneck */}
+                                            <div className="capability-subblock flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
+                                                <TriangleAlert className="capability-subblock-icon h-5 w-5 shrink-0 text-[#B8862E] mt-0.5" strokeWidth={1.5} />
+                                                <div className="flex-1">
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
+                                                        {category.bottleneck}
+                                                    </p>
+                                                    <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
+                                                        {category.bottleneckText}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Build */}
+                                            <div className="capability-subblock flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
+                                                <SquareTerminal className="capability-subblock-icon h-5 w-5 shrink-0 text-[#B8862E] mt-0.5" strokeWidth={1.5} />
+                                                <div className="flex-1">
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
+                                                        {category.build}
+                                                    </p>
+                                                    <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
+                                                        {category.buildText}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Value */}
+                                            <div className="capability-subblock flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
+                                                <BadgeCheck className="capability-subblock-icon h-5 w-5 shrink-0 text-yellow-600 mt-0.5" strokeWidth={1.5} />
+                                                <div className="flex-1">
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
+                                                        {category.value}
+                                                    </p>
+                                                    <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
+                                                        {category.valueText}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                ))}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Final CTA */}
-                <div className="bg-[#B8862E] px-6 py-8 pb-11 text-[#1B1712] sm:px-8 sm:py-10 sm:pb-14">
-                    <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="max-w-xl">
-                            <h2 className="max-w-lg font-serif text-2xl font-semibold leading-tight sm:text-3xl lg:text-4xl">
-                                Need a clean website or a custom system? <br />Let’s talk.
+                {/* Delivery Guarantee */}
+                <section className="guarantee-section border-t border-[#E8DECB] bg-[#F0EBD9] px-6 py-14 text-[#181614] sm:px-8 sm:py-16">
+                    <div className="mx-auto max-w-6xl">
+                        <div className="mx-auto max-w-2xl text-center">
+                            <h2 className="guarantee-heading font-serif text-4xl font-semibold leading-[1.08] sm:text-5xl md:text-6xl">
+                                The Anchorworks Delivery Guarantee
                             </h2>
-
-                            <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#1B1712]/80 sm:text-base">
-                                Bring us your business bottleneck. We’ll tell you honestly whether you need a website, a custom system, or just a smarter setup.
+                            <p className="guarantee-description mx-auto mt-5 max-w-xl text-sm leading-relaxed text-[#181614]/70 sm:text-base">
+                                Practical engineering and marketing standards applied to every single
+                                build - no exceptions.
                             </p>
                         </div>
 
-                        <a
-                            href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
-                            target="_blank"
-                            className="inline-flex w-fit items-center justify-center rounded-[7px] bg-[#1B1712] px-7 py-3.5 text-sm font-semibold text-[#F2EEE4] transition-colors hover:bg-[#241F17] sm:px-8 sm:text-base"
-                        >
-                            Start a project
-                        </a>
+                        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                            {[
+                                ["01", "100% Source Code Ownership", "You own all source code and assets. Zero proprietary page-builder locks or vendor traps.", "Complete Code Handover"],
+                                ["02", "Zero Monthly SaaS Overhead", "Custom self-hosted tools built without forcing you into recurring monthly software subscription fees.", "₹0/mo Platform Cost"],
+                                ["03", "Built for Marketing Synergy", "Clean semantic HTML structure ready for GA4 event loops, Meta pixels, UTM tracking, and organic SEO ranking.", "Pixel & Event Native"],
+                                ["04", "Sub-Second Mobile Speed", "Optimized for lightning-fast performance on mobile connections so leads never bounce before seeing your offer.", "100/100 Core Vitals"],
+                            ].map(([number, title, description, proof]) => (
+                                <article
+                                    key={number}
+                                    className="guarantee-card flex min-h-[272px] flex-col rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 shadow-sm transition-all hover:border-[#B87C2B] hover:shadow-lg"
+                                >
+                                    <span className="guarantee-tag flex h-9 w-9 items-center justify-center rounded-lg border border-[#D99B4B]/40 bg-[#D99B4B]/10 font-mono text-xs font-semibold text-[#B87C2B]">
+                                        {number}
+                                    </span>
+                                    <h3 className="mt-5 font-serif text-lg font-bold leading-tight">
+                                        {title}
+                                    </h3>
+                                    <p className="mt-3 text-xs leading-relaxed text-[#181614]/70">
+                                        {description}
+                                    </p>
+                                    <div className="mt-auto border-t border-[#E8DECB]/70 pt-3">
+                                        <span className="guarantee-pill inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[10px] font-semibold text-emerald-700">
+                                            <Check className="guarantee-check h-3 w-3" />
+                                            {proof}
+                                        </span>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Final CTA */}
+                <div className="ourwork-cta-section cta-section px-5 py-14 text-[#181614] sm:px-8 md:py-20">
+                    <div className="mx-auto max-w-4xl text-center">
+                        <h2 className="ourwork-cta-heading font-serif text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">Need</span></span>{" "}
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">a</span></span>{" "}
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">clean</span></span>{" "}
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">website</span></span>{" "}
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">or</span></span>{" "}
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">a</span></span>{" "}
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">custom</span></span>{" "}
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">system?</span></span>
+                            <br />
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">Let's</span></span>{" "}
+                            <span className="cta-word-clip"><span className="ourwork-cta-word cta-word">talk.</span></span>
+                        </h2>
+                        <p className="ourwork-cta-copy mx-auto mb-7 mt-4 max-w-2xl text-base leading-relaxed text-[#181614]/90 sm:text-lg md:text-xl">
+                            Bring us your business bottleneck. We'll tell you honestly whether you need a website, a custom system, or just a smarter setup.
+                        </p>
+                        <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                            <a
+                                href="mailto:hello@anchorworks.studio?subject=New%20project%20enquiry"
+                                onClick={handleOurWorkCtaClick}
+                                className="ourwork-cta-button ourwork-cta-primary relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
+                            >
+                                Start a project <span className="text-[#D99B4B]">→</span>
+                            </a>
+                            <a
+                                href="https://wa.me/917011042987"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="ourwork-cta-button cta-consult w-full rounded-xl border border-[#181614]/30 bg-[#181614]/10 px-7 py-4 text-sm font-bold transition-colors hover:bg-[#181614]/20 sm:w-auto"
+                            >
+                                Direct WhatsApp / Consult
+                            </a>
+                        </div>
+                        <div className="flex flex-wrap items-center justify-center gap-4 font-mono text-xs text-[#181614]/80 sm:gap-8">
+                            {["Direct Founder Access", "24h Response Guarantee", "Zero Vendor Lock-In"].map((item) => (
+                                <span key={item} className="ourwork-cta-badge flex items-center gap-1.5">
+                                    <Check className="ourwork-cta-check h-3.5 w-3.5" />
+                                    <span className="ourwork-cta-label">{item}</span>
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
