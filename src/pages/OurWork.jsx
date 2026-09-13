@@ -482,7 +482,7 @@ function OurWork() {
                         <span className="capability-eyebrow mb-4 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-[#B87C2B]">
                             <span className="h-px w-4 bg-[#B87C2B]" />
                             Flexible capability playbooks
-                        </span> 
+                        </span>
                         <h2 className="capability-heading font-serif text-4xl font-semibold leading-[1.08] sm:text-5xl md:text-6xl">
                             Six Core Capabilities.
                             <br />
