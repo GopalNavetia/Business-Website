@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNavigate = (path) => {
     navigate(path);
-    setIsOpen(false)
+    setIsOpen(false);
   };
 
   const navItems = [
@@ -32,15 +33,23 @@ function Navbar() {
         </button>
 
         <nav className="hidden items-center gap-9 sm:flex">
-          {navItems.map((item) => (
-            <button
-              key={item.path}
-              onClick={() => handleNavigate(item.path)}
-              className="cursor-pointer text-sm font-medium text-[#F2EEE4]/60 transition-colors hover:text-[#F2EEE4]"
-            >
-              {item.label}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <button
+                key={item.path}
+                onClick={() => handleNavigate(item.path)}
+                className={`group relative cursor-pointer  text-sm font-medium transition-colors ${isActive ? 'text-[#B8862E]' : 'text-[#F2EEE4]/60 hover:text-[#F2EEE4]'
+                  }`}
+              >
+                {item.label}
+                <span
+                  className={`absolute -bottom-1 left-0 h-[1.5px] w-full origin-left bg-[#B8862E] transition-transform duration-300 ease-out ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                    }`}
+                />
+              </button>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -63,15 +72,19 @@ function Navbar() {
 
       {isOpen && (
         <div className="absolute left-0 top-full flex w-full flex-col items-center gap-4 border-t border-[#F2EEE4]/10 bg-[#1B1712] px-6 py-4 sm:hidden">
-          {navItems.map((item) => (
-            <button
-              key={item.path}
-              onClick={() => handleNavigate(item.path)}
-              className="py-1 text-base font-medium text-[#F2EEE4]/80 hover:text-[#F2EEE4]"
-            >
-              {item.label}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <button
+                key={item.path}
+                onClick={() => handleNavigate(item.path)}
+                className={`py-1 text-base font-medium transition-colors ${isActive ? 'text-[#B8862E]' : 'text-[#F2EEE4]/80 hover:text-[#F2EEE4]'
+                  }`}
+              >
+                {item.label}
+              </button>
+            )
+          })}
 
           <a
             href="mailto:hello@anchorworks.studio?subject=New%20project%20enquiry"
