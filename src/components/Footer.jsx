@@ -67,7 +67,7 @@ function Footer() {
                     <div className="mt-5 flex flex-col gap-4 text-sm text-[#F2EEE4]/65 sm:text-base">
                         <button
                             type="button"
-                            onClick={() => navigate("/services")}
+                            onClick={() => navigate("/#process")}
                             className="w-fit cursor-pointer transition-colors hover:text-[#B8862E]"
                         >
                             How we work

@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLayoutEffect, useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "../motion";
@@ -195,6 +195,7 @@ function HeroMockup({ mockupRef, badgeRef, progressRef }) {
 }
 
 function HomePage() {
+    const location = useLocation();
     const navigate = useNavigate();
     const heroRef = useRef(null);
     const spotlightRef = useRef(null);
@@ -213,6 +214,21 @@ function HomePage() {
     const processSectionRef = useRef(null);
     const ctaSectionRef = useRef(null);
     const startProjectRef = useRef(null);
+
+    useEffect(() => {
+        if (location.hash === "#process") {
+            setTimeout(() => {
+                const section = document.getElementById("process");
+
+                if (section) {
+                    section.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }
+            }, 100);
+        }
+    }, [location]);
 
     useLayoutEffect(() => {
         const hero = heroRef.current;
