@@ -74,7 +74,7 @@ function Footer() {
                         </button>
 
                         <a
-                            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${MY_EMAIL}&su=Project%20Enquiry`}
+                           href={`mailto:${MY_EMAIL}?subject=Project%20Enquiry`}    
                             target="_blank"
                             rel="noopener noreferrer"
                             title="Open in Gmail"

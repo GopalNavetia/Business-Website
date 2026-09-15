@@ -333,7 +333,7 @@ function Contact() {
                         )}
                       </div>
                       <a
-                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL_ADDRESS}&su=Project%20Enquiry`}
+                        href={`mailto:${EMAIL_ADDRESS}?subject=Project%20Enquiry`}
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Open in Gmail"
