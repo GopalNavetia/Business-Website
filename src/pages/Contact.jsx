@@ -22,6 +22,8 @@ function Contact() {
   const [copied, setCopied] = useState(false);
   const [openFaqId, setOpenFaqId] = useState(null);
   const pageRef = useRef(null);
+  const heroRef = useRef(null);
+  const spotlightRef = useRef(null);
 
   // The custom serif font swapping in after fallback-font metrics were used to
   // lay out the page can shift section positions enough to leave every
@@ -34,9 +36,11 @@ function Contact() {
   useLayoutEffect(() => {
     let cancelled = false;
     let context;
+    let removePointerListener = () => {};
 
     const run = () => {
       if (cancelled) return;
+      const hero = heroRef.current;
       context = gsap.context(() => {
         // ---- Hero ----
         const heroGlow = pageRef.current.querySelector(".contact-hero-glow");
@@ -98,6 +102,26 @@ function Contact() {
             ...faqItems,
           ], { autoAlpha: 1, clearProps: "transform" });
           return;
+        }
+
+        // Hero grid drift animation
+        gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+
+        // Hero interactive spotlight tracking mouse movement
+        if (hero && spotlightRef.current) {
+          const onPointerMove = (event) => {
+            const bounds = hero.getBoundingClientRect();
+            gsap.to(spotlightRef.current, {
+              x: event.clientX - bounds.left,
+              y: event.clientY - bounds.top,
+              duration: 0.6,
+              ease: "power2.out",
+            });
+          };
+          if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+            hero.addEventListener("pointermove", onPointerMove);
+            removePointerListener = () => hero.removeEventListener("pointermove", onPointerMove);
+          }
         }
 
         // Hero entrance
@@ -170,6 +194,7 @@ function Contact() {
 
     return () => {
       cancelled = true;
+      removePointerListener();
       if (context) context.revert();
     };
   }, []);
@@ -200,7 +225,10 @@ function Contact() {
     <div ref={pageRef}>
 
       {/* ===== HERO ===== */}
-      <section className="contact-hero relative overflow-hidden border-b border-[#23211e] bg-[#141311] px-5 py-14 pb-16 text-white sm:px-8 sm:py-20 md:pb-24">
+      <section ref={heroRef} className="wireframe-grid hero-section contact-hero relative overflow-hidden border-b border-[#23211e] bg-[#131210] px-5 py-14 pb-16 text-white sm:px-8 sm:py-20 md:pb-24">
+        <div ref={spotlightRef} className="hero-spotlight pointer-events-none absolute left-0 top-0 z-0" />
+        <div className="hero-grid-drift pointer-events-none absolute inset-0 z-0" />
+        <div className="pointer-events-none absolute left-1/2 top-1/4 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-[#D99B4B]/10 blur-[130px]" />
         <div className="contact-hero-glow pointer-events-none absolute right-1/4 top-0 h-96 w-96 rounded-full bg-[#d99b4b]/5 blur-3xl" />
         <div className="relative z-10 mx-auto max-w-6xl">
           {/* Status pill */}
