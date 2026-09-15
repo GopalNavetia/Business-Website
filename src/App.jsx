@@ -1,6 +1,7 @@
 import "./App.css";
 import { useLayoutEffect, useRef } from "react";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-router-dom"; // added useLocation
+import { Helmet } from "react-helmet-async"; // NEW
 import { gsap } from "gsap";
 
 import Navbar from "./components/Navbar";
@@ -9,7 +10,71 @@ import OurWork from "./pages/OurWork";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Footer from "./components/Footer";
+import NotFound from "./pages/NotFound";
 import { prefersReducedMotion } from "./motion";
+
+const SITE_URL = import.meta.env.VITE_SITE_URL || "http://localhost:5173";
+const OG_IMAGE = "/og-image.png";
+
+// NEW: metadata for each route
+const pageMeta = {
+  "/": {
+    title: "Anchorworks",
+    description: "Anchorworks builds custom websites with search-optimized code to help your business rank and convert. Design, development, and marketing under one roof."
+  },
+  "/our-work": {
+    title: "Our Work | Anchorworks",
+    description: "See how Anchorworks builds business websites, portfolios, management systems, and booking platforms — fast, search-ready, and fully owned by you, with zero monthly software fees."
+  },
+  "/services": {
+    title: "Services | Anchorworks",
+    description: "Custom website design, development, and digital marketing services — SEO, social media, and more, all under one roof."
+  },
+  "/contact": {
+    title: "Contact | Anchorworks",
+    description: "Ready to start your project? Get in touch with Anchorworks today."
+  }
+};
+
+function PageMeta() {
+  const location = useLocation();
+  const meta = pageMeta[location.pathname];
+  const url = `${SITE_URL}${location.pathname}`;
+  const image = `${SITE_URL}${OG_IMAGE}`;
+
+  if (!meta) {
+    return (
+      <Helmet>
+        <title>Page Not Found | Anchorworks</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+    );
+  }
+
+  return (
+    <Helmet>
+      <title>{meta.title}</title>
+      <meta name="description" content={meta.description} />
+
+      {/* Open Graph */}
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Anchorworks" />
+      <meta property="og:title" content={meta.title} />
+      <meta property="og:description" content={meta.description} />
+      <meta property="og:url" content={url} />
+      <meta property="og:image" content={image} />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={meta.title} />
+      <meta name="twitter:description" content={meta.description} />
+      <meta name="twitter:image" content={image} />
+    </Helmet>
+  );
+}
 
 function SiteMotion() {
   const progressRef = useRef(null);
@@ -80,6 +145,7 @@ function SiteMotion() {
 function Layout() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
+      <PageMeta />
       <SiteMotion />
       <Navbar />
 
@@ -99,6 +165,7 @@ const router = createBrowserRouter([
       { path: "/our-work", element: <OurWork /> },
       { path: "/services", element: <Services /> },
       { path: "/contact", element: <Contact /> },
+      { path: "*", element: <NotFound /> }
     ],
   },
 ]);
