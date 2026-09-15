@@ -31,13 +31,10 @@ function Navbar() {
       <div className="flex h-[68px] w-full items-center justify-between px-6 sm:h-[76px] sm:px-8">
         <button
           onClick={() => handleNavigate('/')}
-          className="flex cursor-pointer items-center gap-2.5 font-serif text-xl font-bold text-[#F2EEE4]"
+          className="flex cursor-pointer items-center gap-2.5 font-serif text-xl font-bold tracking-wide"
         >
-          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-            <rect x="1" y="1" width="24" height="24" rx="5" stroke="#B8862E" strokeWidth="1.6" />
-            <path d="M8 17V9M13 17V6M18 17V12" stroke="#B8862E" strokeWidth="1.6" strokeLinecap="round" />
-          </svg>
-          AnchorWorks
+          <img src="/android-chrome-512x512.png" alt="Anchorworks" className="h-8 w-8 rounded-md" />
+          <span className="text-[#F2EEE4]">Anchor<span className="text-[#B88A3D]">Works</span></span>
         </button>
 
         <nav className="hidden items-center gap-9 sm:flex">

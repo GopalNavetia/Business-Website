@@ -27,15 +27,11 @@ function Footer() {
             <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-16 lg:gap-24">
                 <div>
                     <button
-                        type="button"
-                        onClick={() => navigate("/")}
-                        className="flex cursor-pointer items-center gap-2 font-serif text-2xl font-semibold text-[#F2EEE4]"
+                        onClick={() => handleNavigate('/')}
+                        className="flex cursor-pointer items-center gap-2.5 font-serif text-xl font-bold tracking-wide"
                     >
-                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-                            <rect x="1" y="1" width="24" height="24" rx="5" stroke="#B8862E" strokeWidth="1.6" />
-                            <path d="M8 17V9M13 17V6M18 17V12" stroke="#B8862E" strokeWidth="1.6" strokeLinecap="round" />
-                        </svg>
-                        Anchorworks
+                        <img src="/android-chrome-512x512.png" alt="Anchorworks" className="h-8 w-8 rounded-md" />
+                        <span className="text-[#F2EEE4]">Anchor<span className="text-[#B88A3D]">Works</span></span>
                     </button>
 
                     <p className="mt-6 max-w-sm text-sm leading-relaxed text-[#F2EEE4]/65 sm:text-base">
