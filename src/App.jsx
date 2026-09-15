@@ -19,19 +19,19 @@ const OG_IMAGE = "/og-image.png";
 // NEW: metadata for each route
 const pageMeta = {
   "/": {
-    title: "Anchorworks",
+    title: "Anchor Works",
     description: "Anchorworks builds custom websites with search-optimized code to help your business rank and convert. Design, development, and marketing under one roof."
   },
   "/our-work": {
-    title: "Our Work | Anchorworks",
+    title: "Our Work | Anchor Works",
     description: "See how Anchorworks builds business websites, portfolios, management systems, and booking platforms — fast, search-ready, and fully owned by you, with zero monthly software fees."
   },
   "/services": {
-    title: "Services | Anchorworks",
+    title: "Services | Anchor Works",
     description: "Custom website design, development, and digital marketing services — SEO, social media, and more, all under one roof."
   },
   "/contact": {
-    title: "Contact | Anchorworks",
+    title: "Contact | Anchor Works",
     description: "Ready to start your project? Get in touch with Anchorworks today."
   }
 };
