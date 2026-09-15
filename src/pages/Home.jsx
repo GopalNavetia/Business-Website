@@ -19,6 +19,8 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
+const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
+
 const projects = [
     {
         icon: BriefcaseBusiness,
@@ -544,7 +546,7 @@ function HomePage() {
         gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, {
             scale: 16, autoAlpha: 0, duration: 0.42, ease: "power2.out", onComplete: () => {
                 ripple.remove();
-                window.location.href = button.href;
+                navigate('/contact#enquiry-form');
             }
         });
     };
@@ -678,6 +680,11 @@ function HomePage() {
         return () => context.revert();
     }, []);
 
+    const handleStartProject = (e) => {
+        e.preventDefault();
+        navigate('/contact#enquiry-form');
+    };
+
     return (
         <div className="bg-[#131210] text-[#F6F1E8]">
             {/* Hero Section */}
@@ -703,14 +710,13 @@ function HomePage() {
                         one roof so you can focus on running your business.
                     </p>
                     <div ref={ctasRef} className="mb-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                        <a
-                            href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
-                            target="_blank"
-                            rel="noreferrer"
+                        <button
+                            type="button"
+                            onClick={handleStartProject}
                             className="hero-cta flex w-full items-center justify-center gap-2 rounded-lg bg-[#D99B4B] px-9 py-4 text-base font-semibold text-[#131210] transition-colors hover:bg-[#ECC187] sm:w-auto"
                         >
                             Start a project <ArrowRight className="h-4 w-4" />
-                        </a>
+                        </button>
                         <button
                             type="button"
                             onClick={() => navigate("/our-work")}
@@ -725,10 +731,10 @@ function HomePage() {
                     </p>
                     <HeroMockup mockupRef={mockupRef} badgeRef={badgeRef} progressRef={progressRef} />
                 </div>
-            </section>
+            </section >
 
             {/* Value Pillars Section */}
-            <section ref={featureSectionRef} className="feature-section border-t border-[#D99B4B]/20 bg-[#1A1916] px-5 py-14 sm:px-8 md:py-16">
+            < section ref={featureSectionRef} className="feature-section border-t border-[#D99B4B]/20 bg-[#1A1916] px-5 py-14 sm:px-8 md:py-16" >
                 <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
                     {[
                         [
@@ -771,10 +777,10 @@ function HomePage() {
                         </div>
                     ))}
                 </div>
-            </section>
+            </section >
 
             {/* Projects Catalog Section */}
-            <section
+            < section
                 ref={projectsSectionRef}
                 id="projects"
                 className="bg-[#F6F1E8] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
@@ -833,10 +839,10 @@ function HomePage() {
                         )}
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Team Section */}
-            <section
+            < section
                 ref={teamSectionRef}
                 id="team"
                 className="border-t border-[#E8DECB] bg-[#F0EBD9] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
@@ -903,10 +909,10 @@ function HomePage() {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Partner Section */}
-            <section
+            < section
                 ref={partnerSectionRef}
                 id="partner"
                 className="bg-[#F0EBD9] px-5 pb-14 text-[#181614] sm:px-8 md:pb-20"
@@ -976,10 +982,10 @@ function HomePage() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Process Section */}
-            <section
+            < section
                 ref={processSectionRef}
                 id="process"
                 className="border-t border-[#E8DECB] bg-[#F0EBD9] px-5 py-14 text-[#181614] sm:px-8 md:py-20"
@@ -1029,10 +1035,10 @@ function HomePage() {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Call To Action Section */}
-            <section
+            < section
                 ref={ctaSectionRef}
                 id="contact"
                 className="cta-section px-5 py-14 text-[#181614] sm:px-8 md:py-20"
@@ -1053,7 +1059,7 @@ function HomePage() {
                     </p>
                     <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                         <a
-                            href="mailto:hello@anchorworks.studio?subject=New%20project%20enquiry"
+                            href="/contact#enquiry-form"
                             ref={startProjectRef}
                             onClick={handleStartProjectClick}
                             className="cta-button cta-magnetic relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
@@ -1061,7 +1067,7 @@ function HomePage() {
                             Start a project <ArrowRight className="h-5 w-5 text-[#D99B4B]" />
                         </a>
                         <a
-                            href="https://wa.me/917011042987"
+                            href={`https://wa.me/${MY_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}
                             target="_blank"
                             rel="noreferrer"
                             className="cta-button cta-consult w-full rounded-xl border border-[#181614]/30 bg-[#181614]/10 px-7 py-4 text-sm font-bold transition-colors hover:bg-[#181614]/20 sm:w-auto"
@@ -1082,8 +1088,8 @@ function HomePage() {
                         ))}
                     </div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     );
 }
 

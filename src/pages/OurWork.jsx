@@ -1,14 +1,18 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TriangleAlert, SquareTerminal, BadgeCheck, Check } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "../motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
+
 function OurWork() {
     const location = useLocation();
+    const navigate = useNavigate();
+    const startProjectRef = useRef(null);
 
     useEffect(() => {
         const targetId = location.hash.slice(1);
@@ -346,7 +350,7 @@ function OurWork() {
                 .fromTo(ctaChecks, { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.38, stagger: 0.15, ease: "power3.out" }, "-=0.05")
                 .fromTo(ctaLabels, { x: -6, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.35, stagger: 0.15, ease: "power3.out" }, "-=0.2");
 
-            const magneticButton = pageRef.current.querySelector(".ourwork-cta-primary");
+            const magneticButton = startProjectRef.current;
             const onMagneticMove = (event) => {
                 const bounds = magneticButton.getBoundingClientRect();
                 const offsetX = Math.max(-18, Math.min(18, (event.clientX - (bounds.left + bounds.width / 2)) * 0.22));
@@ -369,29 +373,6 @@ function OurWork() {
             context.revert();
         };
     }, []);
-
-    const handleOurWorkCtaClick = (event) => {
-        if (prefersReducedMotion) return;
-
-        event.preventDefault();
-        const button = event.currentTarget;
-        const bounds = button.getBoundingClientRect();
-        const ripple = document.createElement("span");
-        ripple.className = "cta-ripple";
-        ripple.style.left = `${event.clientX - bounds.left}px`;
-        ripple.style.top = `${event.clientY - bounds.top}px`;
-        button.appendChild(ripple);
-        gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, {
-            scale: 16,
-            autoAlpha: 0,
-            duration: 0.42,
-            ease: "power2.out",
-            onComplete: () => {
-                ripple.remove();
-                window.location.href = button.href;
-            },
-        });
-    };
 
     return (
         <div ref={pageRef}>
@@ -428,14 +409,13 @@ function OurWork() {
                                 We don't force your business into rigid templates or bloated page builders. Whether you need a sub-second marketing site or a custom operational portal, we build only what your business requires.
                             </p>
 
-                            <a
-                                href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
-                                target="_blank"
-                                rel="noopener noreferrer"
+                            <button
+                                type="button"
+                                onClick={() => navigate("/contact#enquiry-form")}
                                 className="ourwork-hero-cta mt-7 inline-flex items-center justify-center gap-2 rounded-lg bg-[#D99B4B] px-9 py-4 text-base font-semibold text-[#131210] transition-colors hover:bg-[#ECC187]"
                             >
                                 Start a project <span aria-hidden="true">→</span>
-                            </a>
+                            </button>
                         </div>
 
                         {/* Build Standards Box */}
@@ -643,15 +623,17 @@ function OurWork() {
                             Bring us your business bottleneck. We'll tell you honestly whether you need a website, a custom system, or just a smarter setup.
                         </p>
                         <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                            <a
-                                href="mailto:hello@anchorworks.studio?subject=New%20project%20enquiry"
-                                onClick={handleOurWorkCtaClick}
+                            <button
+                                type="button"
+                                ref={startProjectRef}
+                                onClick={() => navigate("/contact#enquiry-form")}
                                 className="ourwork-cta-button ourwork-cta-primary relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
                             >
                                 Start a project <span className="text-[#D99B4B]">→</span>
-                            </a>
+                            </button>
+
                             <a
-                                href="https://wa.me/917011042987"
+                                href={`https://wa.me/${MY_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="ourwork-cta-button cta-consult w-full rounded-xl border border-[#181614]/30 bg-[#181614]/10 px-7 py-4 text-sm font-bold transition-colors hover:bg-[#181614]/20 sm:w-auto"

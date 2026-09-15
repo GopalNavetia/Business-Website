@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+const MY_EMAIL = import.meta.env.VITE_MY_EMAIL;
+
 function Footer() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -76,10 +78,13 @@ function Footer() {
                         </button>
 
                         <a
-                            href="mailto:hello@anchorworks.studio"
+                            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${MY_EMAIL}&su=Project%20Enquiry`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Open in Gmail"
                             className="transition-colors hover:text-[#B8862E]"
                         >
-                            hello@anchorworks.studio
+                            {MY_EMAIL}
                         </a>
 
                         <span>Delhi NCR, India</span>

@@ -1,11 +1,15 @@
 import ContactForm from '../components/ContactForm';
-import { useState, useLayoutEffect, useRef } from 'react';
+import { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { Mail, MessageCircle, Check, ChevronDown, Copy, ArrowUpRight, Send } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { prefersReducedMotion } from '../motion';
+import { useLocation } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const EMAIL_ADDRESS = import.meta.env.VITE_MY_EMAIL;
+const PHONE_NUMBER = import.meta.env.VITE_MY_NUMBER;
 
 const FAQS = [
   { id: 1, title: 'What services do you offer?', text: 'We help businesses build and grow their digital presence through website design and development, e-commerce, SEO, digital marketing, and creative content including photography and video.' },
@@ -19,49 +23,77 @@ const FAQS = [
 ];
 
 function Contact() {
+  const location = useLocation();
+
+  // Unified Scroll-to-Hash Effect
+  useEffect(() => {
+    const targetId = location.hash.slice(1);
+    if (!targetId) return;
+
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    const scrollToElement = () => {
+      const element = document.getElementById(targetId);
+
+      if (element) {
+        gsap.killTweensOf(window);
+
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - 80;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+
+        setTimeout(() => {
+          if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.refresh();
+          }
+        }, 600);
+      } else if (attempts < maxAttempts) {
+        attempts++;
+        setTimeout(scrollToElement, 100);
+      }
+    };
+
+    const timer = setTimeout(scrollToElement, 300);
+
+    return () => clearTimeout(timer);
+  }, [location.hash, location.pathname]);
+
   const [copied, setCopied] = useState(false);
   const [openFaqId, setOpenFaqId] = useState(null);
   const pageRef = useRef(null);
   const heroRef = useRef(null);
   const spotlightRef = useRef(null);
 
-  // The custom serif font swapping in after fallback-font metrics were used to
-  // lay out the page can shift section positions enough to leave every
-  // ScrollTrigger's calculated start point stale. Refresh once fonts settle.
-  useLayoutEffect(() => {
-    if (typeof document === "undefined" || !document.fonts || !document.fonts.ready) return;
-    document.fonts.ready.then(() => ScrollTrigger.refresh());
-  }, []);
-
   useLayoutEffect(() => {
     let cancelled = false;
     let context;
-    let removePointerListener = () => {};
+    let removePointerListener = () => { };
 
     const run = () => {
       if (cancelled) return;
       const hero = heroRef.current;
       context = gsap.context(() => {
-        // ---- Hero ----
         const heroGlow = pageRef.current.querySelector(".contact-hero-glow");
         const heroBadge = pageRef.current.querySelector(".ourwork-hero-badge");
         const heroWords = gsap.utils.toArray(".contact-hero-word");
         const heroItalic = pageRef.current.querySelector(".contact-hero-italic");
         const heroCopy = pageRef.current.querySelector(".contact-hero-copy");
 
-        // ---- Info card (left) ----
         const infoCard = pageRef.current.querySelector(".contact-info-card");
         const infoBlocks = gsap.utils.toArray(".contact-info-block");
         const compactItems = gsap.utils.toArray(".compact-item");
         const compactChecks = gsap.utils.toArray(".compact-check-badge");
         const compactTrigger = pageRef.current.querySelector(".contact-info-block:last-child");
 
-        // ---- Form card (right) ----
         const formCard = pageRef.current.querySelector(".contact-form-card");
         const formEyebrow = pageRef.current.querySelector(".contact-form-eyebrow");
         const formHeading = pageRef.current.querySelector(".contact-form-heading");
 
-        // ---- Consultation ----
         const consultCard = pageRef.current.querySelector(".contact-consult-card");
         const consultImage = pageRef.current.querySelector(".contact-consult-image");
         const consultEyebrow = pageRef.current.querySelector(".contact-consult-eyebrow");
@@ -69,7 +101,6 @@ function Contact() {
         const consultCopy = pageRef.current.querySelector(".contact-consult-copy");
         const consultCtas = gsap.utils.toArray(".contact-consult-cta");
 
-        // ---- FAQ ----
         const faqSection = pageRef.current.querySelector(".contact-faq-section");
         const faqEyebrow = pageRef.current.querySelector(".contact-faq-eyebrow");
         const faqWords = gsap.utils.toArray(".faq-word");
@@ -104,10 +135,8 @@ function Contact() {
           return;
         }
 
-        // Hero grid drift animation
         gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
 
-        // Hero interactive spotlight tracking mouse movement
         if (hero && spotlightRef.current) {
           const onPointerMove = (event) => {
             const bounds = hero.getBoundingClientRect();
@@ -124,7 +153,6 @@ function Contact() {
           }
         }
 
-        // Hero entrance
         gsap.timeline({ defaults: { ease: "power3.out" } })
           .fromTo(heroBadge, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45 })
           .fromTo(heroWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" }, "-=0.08")
@@ -135,21 +163,18 @@ function Contact() {
           gsap.to(heroGlow, { scale: 1.15, duration: 7, repeat: -1, yoyo: true, ease: "sine.inOut" });
         }
 
-        // Info card (left) — panel slide-in, then its blocks stagger
         gsap.timeline({
           scrollTrigger: { trigger: infoCard, start: "top 80%", toggleActions: "play none none none" },
         })
           .fromTo(infoCard, { x: -24, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.55 })
           .fromTo(infoBlocks, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.12, ease: "power3.out" }, "-=0.3");
 
-        // Studio Compact checklist — rows then badge pop, nested reveal
         gsap.timeline({
           scrollTrigger: { trigger: compactTrigger, start: "top 82%", toggleActions: "play none none none" },
         })
           .fromTo(compactItems, { x: -10, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.4, stagger: 0.1, ease: "power3.out" })
           .fromTo(compactChecks, { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.3");
 
-        // Form card (right)
         gsap.timeline({
           scrollTrigger: { trigger: formCard, start: "top 80%", toggleActions: "play none none none" },
         })
@@ -157,7 +182,6 @@ function Contact() {
           .fromTo(formEyebrow, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, "-=0.3")
           .fromTo(formHeading, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: "power3.out" }, "-=0.25");
 
-        // Consultation panel
         gsap.timeline({
           scrollTrigger: { trigger: consultCard, start: "top 80%", toggleActions: "play none none none" },
         })
@@ -166,7 +190,6 @@ function Contact() {
           .fromTo([consultEyebrow, consultHeading, consultCopy], { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42, stagger: 0.06, ease: "power3.out" }, "-=0.3")
           .fromTo(consultCtas, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42, stagger: 0.1, ease: "power3.out" }, "-=0.2");
 
-        // FAQ intro
         gsap.timeline({
           scrollTrigger: { trigger: faqSection, start: "top 78%", toggleActions: "play none none none" },
         })
@@ -174,7 +197,6 @@ function Contact() {
           .fromTo(faqWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.2")
           .fromTo(faqDescription, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, "-=0.25");
 
-        // FAQ items
         gsap.fromTo(faqItems, { y: 16, autoAlpha: 0 }, {
           y: 0,
           autoAlpha: 1,
@@ -200,7 +222,7 @@ function Contact() {
   }, []);
 
   const copyEmail = () => {
-    const email = 'hello@anchorworks.studio';
+    const email = EMAIL_ADDRESS;
     const fallback = () => {
       const el = document.createElement('textarea');
       el.value = email;
@@ -231,7 +253,6 @@ function Contact() {
         <div className="pointer-events-none absolute left-1/2 top-1/4 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-[#D99B4B]/10 blur-[130px]" />
         <div className="contact-hero-glow pointer-events-none absolute right-1/4 top-0 h-96 w-96 rounded-full bg-[#d99b4b]/5 blur-3xl" />
         <div className="relative z-10 mx-auto max-w-6xl">
-          {/* Status pill */}
           <span className="ourwork-hero-badge mb-5 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/40 bg-[#D99B4B]/10 px-3.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#D99B4B]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#D99B4B]" />
             DIRECT FOUNDER AVAILABILITY · 24H RESPONSE SLA · DELHI NCR &amp; WORLDWIDE
@@ -288,19 +309,18 @@ function Contact() {
                           DIRECT STUDIO INBOX
                         </p>
                         <p className="mt-0.5 font-mono text-sm font-medium text-[#141311]">
-                          hello@anchorworks.studio
+                          {EMAIL_ADDRESS}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
-                      {/* Copy button with tooltip */}
                       <div className="relative">
                         <button
                           onClick={copyEmail}
                           title="Copy email address"
                           className={`flex h-8 w-8 items-center justify-center rounded-lg border transition ${copied
-                              ? 'border-emerald-300 bg-emerald-50 text-emerald-600'
-                              : 'border-[#e8e2d7] bg-[#f6f1e8] text-neutral-500 hover:border-[#d99b4b]/40 hover:bg-white hover:text-[#141311]'
+                            ? 'border-emerald-300 bg-emerald-50 text-emerald-600'
+                            : 'border-[#e8e2d7] bg-[#f6f1e8] text-neutral-500 hover:border-[#d99b4b]/40 hover:bg-white hover:text-[#141311]'
                             }`}
                         >
                           {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
@@ -312,9 +332,8 @@ function Contact() {
                           </span>
                         )}
                       </div>
-                      {/* Open Gmail compose — always works in browser */}
                       <a
-                        href="https://mail.google.com/mail/?view=cm&fs=1&to=hello@anchorworks.studio&su=Project%20Enquiry"
+                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL_ADDRESS}&su=Project%20Enquiry`}
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Open in Gmail"
@@ -347,7 +366,7 @@ function Contact() {
                   </p>
                   <div className="mt-3">
                     <a
-                      href="https://wa.me/917011042987?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project"
+                    href={`https://wa.me/${PHONE_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center rounded-md bg-[#141311] px-4 py-2 text-xs font-medium text-white transition hover:bg-neutral-800"
@@ -388,7 +407,7 @@ function Contact() {
             </div>
 
             {/* RIGHT — enquiry form */}
-            <div className="lg:col-span-7" id="enquiry-form">
+            <div id="enquiry-form" className="scroll-mt-40 sm:scroll-mt-20 lg:col-span-7">
               <div className="contact-form-card rounded-2xl border border-[#e8e2d7] bg-white p-7 shadow-sm sm:p-8">
                 <div className="mb-6 border-b border-[#e8e2d7] pb-5">
                   <p className="contact-form-eyebrow mb-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#a87438]">
@@ -410,7 +429,6 @@ function Contact() {
       <section className="border-b border-[#e8e2d7] bg-[#f6f1e8] px-6 py-12 md:px-12">
         <div className="mx-auto max-w-6xl">
           <div className="contact-consult-card grid grid-cols-1 items-stretch overflow-hidden rounded-2xl border border-[#e8e2d7] bg-white shadow-sm lg:grid-cols-12">
-            {/* Left — image */}
             <div className="contact-consult-image relative min-h-[220px] lg:col-span-5 lg:min-h-full">
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyrwihDFblPolE5kobw_gLHG9htyEJG-tXMwSgJqVd-PVgIXY-Pm2bDW-NaaJyvrXrx-x0WVzrxCLSO7FpQ5UbbsADBHr7MpAFjEM_n5YgNdtDKwWgLHaJxZRUqiSW1JnTjz50oX2L9XkAaKJWytxt62XIYC_k4_ZGi_DYyNaWFjlGRHFuCvcV4UtSsPdc6WmGdozp8CEfkqiP2QTzvNAlJoVospT5ur75mgpdnswDBzAB8krcLKHD"
@@ -426,7 +444,6 @@ function Contact() {
                 </p>
               </div>
             </div>
-            {/* Right — content */}
             <div className="flex flex-col justify-center p-8 sm:p-10 lg:col-span-7">
               <div className="contact-consult-eyebrow mb-2 flex items-center space-x-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#c58838]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#d99b4b]" />
@@ -449,7 +466,7 @@ function Contact() {
                   Book a 15-Min Call →
                 </a>
                 <a
-                  href="https://wa.me/917011042987"
+                  href={`https://wa.me/${PHONE_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="contact-consult-cta inline-flex items-center space-x-2 rounded-md border border-[#e8e2d7] bg-neutral-100 px-5 py-2.5 text-xs font-medium text-[#141311] transition hover:bg-neutral-200 sm:text-sm"

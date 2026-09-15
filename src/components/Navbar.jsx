@@ -11,6 +11,14 @@ function Navbar() {
     setIsOpen(false);
   };
 
+  const handleStartProject = (e) => {
+  e.preventDefault();
+  setIsOpen(false);
+
+  // Navigate to /contact with the target hash
+  navigate('/contact#enquiry-form');
+};
+
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'Our Work', path: '/our-work' },
@@ -39,13 +47,15 @@ function Navbar() {
               <button
                 key={item.path}
                 onClick={() => handleNavigate(item.path)}
-                className={`group relative cursor-pointer  text-sm font-medium transition-colors ${isActive ? 'text-[#B8862E]' : 'text-[#F2EEE4]/60 hover:text-[#F2EEE4]'
-                  }`}
+                className={`group relative cursor-pointer text-sm font-medium transition-colors ${
+                  isActive ? 'text-[#B8862E]' : 'text-[#F2EEE4]/60 hover:text-[#F2EEE4]'
+                }`}
               >
                 {item.label}
                 <span
-                  className={`absolute -bottom-1 left-0 h-[1.5px] w-full origin-left bg-[#B8862E] transition-transform duration-300 ease-out ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                    }`}
+                  className={`absolute -bottom-1 left-0 h-[1.5px] w-full origin-left bg-[#B8862E] transition-transform duration-300 ease-out ${
+                    isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`}
                 />
               </button>
             );
@@ -53,12 +63,12 @@ function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <a
-            href="mailto:hello@anchorworks.studio?subject=New%20project%20enquiry"
-            className="hidden rounded-[7px] bg-[#B8862E] px-5 py-2.5 text-sm font-semibold text-[#1B1712] transition-colors hover:bg-[#c99636] sm:inline-flex"
+          <button
+            onClick={handleStartProject}
+            className="hidden cursor-pointer rounded-[7px] bg-[#B8862E] px-5 py-2.5 text-sm font-semibold text-[#1B1712] transition-colors hover:bg-[#c99636] sm:inline-flex"
           >
             Start a project
-          </a>
+          </button>
 
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -78,20 +88,21 @@ function Navbar() {
               <button
                 key={item.path}
                 onClick={() => handleNavigate(item.path)}
-                className={`py-1 text-base font-medium transition-colors ${isActive ? 'text-[#B8862E]' : 'text-[#F2EEE4]/80 hover:text-[#F2EEE4]'
-                  }`}
+                className={`py-1 text-base font-medium transition-colors ${
+                  isActive ? 'text-[#B8862E]' : 'text-[#F2EEE4]/80 hover:text-[#F2EEE4]'
+                }`}
               >
                 {item.label}
               </button>
-            )
+            );
           })}
 
-          <a
-            href="mailto:hello@anchorworks.studio?subject=New%20project%20enquiry"
-            className="mt-2 w-full rounded-[7px] bg-[#B8862E] px-5 py-3 text-center text-sm font-semibold text-[#1B1712]"
+          <button
+            onClick={handleStartProject}
+            className="mt-2 w-full cursor-pointer rounded-[7px] bg-[#B8862E] px-5 py-3 text-center text-sm font-semibold text-[#1B1712]"
           >
             Start a project
-          </a>
+          </button>
         </div>
       )}
     </header>

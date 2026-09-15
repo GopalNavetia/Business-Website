@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "../motion";
@@ -22,9 +23,12 @@ import {
     Sparkles
 } from "lucide-react";
 
+const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
+
 gsap.registerPlugin(ScrollTrigger);
 
 function Services() {
+    const navigate = useNavigate();
     const heroRef = useRef(null);
     const spotlightRef = useRef(null);
     const headlineRef = useRef(null);
@@ -662,26 +666,9 @@ function Services() {
         };
     }, []);
 
-
-    const handleStartProjectClick = (event) => {
-        if (prefersReducedMotion) return;
-
-        event.preventDefault();
-        const button = event.currentTarget;
-        const bounds = button.getBoundingClientRect();
-        const ripple = document.createElement("span");
-        ripple.className = "cta-ripple absolute rounded-full bg-white/30 pointer-events-none";
-        ripple.style.left = `${event.clientX - bounds.left}px`;
-        ripple.style.top = `${event.clientY - bounds.top}px`;
-        ripple.style.transform = "translate(-50%, -50%)";
-        button.appendChild(ripple);
-
-        gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, {
-            scale: 16, autoAlpha: 0, duration: 0.42, ease: "power2.out", onComplete: () => {
-                ripple.remove();
-                window.location.href = button.href;
-            }
-        });
+    const handleStartProject = (e) => {
+        if (e) e.preventDefault();
+        navigate("/contact#enquiry-form");
     };
 
     const disciplineOneItems = [
@@ -857,14 +844,13 @@ function Services() {
 
                     {/* Hero CTA Button */}
                     <div ref={ctasRef} className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                        <a
-                            href="https://wa.me/917011042987?text=Hi%20Anchorworks%2C%20I%20would%20like%20to%20enquire%20about%20a%20project."
-                            target="_blank"
-                            rel="noreferrer"
+                        <button
+                            type="button"
+                            onClick={handleStartProject}
                             className="hero-cta flex w-full items-center justify-center gap-2 rounded-lg bg-[#D99B4B] px-9 py-4 text-base font-semibold text-[#131210] transition-colors hover:bg-[#ECC187] sm:w-auto"
                         >
                             Start a project <ArrowRight className="h-4 w-4" />
-                        </a>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -902,7 +888,7 @@ function Services() {
                                     Web Design &amp; Development
                                 </h3>
                             </div>
-                            
+
                         </div>
 
                         {/* Bento Layout: Full Hero Showcase + 3-Column Capability Grid */}
@@ -1138,15 +1124,15 @@ function Services() {
                     </p>
                     <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                         <a
-                            href="mailto:hello@anchorworks.studio?subject=New%20project%20enquiry"
+                            href="/contact#enquiry-form"
                             ref={startProjectRef}
-                            onClick={handleStartProjectClick}
+                            onClick={handleStartProject}
                             className="cta-button cta-magnetic relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
                         >
                             Start a project <ArrowRight className="h-5 w-5 text-[#D99B4B]" />
                         </a>
                         <a
-                            href="https://wa.me/917011042987"
+                            href={`https://wa.me/${MY_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}
                             target="_blank"
                             rel="noreferrer"
                             className="cta-button cta-consult w-full rounded-xl border border-[#181614]/30 bg-[#181614]/10 px-7 py-4 text-sm font-bold transition-colors hover:bg-[#181614]/20 sm:w-auto"
