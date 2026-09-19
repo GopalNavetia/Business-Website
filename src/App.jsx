@@ -62,6 +62,7 @@ function PageMeta() {
       <meta property="og:title" content={meta.title} />
       <meta property="og:description" content={meta.description} />
       <meta property="og:url" content={url} />
+      <link rel="canonical" href={url} />
       <meta property="og:image" content={image} />
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image:width" content="1200" />
