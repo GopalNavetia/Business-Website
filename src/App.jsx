@@ -1,5 +1,5 @@
 import "./App.css";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-router-dom"; // added useLocation
 import { Helmet } from "react-helmet-async"; // NEW
 import { gsap } from "gsap";
@@ -38,6 +38,7 @@ const pageMeta = {
 
 function PageMeta() {
   const location = useLocation();
+  const path = location.pathname.replace(/\/+$/, "") || "/";
   const meta = pageMeta[location.pathname];
   const url = `${SITE_URL}${location.pathname}`;
   const image = `${SITE_URL}${OG_IMAGE}`;
@@ -172,6 +173,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+    useEffect(() => {
+    document.dispatchEvent(new Event("app-rendered"));
+  }, []);
+
   return <RouterProvider router={router} />;
 }
 
