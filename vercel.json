@@ -1,4 +1,8 @@
 {
+  "framework": null,
+  "installCommand": "echo Skipping install",
+  "buildCommand": "echo Using prebuilt dist",
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/(.*)",
