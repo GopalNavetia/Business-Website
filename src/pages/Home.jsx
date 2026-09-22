@@ -944,7 +944,7 @@ function HomePage() {
                                 Development meets digital marketing
                             </h3>
                             <p className="partner-copy mt-3 text-sm leading-relaxed text-[#181614]/70 sm:text-base">
-                                For projects that need more than a website, Anchorworks partners
+                                For projects that need more than a website, AnchorWorks partners
                                 directly with Growthonixs. Together, we pair custom engineering
                                 with complete digital marketing under one roof.
                             </p>
