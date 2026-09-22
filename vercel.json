@@ -1,6 +1,7 @@
 {
-  "framework": "vite",
-  "buildCommand": "npm run build",
+  "framework": null,
+  "installCommand": "echo Skipping install",
+  "buildCommand": "echo Using prebuilt dist",
   "outputDirectory": "dist",
   "rewrites": [
     {
