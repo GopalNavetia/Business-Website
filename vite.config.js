@@ -12,7 +12,8 @@ export default defineConfig({
       renderer: '@prerenderer/renderer-puppeteer',
       rendererOptions: {
         renderAfterDocumentEvent: 'app-rendered',
-      },
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      }, 
     }),
   ],
   server: { host: true },
