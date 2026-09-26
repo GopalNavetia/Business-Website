@@ -458,7 +458,7 @@ function Contact() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
-                  href="https://calendly.com/work-gopalnavetia/15-minutes-meeting"
+                  href="https://calendly.com/anchorworks-web/30min"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="contact-consult-cta inline-flex items-center rounded-md bg-[#141311] px-5 py-2.5 text-xs font-medium text-white shadow-sm transition hover:bg-neutral-900 sm:text-sm"
