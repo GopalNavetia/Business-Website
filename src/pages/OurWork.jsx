@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TriangleAlert, SquareTerminal, BadgeCheck, Check } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "../motion";
@@ -11,7 +11,6 @@ const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
 
 function OurWork() {
     const location = useLocation();
-    const navigate = useNavigate();
     const startProjectRef = useRef(null);
 
     useEffect(() => {
@@ -21,7 +20,7 @@ function OurWork() {
         window.scrollTo({
             top: 0,
             left: 0,
-            behavior: "instant",
+            behavior: "smooth",
         });
 
         if (!targetId) return;
@@ -409,13 +408,12 @@ function OurWork() {
                                 We don't force your business into rigid templates or bloated page builders. Whether you need a sub-second marketing site or a custom operational portal, we build only what your business requires.
                             </p>
 
-                            <button
-                                type="button"
-                                onClick={() => navigate("/contact#enquiry-form")}
+                            <Link
+                                to="/contact#enquiry-form"
                                 className="ourwork-hero-cta mt-7 inline-flex items-center justify-center gap-2 rounded-lg bg-[#D99B4B] px-9 py-4 text-base font-semibold text-[#131210] transition-colors hover:bg-[#ECC187]"
                             >
                                 Start a project <span aria-hidden="true">→</span>
-                            </button>
+                            </Link>
                         </div>
 
                         {/* Build Standards Box */}
@@ -623,14 +621,13 @@ function OurWork() {
                             Bring us your business bottleneck. We'll tell you honestly whether you need a website, a custom system, or just a smarter setup.
                         </p>
                         <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                            <button
-                                type="button"
+                            <Link
+                                to="/contact#enquiry-form"
                                 ref={startProjectRef}
-                                onClick={() => navigate("/contact#enquiry-form")}
                                 className="ourwork-cta-button ourwork-cta-primary relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
                             >
                                 Start a project <span className="text-[#D99B4B]">→</span>
-                            </button>
+                            </Link>
 
                             <a
                                 href={`https://wa.me/${MY_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}

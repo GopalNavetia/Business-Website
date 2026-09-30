@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "../motion";
@@ -696,11 +696,6 @@ function HomePage() {
         return () => context.revert();
     }, []);
 
-    const handleStartProject = (e) => {
-        e.preventDefault();
-        navigate('/contact#enquiry-form');
-    };
-
     return (
         <div className="bg-[#131210] text-[#F6F1E8]">
             {/* Hero Section */}
@@ -726,20 +721,18 @@ function HomePage() {
                         one roof so you can focus on running your business.
                     </p>
                     <div ref={ctasRef} className="mb-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                        <button
-                            type="button"
-                            onClick={handleStartProject}
+                        <Link
+                            to="/contact#enquiry-form"
                             className="hero-cta flex w-full items-center justify-center gap-2 rounded-lg bg-[#D99B4B] px-9 py-4 text-base font-semibold text-[#131210] transition-colors hover:bg-[#ECC187] sm:w-auto"
                         >
                             Start a project <ArrowRight className="h-4 w-4" />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/our-work")}
-                            className="hero-cta w-full rounded-lg border border-[#E8DECB]/30 bg-[#22201C]/30 px-8 py-4 text-base font-semibold transition-colors hover:border-[#D99B4B]/60 hover:bg-[#22201C] sm:w-auto"
+                        </Link>
+                        <Link
+                            to="/our-work"
+                            className="hero-cta w-full rounded-lg border border-[#E8DECB]/30 bg-[#22201C]/30 px-8 py-4 text-center text-base font-semibold transition-colors hover:border-[#D99B4B]/60 hover:bg-[#22201C] sm:w-auto"
                         >
                             See our work
-                        </button>
+                        </Link>
                     </div>
                     <p ref={quoteRef} className="mx-auto mb-9 max-w-lg text-sm italic tracking-wide text-[#8A857B]">
                         “We learn how your business actually makes money first, then build a
@@ -817,7 +810,10 @@ function HomePage() {
                         </h2>
                         <p className="mt-4 text-sm leading-relaxed text-[#181614]/70 sm:text-base">
                             Pick the one closest to what you need, or tell us what you&apos;re
-                            picturing and we&apos;ll help you figure out the rest.
+                            picturing and we&apos;ll help you figure out the rest.{" "}
+                            <Link to="/services" className="font-semibold text-[#B87C2B] underline">
+                                See all our services
+                            </Link>.
                         </p>
                     </div>
                     <div className="project-grid grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -843,13 +839,12 @@ function HomePage() {
                                             {description}
                                         </p>
                                     </div>
-                                    <a
-                                        href={`/our-work#${slug}`}
+                                    <Link
+                                        to={`/our-work#${slug}`}
                                         className="flex items-center border-t border-[#E8DECB]/70 pt-4 text-sm font-bold text-[#B87C2B]"
                                     >
-                                        Read more{" "}
-                                        <ArrowRight className="project-arrow ml-1.5 h-4 w-4" />
-                                    </a>
+                                        Read more <ArrowRight className="project-arrow ml-1.5 h-4 w-4" />
+                                    </Link>
                                 </article>
                             ),
                         )}
