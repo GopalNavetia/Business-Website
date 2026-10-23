@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" fill="#181310"/>
+  <g fill="#C89B45">
+    <!-- Upper part of the A (left leg + apex) -->
+    <path d="M467 265 L557 265 L603 360 L540 433 Q505 480 440 525 Q385 545 320 581 Z"/>
+    <!-- Lower right part of the A -->
+    <path d="M643 458 L787 760 L677 760 L625 637 L445 637 Q510 608 548 585 Q580 562 598 540 L575 553 L582 530 Q615 500 643 458 Z"/>
+    <!-- Arrow head + shaft + swoosh tail -->
+    <path d="M627 297 L757 265 L736 403 L705 372 L590 503 Q560 540 480 575 Q430 600 395 660 Q365 705 348 760 L237 760 Q265 690 320 625 Q365 565 430 535 Q500 495 545 435 L657 325 Z"/>
+  </g>
+  <g fill="#181310">
+    <!-- Notch inside the A -->
+    <path d="M512 372 L528 433 Q500 466 468 474 Q492 440 512 372 Z"/>
+    <!-- Thin separating stripe in the swoosh -->
+    <path d="M322 628 Q350 590 392 565 Q440 540 482 500 L470 515 Q440 560 392 585 Q350 605 322 628 Z"/>
+    <!-- Hollow in the swoosh tail -->
+    <path d="M276 727 L327 731 Q345 705 365 685 Q330 695 305 685 Z"/>
+  </g>
+</svg>
