@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLayoutEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "../motion";
@@ -22,14 +22,23 @@ import {
     Film,
     Sparkles
 } from "lucide-react";
+import { serviceGroups, services } from "../data/services";
+import ServiceInformationSection from "../components/ServiceInformationSection";
 
 const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
 
 gsap.registerPlugin(ScrollTrigger);
 
-function Services() {
+function Services({ groupSlug }) {
     const navigate = useNavigate();
+    const serviceGroupsByTitle = Object.fromEntries(services.map((service) => [service.title, service.groupSlug]));
+    const isOverview = !groupSlug;
+    const activeGroup = serviceGroups.find((group) => group.slug === groupSlug);
+    const ServiceCard = isOverview ? Link : "div";
     const heroRef = useRef(null);
+    const groupHeroRef = useRef(null);
+    const groupSpotlightRef = useRef(null);
+    const serviceInfoRef = useRef(null);
     const spotlightRef = useRef(null);
     const headlineRef = useRef(null);
     const italicHeadlineRef = useRef(null);
@@ -38,12 +47,15 @@ function Services() {
 
     // Final CTA Section Refs
     const ctaSectionRef = useRef(null);
-    const ctaHeadingRef = useRef(null);
-    const ctaCopyRef = useRef(null);
-    const ctaButtonsRef = useRef(null);
     const startProjectRef = useRef(null);
-    const consultBtnRef = useRef(null);
-    const trustBadgesRef = useRef(null);
+
+    const handleGroupHeroPointerMove = (event) => {
+        if (prefersReducedMotion || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+        const bounds = event.currentTarget.getBoundingClientRect();
+        groupSpotlightRef.current.style.left = `${event.clientX - bounds.left}px`;
+        groupSpotlightRef.current.style.top = `${event.clientY - bounds.top}px`;
+    };
 
     // Core Disciplines Section Intro Refs
     const disciplinesIntroRef = useRef(null);
@@ -85,6 +97,119 @@ function Services() {
     }, []);
 
     useLayoutEffect(() => {
+        if (isOverview) return;
+
+        const contexts = [];
+        const hero = groupHeroRef.current;
+        const info = serviceInfoRef.current;
+
+        if (hero) {
+            contexts.push(gsap.context(() => {
+                const content = gsap.utils.toArray(".service-group-intro");
+                const cards = gsap.utils.toArray(".service-group-intro-card");
+
+                if (prefersReducedMotion) {
+                    gsap.fromTo(
+                        [...content, ...cards],
+                        { autoAlpha: 0 },
+                        { autoAlpha: 1, duration: 0.55, stagger: 0.08, ease: "power3.out" },
+                    );
+                    return;
+                }
+
+                gsap.timeline({ defaults: { ease: "power3.out" } })
+                    .fromTo(
+                        content[0],
+                        { y: 12, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.45 },
+                    )
+                    .fromTo(
+                        content[1],
+                        { y: 24, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.6 },
+                        "-=0.2",
+                    )
+                    .fromTo(
+                        content.slice(2),
+                        { y: 16, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.08 },
+                        "-=0.25",
+                    )
+                    .fromTo(
+                        cards,
+                        { y: 22, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.12 },
+                        "-=0.15",
+                    );
+            }, hero));
+        }
+
+        if (info) {
+            contexts.push(gsap.context(() => {
+                const heading = gsap.utils.toArray(".service-info-heading");
+                const copy = gsap.utils.toArray(".service-info-copy");
+                const cards = gsap.utils.toArray(".service-info-card");
+
+                if (prefersReducedMotion) {
+                    gsap.fromTo(
+                        [...heading, ...copy, ...cards],
+                        { autoAlpha: 0 },
+                        {
+                            autoAlpha: 1,
+                            duration: 0.5,
+                            stagger: 0.08,
+                            ease: "power3.out",
+                            scrollTrigger: {
+                                trigger: info,
+                                start: "top 82%",
+                                toggleActions: "play none none none",
+                            },
+                        },
+                    );
+                    return;
+                }
+
+                const timeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: info,
+                        start: "top 82%",
+                        toggleActions: "play none none none",
+                    },
+                    defaults: { ease: "power3.out" },
+                });
+
+                timeline
+                    .fromTo(
+                        heading,
+                        { y: 20, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.5 },
+                    )
+                    .fromTo(
+                        copy,
+                        { y: 16, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.5 },
+                        "-=0.25",
+                    )
+                    .fromTo(
+                        cards,
+                        { y: 28, rotateX: 5, autoAlpha: 0, transformPerspective: 900 },
+                        {
+                            y: 0,
+                            rotateX: 0,
+                            autoAlpha: 1,
+                            duration: 0.65,
+                            stagger: 0.13,
+                        },
+                        "-=0.2",
+                    );
+            }, info));
+        }
+
+        return () => contexts.forEach((context) => context.revert());
+    }, [groupSlug, isOverview]);
+
+    useLayoutEffect(() => {
+        if (!isOverview) return;
         const hero = heroRef.current;
         let removePointerListener = () => { };
         let cancelled = false;
@@ -149,10 +274,11 @@ function Services() {
             removePointerListener();
             if (context) context.revert();
         };
-    }, []);
+    }, [isOverview]);
 
     // Core Disciplines Header Scroll-Triggered Animation
     useLayoutEffect(() => {
+        if (!isOverview) return;
         let cancelled = false;
         let context;
 
@@ -221,10 +347,11 @@ function Services() {
             cancelled = true;
             if (context) context.revert();
         };
-    }, []);
+    }, [isOverview]);
 
     // Discipline 01 (Web Design & Development) Scroll-Triggered Animation
     useLayoutEffect(() => {
+        if (groupSlug && groupSlug !== "web-design-development") return;
         const context = gsap.context(() => {
             const container = d1ContainerRef.current;
             const headerLeft = d1HeaderLeftRef.current;
@@ -328,10 +455,11 @@ function Services() {
         }, d1ContainerRef);
 
         return () => context.revert();
-    }, []);
+    }, [groupSlug]);
 
     // Discipline 02 (Search & Digital Marketing) Scroll-Triggered Animation
     useLayoutEffect(() => {
+        if (groupSlug && groupSlug !== "search-digital-marketing") return;
         const context = gsap.context(() => {
             const container = d2ContainerRef.current;
             const headerLeft = d2HeaderLeftRef.current;
@@ -447,10 +575,11 @@ function Services() {
         }, d2ContainerRef);
 
         return () => context.revert();
-    }, []);
+    }, [groupSlug]);
 
     // Discipline 03 (Video Shoot & Editing) Scroll-Triggered Animation
     useLayoutEffect(() => {
+        if (groupSlug && groupSlug !== "video-production-editing") return;
         const context = gsap.context(() => {
             const container = d3ContainerRef.current;
             const headerLeft = d3HeaderLeftRef.current;
@@ -554,7 +683,7 @@ function Services() {
         }, d3ContainerRef);
 
         return () => context.revert();
-    }, []);
+    }, [groupSlug]);
 
     // Final CTA Section Animations (Word Mask Reveal, Trust Badges, Magnetic Button, Ripple Click)
     useLayoutEffect(() => {
@@ -676,14 +805,14 @@ function Services() {
             icon: AppWindow,
             tag: "SPECIALIZATION 01",
             title: "UI/UX Design",
-            description: "Interactive interfaces mapped around user behavior, touch targets, and clear navigation paths.",
+            description: "Website experiences mapped around user behavior, touch targets, and clear navigation paths for Delhi businesses.",
             badge: "Engineered Prototype"
         },
         {
             icon: Palette,
             tag: "SPECIALIZATION 02",
             title: "Logo & Brand Identity",
-            description: "Custom-tailored typography systems, brand marks, and color tokens built to establish immediate credibility.",
+            description: "As a branding agency in Delhi, we provide logo design services with custom typography, brand marks, and color systems.",
             badge: "Identity Assets"
         },
         {
@@ -696,8 +825,8 @@ function Services() {
         {
             icon: BookOpen,
             tag: "SPECIALIZATION 04",
-            title: "Marketing Collateral",
-            description: "High-end layout design for marketing assets, booklets, and business print collateral.",
+            title: "Graphic Design & Marketing Collateral",
+            description: "Our graphic design company in Delhi creates campaign assets, booklets, and print and digital collateral for local businesses.",
             badge: "Print & Digital Decks"
         },
         {
@@ -705,8 +834,14 @@ function Services() {
             tag: "SPECIALIZATION 05",
             title: "Conversion Landing Pages",
             description: "Single-offer page architectures engineered with clear visual hierarchy to turn traffic into enquiries.",
-            badge: "Conversion Optimized",
-            colSpan: "md:col-span-2 lg:col-span-2"
+            badge: "Conversion Optimized"
+        },
+        {
+            icon: AppWindow,
+            tag: "SPECIALIZATION 06",
+            title: "Shopify & E-commerce Development",
+            description: "From Shopify website development in Delhi to e-commerce website development in Delhi, our stores make product discovery and checkout straightforward.",
+            badge: "Online Store Builds"
         },
     ];
 
@@ -715,14 +850,14 @@ function Services() {
             icon: Search,
             tag: "SPECIALIZATION 01",
             title: "Search Engine Optimization (SEO) & Local Business SEO",
-            description: "Technical sitemaps, structured schemas, and local search strategies to index and rank on high-intent terms.",
+            description: "Our SEO company in Delhi helps businesses improve technical foundations, useful content, and local visibility with SEO services in Delhi.",
             badge: "LOCAL & TECHNICAL SEARCH"
         },
         {
             icon: Target,
             tag: "SPECIALIZATION 02",
             title: "Pay-Per-Click Advertising (Google & Meta Ads)",
-            description: "Performance ad campaigns backed by server-side tracking and analytics.",
+            description: "As a Google Ads agency in Delhi, we plan measurable campaigns. Our PPC agency in Delhi also manages tracking and reporting as a digital advertising agency in Delhi.",
             badge: "SERVER-SIDE TRACKING"
         }
     ];
@@ -732,7 +867,7 @@ function Services() {
             icon: Share2,
             tag: "SPECIALIZATION 03",
             title: "Social Media Marketing (SMM)",
-            description: "Multi-channel content curation, community building, and strategic campaign scheduling.",
+            description: "As a social media marketing agency in Delhi, we plan content, build communities, and provide social media management services in Delhi.",
             badge: "COMMUNITY GROWTH"
         },
         {
@@ -748,6 +883,13 @@ function Services() {
             title: "Email & WhatsApp Marketing",
             description: "Behavior-based, automated email flows and mobile chat campaigns running on autopilot.",
             badge: "AUTOMATED FLOWS"
+        },
+        {
+            icon: Target,
+            tag: "SPECIALIZATION 06",
+            title: "Lead Generation",
+            description: "As a lead generation company in Delhi, we build campaigns and landing pages. Our lead generation services in Delhi focus on clear enquiry paths.",
+            badge: "ENQUIRY-FOCUSED CAMPAIGNS"
         }
     ];
 
@@ -755,8 +897,8 @@ function Services() {
         {
             icon: Video,
             tag: "SPECIALIZATION 01",
-            title: "Commercial & Ad Film Production",
-            description: "Engaging pacing and dynamic video cuts edited specifically to tell brand stories on social feeds.",
+            title: "Video Editing & Commercial Production",
+            description: "As a video editing company in Delhi, we help brands shape commercial footage. Work with a video editor in Delhi to prepare it for digital channels.",
             badge: "BRAND CAMPAIGNS"
         },
         {
@@ -807,6 +949,8 @@ function Services() {
 
     return (
         <div className="min-h-screen bg-[#131210] font-sans text-[#F6F1E8] selection:bg-[#D99B4B] selection:text-[#131210]">
+            {isOverview && (
+            <>
             {/* Hero Section */}
             <section ref={heroRef} className="wireframe-grid hero-section relative overflow-hidden bg-[#131210] px-5 pb-14 pt-14 text-[#F6F1E8] sm:px-8 md:pb-20 md:pt-20">
                 <div ref={spotlightRef} className="hero-spotlight pointer-events-none absolute left-0 top-0 z-0" />
@@ -824,10 +968,10 @@ function Services() {
                     {/* Masked Headline */}
                     <h1 ref={headlineRef} className="max-w-4xl font-serif text-4xl font-semibold leading-[1.08] tracking-tight text-[#F6F1E8] sm:text-6xl lg:text-[64px]">
                         <span className="block">
-                            {renderMaskedWords("Engineering Digital")}
+                            {renderMaskedWords("Digital Marketing & Web Design")}
                         </span>
                         <span ref={italicHeadlineRef} className="block font-serif font-normal italic text-[#D99B4B]">
-                            {renderMaskedWords("Advantage.")}
+                            {renderMaskedWords("Services in Delhi.")}
                             <span className="block font-serif font-normal italic text-[#D99B4B]">
                                 {renderMaskedWords("Built Without Compromise.")}
                             </span>
@@ -837,8 +981,8 @@ function Services() {
                     {/* Sub-copy Description */}
                     <div ref={subheadingRef} className="mt-6 max-w-2xl">
                         <p className="text-base font-light leading-relaxed text-[#8A857B] sm:text-lg md:text-xl">
-                            We design and engineer bespoke web platforms, data pipelines, and media assets designed for speed, clarity,
-                            and compounding business return.
+                            Anchor Works helps Delhi businesses with web design and development, digital marketing, SEO, graphic design,
+                            video editing, paid advertising, and e-commerce solutions.
                         </p>
                     </div>
 
@@ -854,12 +998,67 @@ function Services() {
                     </div>
                 </div>
             </section>
+            </>
+            )}
+
+            {!isOverview && activeGroup && (
+                <section
+                    ref={groupHeroRef}
+                    onPointerMove={handleGroupHeroPointerMove}
+                    className="wireframe-grid relative overflow-hidden bg-[#131210] px-6 py-12 text-[#F6F1E8] sm:px-8 sm:py-16"
+                >
+                    <div ref={groupSpotlightRef} className="hero-spotlight pointer-events-none absolute left-0 top-0 z-0 transition-[left,top] duration-500 ease-out" />
+                    <div className="hero-grid-drift pointer-events-none absolute inset-0" />
+                    <div className="pointer-events-none absolute right-0 top-0 h-[380px] w-[520px] rounded-full bg-[#D99B4B]/10 blur-[120px]" />
+                    <div className="relative mx-auto max-w-7xl">
+                        <div className="max-w-3xl">
+                            <p className="service-group-intro inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D99B4B]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#D99B4B]" />
+                                {activeGroup.introduction.eyebrow}
+                            </p>
+                            <h1 className="service-group-intro mt-4 font-serif text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+                                {activeGroup.introduction.headline}
+                            </h1>
+                            <p className="service-group-intro mt-5 max-w-2xl text-sm font-light leading-relaxed text-[#F2EEE4]/65 sm:text-base">
+                                {activeGroup.introduction.body}
+                            </p>
+                            <Link
+                                to="/contact#enquiry-form"
+                                className="service-group-intro mt-7 inline-flex items-center gap-2 rounded-lg bg-[#D99B4B] px-6 py-3 text-sm font-semibold text-[#131210] transition-colors hover:bg-[#ECC187]"
+                            >
+                                Talk about your project
+                                <ArrowRight className="h-4 w-4" />
+                            </Link>
+                        </div>
+
+                        <div className="mt-10 grid gap-4 md:grid-cols-3">
+                            {activeGroup.introduction.details.map((detail, index) => (
+                                <article
+                                    key={detail.title}
+                                    className="service-group-intro-card rounded-2xl border border-[#F2EEE4]/10 bg-[#F2EEE4]/[0.035] p-5 backdrop-blur-sm sm:p-6"
+                                >
+                                    <span className="font-mono text-xs font-semibold tracking-wider text-[#D99B4B]">
+                                        0{index + 1}
+                                    </span>
+                                    <h2 className="mt-3 font-serif text-lg font-semibold text-[#F2EEE4]">
+                                        {detail.title}
+                                    </h2>
+                                    <p className="mt-2 text-sm leading-relaxed text-[#F2EEE4]/60">
+                                        {detail.description}
+                                    </p>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Core Disciplines Section */}
-            <main className="bg-[#FAF7F2] px-6 py-12 text-[#1B1712] sm:px-8">
+            <main className={`bg-[#FAF7F2] px-6 text-[#1B1712] sm:px-8 ${isOverview ? "py-12" : "py-8 sm:py-12"}`}>
                 <div className="mx-auto flex max-w-7xl flex-col gap-10">
 
                     {/* Section Intro Header with Scroll-Triggered Animation */}
+                    {isOverview && (
                     <div ref={disciplinesIntroRef} className="mx-auto max-w-3xl text-center">
                         <h2 ref={disciplinesHeadingRef} className="font-serif text-3xl font-semibold leading-tight text-[#1B1712] sm:text-4xl lg:text-5xl">
                             Three Core Disciplines.
@@ -877,19 +1076,26 @@ function Services() {
                             Each vertical is engineered to remove operational drag and convert attention into measurable equity.
                         </p>
                     </div>
+                    )}
 
                     {/* DISCIPLINE 01: Web Design & Development */}
+                    {(!groupSlug || groupSlug === "web-design-development") && (
                     <article ref={d1ContainerRef} className="rounded-3xl border border-[#1B1712]/10 bg-[#F5F1E8] p-6 shadow-sm sm:p-8">
                         {/* Header Strip */}
                         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-[#1B1712]/10 pb-6">
                             <div ref={d1HeaderLeftRef} className="flex items-center gap-3">
                                 <span className="text-xs font-bold text-[#1B1712]/40">01/03</span>
                                 <h3 className="ml-2 font-serif text-2xl font-semibold text-[#1B1712] sm:text-3xl">
-                                    Web Design &amp; Development
+                                    Web Design &amp; Development in Delhi
                                 </h3>
                             </div>
 
                         </div>
+
+                        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-[#1B1712]/70 sm:text-base">
+                            As a website development company in Delhi and website design company in Delhi, we build responsive sites for businesses across Delhi, around your customers,
+                            services, and business goals.
+                        </p>
 
                         {/* Bento Layout: Full Hero Showcase + 3-Column Capability Grid */}
                         <div className="space-y-6">
@@ -913,7 +1119,8 @@ function Services() {
                             {/* 3-Column Grid of Deliverable Cards */}
                             <div className="grid grid-cols-1 gap-5 pt-2 md:grid-cols-2 lg:grid-cols-3">
                                 {disciplineOneItems.map(({ icon: Icon, tag, title, description, badge, colSpan }, idx) => (
-                                    <div
+                                    <ServiceCard
+                                        {...(isOverview ? { to: `/services/${serviceGroupsByTitle[title]}` } : {})}
                                         key={title}
                                         className={`group flex flex-col justify-between rounded-2xl border border-[#1B1712]/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#B8862E]/50 hover:shadow-lg ${idx < 3 ? "d1-row-1" : "d1-row-2"} ${colSpan || ""}`}
                                     >
@@ -936,13 +1143,15 @@ function Services() {
                                         <div className="mt-5 flex items-center border-t border-[#1B1712]/5 pt-4 text-[11px] font-bold uppercase tracking-wider text-[#B8862E]">
                                             <span>{badge}</span>
                                         </div>
-                                    </div>
+                                    </ServiceCard>
                                 ))}
                             </div>
                         </div>
                     </article>
+                    )}
 
                     {/* DISCIPLINE 02: Search & Digital Marketing */}
+                    {(!groupSlug || groupSlug === "search-digital-marketing") && (
                     <article ref={d2ContainerRef} className="rounded-3xl border border-[#1B1712]/10 bg-[#F5F1E8] p-6 shadow-sm sm:p-8">
                         {/* Header Strip */}
                         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-[#1B1712]/10 pb-6">
@@ -953,6 +1162,11 @@ function Services() {
                                 </h3>
                             </div>
                         </div>
+
+                        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-[#1B1712]/70 sm:text-base">
+                            We are a digital marketing company in Delhi, helping businesses improve search visibility, attract relevant
+                            enquiries, and reach customers through measurable campaigns.
+                        </p>
 
                         <div className="space-y-6">
                             {/* Bento Row: Left Media Visual + Right Stacked Cards */}
@@ -977,7 +1191,8 @@ function Services() {
                                 {/* Right Stacked Service Cards */}
                                 <div className="flex flex-col justify-between gap-5 lg:col-span-6">
                                     {disciplineTwoTopItems.map(({ icon: Icon, tag, title, description, badge }) => (
-                                        <div
+                                        <ServiceCard
+                                            {...(isOverview ? { to: `/services/${serviceGroupsByTitle[title]}` } : {})}
                                             key={title}
                                             className="d2-stacked-card group flex h-full flex-col justify-between rounded-2xl border border-[#1B1712]/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#B8862E]/50 hover:shadow-lg"
                                         >
@@ -1000,7 +1215,7 @@ function Services() {
                                             <div className="mt-5 flex items-center border-t border-[#1B1712]/5 pt-3.5 text-[11px] font-bold uppercase tracking-wider text-[#B8862E]">
                                                 <span>{badge}</span>
                                             </div>
-                                        </div>
+                                        </ServiceCard>
                                     ))}
                                 </div>
                             </div>
@@ -1008,7 +1223,8 @@ function Services() {
                             {/* Bottom 3-Card Grid for Discipline 02 */}
                             <div ref={d2BottomRowRef} className="grid grid-cols-1 gap-5 md:grid-cols-3">
                                 {disciplineTwoBottomItems.map(({ icon: Icon, tag, title, description, badge }) => (
-                                    <div
+                                    <ServiceCard
+                                        {...(isOverview ? { to: `/services/${serviceGroupsByTitle[title]}` } : {})}
                                         key={title}
                                         className="d2-bottom-card group flex flex-col justify-between rounded-2xl border border-[#1B1712]/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#B8862E]/50 hover:shadow-lg"
                                     >
@@ -1031,20 +1247,22 @@ function Services() {
                                         <div className="mt-5 flex items-center border-t border-[#1B1712]/5 pt-4 text-[11px] font-bold uppercase tracking-wider text-[#B8862E]">
                                             <span>{badge}</span>
                                         </div>
-                                    </div>
+                                    </ServiceCard>
                                 ))}
                             </div>
                         </div>
                     </article>
+                    )}
 
                     {/* DISCIPLINE 03: Video Shoot & Editing */}
+                    {(!groupSlug || groupSlug === "video-production-editing") && (
                     <article ref={d3ContainerRef} className="rounded-3xl border border-[#1B1712]/10 bg-[#F5F1E8] p-6 shadow-sm sm:p-8">
                         {/* Header Strip */}
                         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-[#1B1712]/10 pb-6">
                             <div ref={d3HeaderLeftRef} className="flex items-center gap-3">
                                 <span className="text-xs font-bold text-[#1B1712]/40">03/03</span>
                                 <h3 className="ml-2 font-serif text-2xl font-semibold text-[#1B1712] sm:text-3xl">
-                                    Video Shoot &amp; Editing
+                                    Video Editing &amp; Production in Delhi
                                 </h3>
                             </div>
                         </div>
@@ -1070,7 +1288,8 @@ function Services() {
                             {/* Bento Capability Cards Grid */}
                             <div className="grid grid-cols-1 gap-5 pt-2 md:grid-cols-2 lg:grid-cols-3">
                                 {disciplineThreeItems.map(({ icon: Icon, tag, title, description, badge, colSpan }, idx) => (
-                                    <div
+                                    <ServiceCard
+                                        {...(isOverview ? { to: `/services/${serviceGroupsByTitle[title]}` } : {})}
                                         key={title}
                                         className={`group flex flex-col justify-between rounded-2xl border border-[#1B1712]/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#B8862E]/50 hover:shadow-lg ${idx < 3 ? "d3-row-1" : "d3-row-2"} ${colSpan || ""}`}
                                     >
@@ -1093,14 +1312,19 @@ function Services() {
                                         <div className="mt-5 flex items-center border-t border-[#1B1712]/5 pt-4 text-[11px] font-bold uppercase tracking-wider text-[#B8862E]">
                                             <span>{badge}</span>
                                         </div>
-                                    </div>
+                                    </ServiceCard>
                                 ))}
                             </div>
                         </div>
                     </article>
+                    )}
 
                 </div>
             </main>
+
+            {!isOverview && activeGroup && (
+                <ServiceInformationSection sectionRef={serviceInfoRef} information={activeGroup.information} />
+            )}
 
             {/* Call To Action Section */}
             <section

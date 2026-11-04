@@ -255,7 +255,7 @@ function Contact() {
         <div className="relative z-10 mx-auto max-w-6xl">
           <span className="ourwork-hero-badge mb-5 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/40 bg-[#D99B4B]/10 px-3.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#D99B4B]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#D99B4B]" />
-            DIRECT FOUNDER AVAILABILITY · 24H RESPONSE SLA · DELHI NCR &amp; WORLDWIDE
+            DIRECT FOUNDER AVAILABILITY · 24H RESPONSE SLA · DELHI &amp; WORLDWIDE
           </span>
           <h1 className="max-w-4xl font-serif text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             <span className="hero-word-clip"><span className="contact-hero-word">Let's</span></span>{" "}
@@ -290,7 +290,7 @@ function Contact() {
                     STUDIO COORDINATES
                   </p>
                   <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#141311]">
-                    Delhi NCR, India
+                    Delhi, India
                   </h2>
                   <p className="mt-1 text-xs font-light text-neutral-500">
                     Web, Marketing &amp; Creative — Serving Clients Worldwide

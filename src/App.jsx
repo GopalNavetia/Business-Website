@@ -11,6 +11,8 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
+import ServiceGroup from "./pages/ServiceGroup";
+import { serviceGroups } from "./data/services";
 import { prefersReducedMotion } from "./motion";
 
 const SITE_URL = import.meta.env.VITE_SITE_URL || "http://localhost:5173";
@@ -27,8 +29,8 @@ const pageMeta = {
     description: "See how Anchorworks builds business websites, portfolios, management systems, and booking platforms — fast, search-ready, and fully owned by you, with zero monthly software fees."
   },
   "/services": {
-    title: "Services | Anchor Works",
-    description: "Custom website design, development, and digital marketing services — SEO, social media, and more, all under one roof."
+    title: "Digital Marketing Company in Delhi | Anchor Works",
+    description: "Anchor Works serves Delhi with website design and development, SEO, graphic design, branding, video editing, paid advertising, and e-commerce."
   },
   "/contact": {
     title: "Contact | Anchor Works",
@@ -39,8 +41,16 @@ const pageMeta = {
 function PageMeta() {
   const location = useLocation();
   const path = location.pathname.replace(/\/+$/, "") || "/";
-  const meta = pageMeta[location.pathname];
-  const url = `${SITE_URL}${location.pathname}`;
+  const serviceGroup = path.startsWith("/services/")
+    ? serviceGroups.find((item) => `/services/${item.slug}` === path)
+    : null;
+  const meta = pageMeta[path] || (serviceGroup
+    ? {
+        title: `${serviceGroup.title} | Anchor Works`,
+        description: serviceGroup.description,
+      }
+    : null);
+  const url = `${SITE_URL}${path}`;
   const image = `${SITE_URL}${OG_IMAGE}`;
 
   if (!meta) {
@@ -166,6 +176,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/our-work", element: <OurWork /> },
       { path: "/services", element: <Services /> },
+      { path: "/services/:groupSlug", element: <ServiceGroup /> },
       { path: "/contact", element: <Contact /> },
       { path: "*", element: <NotFound /> }
     ],
