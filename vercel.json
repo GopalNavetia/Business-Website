@@ -3,6 +3,50 @@
   "installCommand": "echo Skipping install",
   "buildCommand": "echo Using prebuilt dist",
   "outputDirectory": "dist",
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.anchorworks.in"
+        }
+      ],
+      "destination": "https://anchorworks.in/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/our-work/",
+      "destination": "/our-work",
+      "permanent": true
+    },
+    {
+      "source": "/services/",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/services/web-design-development/",
+      "destination": "/services/web-design-development",
+      "permanent": true
+    },
+    {
+      "source": "/services/search-digital-marketing/",
+      "destination": "/services/search-digital-marketing",
+      "permanent": true
+    },
+    {
+      "source": "/services/video-production-editing/",
+      "destination": "/services/video-production-editing",
+      "permanent": true
+    },
+    {
+      "source": "/contact/",
+      "destination": "/contact",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

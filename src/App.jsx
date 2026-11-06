@@ -15,7 +15,7 @@ import ServiceGroup from "./pages/ServiceGroup";
 import { serviceGroups } from "./data/services";
 import { prefersReducedMotion } from "./motion";
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || "http://localhost:5173";
+const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://anchorworks.in").replace(/\/+$/, "");
 const OG_IMAGE = "/og-image.png";
 
 // NEW: metadata for each route
@@ -84,6 +84,24 @@ function PageMeta() {
       <meta name="twitter:title" content={meta.title} />
       <meta name="twitter:description" content={meta.description} />
       <meta name="twitter:image" content={image} />
+      {path === "/" && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ProfessionalService",
+            name: "Anchor Works",
+            url: SITE_URL,
+            logo: `${SITE_URL}/logo.png`,
+            email: "info@anchorworks.in",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Delhi",
+              addressCountry: "IN",
+            },
+            areaServed: ["Delhi, India", "Worldwide"],
+          })}
+        </script>
+      )}
     </Helmet>
   );
 }

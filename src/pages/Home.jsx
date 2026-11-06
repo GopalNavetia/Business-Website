@@ -751,20 +751,23 @@ function HomePage() {
                             "01 / Conversion",
                             "Conversion-first design",
                             "Pages built to turn visitors into leads, supported by SEO and content that brings them there.",
+                            "/services/web-design-development",
                         ],
                         [
                             Search,
                             "02 / Discovery",
                             "Built around how people find you",
                             "Your digital presence works across Google, social, and referrals seamlessly.",
+                            "/services/search-digital-marketing",
                         ],
                         [
                             Zap,
                             "03 / Architecture",
                             "Strategy behind every decision",
                             "Design, marketing, and UX work as one system, not three separate services.",
+                            "/services/video-production-editing",
                         ],
-                    ].map(([Icon, label, title, description]) => (
+                    ].map(([Icon, label, title, description, path]) => (
                         <div
                             key={label}
                             className="feature-card group rounded-2xl border border-[#D99B4B]/20 bg-[#1C1B18] p-6"
@@ -783,6 +786,12 @@ function HomePage() {
                             <p className="text-sm leading-relaxed text-[#8A857B]">
                                 {description}
                             </p>
+                            <Link
+                                to={path}
+                                className="mt-4 inline-flex text-sm font-semibold text-[#D99B4B] underline underline-offset-4"
+                            >
+                                Explore this service
+                            </Link>
                         </div>
                     ))}
                 </div>
