@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const MY_EMAIL = import.meta.env.VITE_MY_EMAIL;
+const PHONE_NUMBER = import.meta.env.VITE_MY_NUMBER || "";
+const DISPLAY_PHONE_NUMBER = PHONE_NUMBER.replace(/^(\d{2})(\d{5})(\d{5})$/, "+$1 $2 $3");
 
 function Footer() {
     const location = useLocation();
@@ -76,6 +78,15 @@ function Footer() {
                         >
                             {MY_EMAIL}
                         </a>
+
+                        {PHONE_NUMBER && (
+                            <a
+                                href={`tel:+${PHONE_NUMBER}`}
+                                className="transition-colors hover:text-[#B8862E]"
+                            >
+                                {DISPLAY_PHONE_NUMBER}
+                            </a>
+                        )}
 
                         <span>Delhi, India</span>
                     </div>
