@@ -1,6 +1,6 @@
 import ContactForm from '../components/ContactForm';
 import { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { Mail, MessageCircle, Check, ChevronDown, Copy, ArrowUpRight, Send } from 'lucide-react';
+import { Mail, MessageCircle, Phone, Check, ChevronDown, Copy, ArrowUpRight, Send } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { prefersReducedMotion } from '../motion';
@@ -9,7 +9,8 @@ import { useLocation } from 'react-router-dom';
 gsap.registerPlugin(ScrollTrigger);
 
 const EMAIL_ADDRESS = import.meta.env.VITE_MY_EMAIL;
-const PHONE_NUMBER = import.meta.env.VITE_MY_NUMBER;
+const PHONE_NUMBER = import.meta.env.VITE_MY_NUMBER || '';
+const DISPLAY_PHONE_NUMBER = PHONE_NUMBER.replace(/^(\d{2})(\d{5})(\d{5})$/, '+$1 $2 $3');
 
 const FAQS = [
   { id: 1, title: 'What services do you offer?', text: 'We help businesses build and grow their digital presence through website design and development, e-commerce, SEO, digital marketing, and creative content including photography and video.' },
@@ -64,6 +65,7 @@ function Contact() {
   }, [location.hash, location.pathname]);
 
   const [copied, setCopied] = useState(false);
+  const [phoneCopied, setPhoneCopied] = useState(false);
   const [openFaqId, setOpenFaqId] = useState(null);
   const pageRef = useRef(null);
   const heroRef = useRef(null);
@@ -234,9 +236,32 @@ function Contact() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     };
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(email)
         .then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); })
+        .catch(fallback);
+    } else {
+      fallback();
+    }
+  };
+
+  const copyPhone = () => {
+    const fallback = () => {
+      const el = document.createElement('textarea');
+      el.value = DISPLAY_PHONE_NUMBER;
+      el.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      setPhoneCopied(true);
+      setTimeout(() => setPhoneCopied(false), 2000);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(DISPLAY_PHONE_NUMBER)
+        .then(() => { setPhoneCopied(true); setTimeout(() => setPhoneCopied(false), 2000); })
         .catch(fallback);
     } else {
       fallback();
@@ -308,7 +333,7 @@ function Contact() {
                         <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
                           DIRECT STUDIO INBOX
                         </p>
-                        <p className="mt-0.5 font-mono text-sm font-medium text-[#141311]">
+                        <p className="mt-0.5 font-mono text-sm font-semibold tracking-tight text-[#141311]">
                           {EMAIL_ADDRESS}
                         </p>
                       </div>
@@ -364,15 +389,42 @@ function Contact() {
                   <p className="text-xs font-light leading-relaxed text-neutral-500">
                     Ideal for quick questions, project ideas, and discussing your requirements before getting started.
                   </p>
-                  <div className="mt-3">
-                    <a
-                    href={`https://wa.me/${PHONE_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center rounded-md bg-[#141311] px-4 py-2 text-xs font-medium text-white transition hover:bg-neutral-800"
-                    >
-                      Start Chat →
-                    </a>
+                  <div className="mt-4">
+                    <p className="flex items-center gap-2 border-t border-[#e8e2d7] pt-3 font-mono text-sm font-semibold tracking-tight text-[#141311]">
+                      <Phone className="h-3.5 w-3.5 text-emerald-600" />
+                      <span>{DISPLAY_PHONE_NUMBER}</span>
+                    </p>
+                    <div className="mt-2.5 grid grid-cols-3 gap-2">
+                      <a
+                        href={`https://wa.me/${PHONE_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-w-0 items-center justify-center rounded-md bg-[#141311] px-2 py-2 text-[11px] font-medium text-white transition hover:bg-neutral-800"
+                      >
+                        <MessageCircle className="mr-1 h-3 w-3 shrink-0" />
+                        Chat
+                      </a>
+                      <a
+                        href={`tel:+${PHONE_NUMBER}`}
+                        className="inline-flex min-w-0 items-center justify-center rounded-md border border-[#e8e2d7] bg-[#f6f1e8] px-2 py-2 text-[11px] font-medium text-[#141311] transition hover:border-[#d99b4b]/40 hover:bg-white"
+                      >
+                        <Phone className="mr-1 h-3 w-3 shrink-0" />
+                        Call
+                      </a>
+                      <button
+                        type="button"
+                        onClick={copyPhone}
+                        title="Copy phone number"
+                        className={`inline-flex min-w-0 items-center justify-center rounded-md border px-2 py-2 text-[11px] font-medium transition ${
+                          phoneCopied
+                            ? 'border-emerald-300 bg-emerald-50 text-emerald-600'
+                            : 'border-[#e8e2d7] bg-[#f6f1e8] text-[#141311] hover:border-[#d99b4b]/40 hover:bg-white'
+                        }`}
+                      >
+                        {phoneCopied ? <Check className="mr-1 h-3 w-3" /> : <Copy className="mr-1 h-3 w-3" />}
+                        {phoneCopied ? 'Copied' : 'Copy'}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
