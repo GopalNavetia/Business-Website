@@ -31,7 +31,7 @@ function Footer() {
                         to="/"
                         className="flex w-fit cursor-pointer items-center gap-2.5 font-serif text-xl font-bold tracking-wide"
                     >
-                        <img src="/logo.webp" alt="Anchorworks" width="32" height="32" className="h-8 w-8 rounded-md" />
+                        <img src="/logo.png" alt="Anchorworks" className="h-8 w-8 rounded-md" />
                         <span className="text-[#F2EEE4]">Anchor<span className="text-[#B88A3D]">Works</span></span>
                     </Link>
 

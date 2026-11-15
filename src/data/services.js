@@ -60,7 +60,7 @@ export const serviceGroups = [
                 },
             ],
         },
-        image: "/webDev.webp",
+        image: "/webDev.png",
         imageAlt: "Web design and development showcase",
         highlight: "Multi-Device Responsive Architecture",
         services: [
@@ -721,7 +721,7 @@ export const serviceGroups = [
                 },
             ],
         },
-        image: "/searchDigitalMarketing.webp",
+        image: "/searchDigitalMarketing.png",
         imageAlt: "Search and digital marketing showcase",
         highlight: "Direct Lead Pipeline & CRM Sync",
         services: [
@@ -824,7 +824,7 @@ export const serviceGroups = [
                 },
             ],
         },
-        image: "/videoEditing.webp",
+        image: "/videoEditing.png",
         imageAlt: "Video shoot and editing showcase",
         highlight: "Cinematic Grading & Sound Design Studio",
         services: [

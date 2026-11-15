@@ -1,1 +1,0 @@
-import{c as t,t as e}from"./react-3iNWaMJX.js";import{n as i,t as n}from"./index-CzHiKd5G.js";import m from"./Services-Cc0dWSc-.js";var o=e();function f(){const{groupSlug:s}=t(),r=i.find(u=>u.slug===s);return r?(0,o.jsx)(m,{groupSlug:r.slug}):(0,o.jsx)(n,{})}export{f as default};

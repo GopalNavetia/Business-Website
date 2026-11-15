@@ -26,7 +26,7 @@ function Navbar() {
           onClick={closeMenu}
           className="flex cursor-pointer items-center gap-2.5 font-serif text-xl font-bold tracking-wide"
         >
-          <img src="/logo.webp" alt="Anchorworks" width="32" height="32" className="h-8 w-8 rounded-md" />
+          <img src="/logo.png" alt="Anchorworks" className="h-8 w-8 rounded-md" />
           <span className="text-[#F2EEE4]">Anchor<span className="text-[#B88A3D]">Works</span></span>
         </Link>
 
@@ -91,7 +91,7 @@ function Navbar() {
               }`}
             >
               <div className="rounded-2xl border border-[#F2EEE4]/10 bg-[#211C16] p-2 shadow-2xl shadow-black/30">
-                <p className="px-4 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#F2EEE4]/40">
+                <p className="px-4 pb-2 pt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#F2EEE4]/40">
                   Explore our services
                 </p>
                 <div className="flex flex-col">
@@ -102,7 +102,7 @@ function Navbar() {
                       onClick={() => setDesktopServicesOpen(false)}
                       className="group/item flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-[#F2EEE4]/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D99B4B]"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#D99B4B]/20 bg-[#D99B4B]/10 font-mono text-[11px] font-bold text-[#D99B4B]">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#D99B4B]/20 bg-[#D99B4B]/10 font-mono text-[10px] font-bold text-[#D99B4B]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span className="min-w-0 flex-1">
@@ -194,7 +194,7 @@ function Navbar() {
             </div>
             {mobileServicesOpen && (
               <div className="mt-2 w-full rounded-xl border border-[#F2EEE4]/10 bg-[#211C16] p-2">
-                <p className="px-3 pb-2 pt-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#F2EEE4]/40">
+                <p className="px-3 pb-2 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#F2EEE4]/40">
                   Explore our services
                 </p>
                 <div className="flex flex-col">
@@ -205,7 +205,7 @@ function Navbar() {
                       onClick={closeMenu}
                       className="flex items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors hover:bg-[#F2EEE4]/[0.06]"
                     >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#D99B4B]/20 bg-[#D99B4B]/10 font-mono text-[11px] font-bold text-[#D99B4B]">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#D99B4B]/20 bg-[#D99B4B]/10 font-mono text-[10px] font-bold text-[#D99B4B]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span className="min-w-0 flex-1">

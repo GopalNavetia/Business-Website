@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import { Send, CheckCircle, Lock } from 'lucide-react';
-import { gsap, reveal, prefersReducedMotion } from '../motion';
+import { gsap } from '../motion';
+import { prefersReducedMotion } from '../motion';
 
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -13,7 +14,7 @@ const INPUT =
   'w-full bg-[#fcfaf7] border border-[#e8e2d7] rounded-md text-sm px-4 py-3 focus:border-[#d99b4b] focus:ring-1 focus:ring-[#d99b4b] outline-none text-[#141311] placeholder:text-neutral-400 font-sans transition';
 
 const LABEL =
-  'block font-mono text-[11px] font-semibold uppercase tracking-widest text-neutral-500 mb-2';
+  'block font-mono text-[10px] font-semibold uppercase tracking-widest text-neutral-500 mb-2';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -31,28 +32,61 @@ export default function ContactForm() {
   const successRef = useRef(null);
 
   useEffect(() => {
-    const context = gsap.context(() => reveal('.form-field-group', formRef.current), formRef);
+    let context;
+
+    context = gsap.context(() => {
+      const groups = gsap.utils.toArray('.form-field-group');
+
+      if (prefersReducedMotion) {
+        gsap.set(groups, { autoAlpha: 1, clearProps: 'transform' });
+        return;
+      }
+
+      gsap.fromTo(
+        groups,
+        { y: 16, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.45,
+          stagger: 0.08,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: formRef.current,
+            start: 'top 82%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    }, formRef);
+
     return () => context.revert();
   }, []);
 
   useEffect(() => {
     if (!showSuccess || !successRef.current) return;
+
     if (prefersReducedMotion) {
-      gsap.set(successRef.current, { autoAlpha: 1, clearProps: 'transform' });
+      gsap.set(successRef.current, {
+        autoAlpha: 1,
+        clearProps: 'transform',
+      });
       return;
     }
 
     gsap.fromTo(
       successRef.current,
       {
-        autoAlpha: 0.001,
-        y: 14,
+        scale: 0.95,
+        y: -6,
+        autoAlpha: 0,
       },
       {
+        scale: 1,
         y: 0,
         autoAlpha: 1,
-        duration: 0.5,
-        ease: 'power2.out',
+        duration: 0.4,
+        ease: 'back.out(1.4)',
       }
     );
   }, [showSuccess]);
@@ -278,7 +312,7 @@ export default function ContactForm() {
         </div>
 
 
-        <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#c58838]">
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#c58838]">
           DIRECT FOUNDER DISPATCH
         </span>
 
