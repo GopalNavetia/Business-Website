@@ -228,11 +228,8 @@ function HomePage() {
                 if (count) count.textContent = "184";
                 return;
             }
-            gsap.fromTo(".hero-content", { autoAlpha: 0.001, y: 10 }, {
-                autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out",
-            });
-            gsap.fromTo(".hero-content .pointer-events-none", { autoAlpha: 0.001 }, {
-                autoAlpha: 1, duration: 0.5, ease: "power2.out",
+            gsap.fromTo(".hero-content", { opacity: 1, y: 10 }, {
+                opacity: 1, y: 0, duration: 0.4, ease: "power2.out",
             });
             const leadCount = { value: 0 };
             gsap.to(leadCount, { value: 184, duration: 0.6, ease: "power2.out", onUpdate: () => {
@@ -441,14 +438,14 @@ function HomePage() {
                                 name: "Gopal Navetia",
                                 role: "Lead Full-Stack Architect",
                                 badge: "Direct lead",
-                                image: "/gopal.png",
+                                image: "/gopal.webp",
                                 bio: "Builds dependable digital systems from the first wireframe to the final deployment, with a focus on speed, clarity, and measurable growth.",
                             },
                             {
                                 name: "Vatsal Gupta",
                                 role: "Product & Experience Engineer",
                                 badge: "Direct lead",
-                                image: "/vatsal.png",
+                                image: "/vatsal.webp",
                                 bio: "Shapes the product experience around real customer journeys, turning complex requirements into interfaces people can use immediately.",
                             },
                         ].map((member) => (
@@ -457,18 +454,15 @@ function HomePage() {
                                 className="team-card group rounded-2xl border border-[#E8DECB] bg-white p-5 sm:p-7"
                             >
                                 <div className="team-photo-frame mb-6 aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
-                                    <picture>
-                                        <source srcSet={member.image.replace(".png", ".webp")} type="image/webp" />
-                                        <img
-                                            src={member.image}
-                                            alt={member.name}
-                                            width="800"
-                                            height="800"
-                                            loading="lazy"
-                                            decoding="async"
-                                            className={`team-photo h-full w-full object-cover ${member.name === "Vatsal Gupta" ? "scale-[1.06]" : ""}`}
-                                        />
-                                    </picture>
+                                    <img
+                                        src={member.image}
+                                        alt={member.name}
+                                        width="800"
+                                        height="800"
+                                        loading="lazy"
+                                        decoding="async"
+                                        className={`team-photo h-full w-full object-cover ${member.name === "Vatsal Gupta" ? "scale-[1.06]" : ""}`}
+                                    />
                                 </div>
                                 <div className="mb-3 flex items-start justify-between gap-3">
                                     <h3 className="font-serif text-2xl font-bold text-[#181614]">
@@ -524,18 +518,15 @@ function HomePage() {
                         <div className="partner-card-column lg:col-span-3">
                             <div className="partner-card group rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 text-center shadow-sm transition-all duration-300 hover:border-[#B87C2B]/40 hover:shadow-xl">
                                 <div className="partner-logo mb-4 flex items-center justify-center gap-2">
-                                    <picture>
-                                        <source srcSet="/partnerLogo.webp" type="image/webp" />
-                                        <img
-                                            src="/partnerLogo.png"
-                                            alt=""
-                                            width="72"
-                                            height="65"
-                                            loading="lazy"
-                                            decoding="async"
-                                            className="partner-logo-img h-9 w-9 object-cover rounded-lg shadow-sm"
-                                        />
-                                    </picture>
+                                    <img
+                                        src="/partnerLogo.webp"
+                                        alt=""
+                                        width="72"
+                                        height="65"
+                                        loading="lazy"
+                                        decoding="async"
+                                        className="partner-logo-img h-9 w-9 object-cover rounded-lg shadow-sm"
+                                    />
                                     <div className="text-left">
                                         <div className="font-serif text-lg font-bold leading-tight">GROWTHONICX</div>
                                         <div className="font-mono text-xs uppercase tracking-wider text-[#6F685F]">
@@ -545,18 +536,15 @@ function HomePage() {
                                 </div>
                                 <div className="partner-nested-card mb-4 flex aspect-[16/10] w-full flex-col items-center justify-center rounded-xl border border-[#E8DECB] bg-white p-4 shadow-sm">
                                     <div className="partner-photo-frame aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
-                                        <picture>
-                                            <source srcSet="/kunal.webp" type="image/webp" />
-                                            <img
-                                                src="/kunal.png"
-                                                alt="Kunal"
-                                                width="800"
-                                                height="800"
-                                                loading="lazy"
-                                                decoding="async"
-                                                className="partner-photo h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                                            />
-                                        </picture>
+                                        <img
+                                            src="/kunal.webp"
+                                            alt="Kunal"
+                                            width="800"
+                                            height="800"
+                                            loading="lazy"
+                                            decoding="async"
+                                            className="partner-photo h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                        />
                                     </div>
                                 </div>
                                 <div className="mb-3 flex items-start justify-between gap-3">

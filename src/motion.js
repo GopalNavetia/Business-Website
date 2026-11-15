@@ -40,24 +40,3 @@ export const reveal = (selector, scope) => {
         }),
     });
 };
-
-export function pauseWhenHidden(tween, element) {
-    if (!tween || !element || typeof window === "undefined") return () => {};
-
-    let visible = true;
-    const update = () => tween.paused(document.hidden || !visible);
-    const observer = new IntersectionObserver(([entry]) => {
-        visible = entry.isIntersecting;
-        update();
-    }, { threshold: 0.01 });
-
-    observer.observe(element);
-    document.addEventListener("visibilitychange", update);
-    update();
-
-    return () => {
-        observer.disconnect();
-        document.removeEventListener("visibilitychange", update);
-        tween.kill();
-    };
-}

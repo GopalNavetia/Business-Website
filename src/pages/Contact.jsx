@@ -304,7 +304,7 @@ function Contact() {
           <div className="contact-consult-card grid grid-cols-1 items-stretch overflow-hidden rounded-2xl border border-[#e8e2d7] bg-white shadow-sm lg:grid-cols-12">
             <div className="contact-consult-image relative min-h-[220px] lg:col-span-5 lg:min-h-full">
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyrwihDFblPolE5kobw_gLHG9htyEJG-tXMwSgJqVd-PVgIXY-Pm2bDW-NaaJyvrXrx-x0WVzrxCLSO7FpQ5UbbsADBHr7MpAFjEM_n5YgNdtDKwWgLHaJxZRUqiSW1JnTjz50oX2L9XkAaKJWytxt62XIYC_k4_ZGi_DYyNaWFjlGRHFuCvcV4UtSsPdc6WmGdozp8CEfkqiP2QTzvNAlJoVospT5ur75mgpdnswDBzAB8krcLKHD"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyrwihDFblPolE5kobw_gLHG9htyEJG-tXMwSgJqVd-PVgIXY-Pm2bDW-NaaJyvrXrx-x0WVzrxCLSO7FpQ5UbbsADBHr7MpAFjEM_n5YgNdtDKwWgLHaJxZRUqiSW1JnTjz50oX2L9XkAaKJWytxt62XIYC_k4_ZGi_DYyNaWFjlGRHFuCvcV4UtSsPdc6WmGdozp8CEfkqiP2QTzvNAlJoVospT5ur75mgpdnswDBzAB8krcLKHD=w800"
                 alt="Consultation"
                 width="1200"
                 height="800"

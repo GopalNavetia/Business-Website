@@ -13,7 +13,7 @@ const INPUT =
   'w-full bg-[#fcfaf7] border border-[#e8e2d7] rounded-md text-sm px-4 py-3 focus:border-[#d99b4b] focus:ring-1 focus:ring-[#d99b4b] outline-none text-[#141311] placeholder:text-neutral-400 font-sans transition';
 
 const LABEL =
-  'block font-mono text-[10px] font-semibold uppercase tracking-widest text-neutral-500 mb-2';
+  'block font-mono text-[11px] font-semibold uppercase tracking-widest text-neutral-500 mb-2';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -278,7 +278,7 @@ export default function ContactForm() {
         </div>
 
 
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#c58838]">
+        <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#c58838]">
           DIRECT FOUNDER DISPATCH
         </span>
 

@@ -223,7 +223,9 @@ function Services({ groupSlug }) {
                             <div className="group relative overflow-hidden rounded-2xl border border-[#1B1712]/10 bg-[#120F0C] shadow-lg">
                                 <img
                                    
-                                    src="/webDev.png"
+                                    src="/webDev.webp"
+                                    srcSet="/webDev-640.webp 640w, /webDev.webp 1280w"
+                                    sizes="(min-width: 1024px) 60vw, 100vw"
                                     alt="Web Design & Development Showcase"
                                     width="2048"
                                     height="1536"
@@ -299,7 +301,9 @@ function Services({ groupSlug }) {
                                 <div className="group relative flex min-h-[380px] items-center justify-center overflow-hidden rounded-2xl border border-[#1B1712]/10 bg-[#120F0C] shadow-lg lg:col-span-6">
                                     <img
                                        
-                                        src="/searchDigitalMarketing.png"
+                                        src="/searchDigitalMarketing.webp"
+                                        srcSet="/searchDigitalMarketing-640.webp 640w, /searchDigitalMarketing.webp 1280w"
+                                        sizes="(min-width: 1024px) 60vw, 100vw"
                                         alt="Search & Digital Marketing Showcase"
                                         width="2048"
                                         height="1536"
@@ -400,7 +404,9 @@ function Services({ groupSlug }) {
                             <div className="group relative overflow-hidden rounded-2xl border border-[#1B1712]/10 bg-[#120F0C] shadow-lg">
                                 <img
                                    
-                                    src="/videoEditing.png"
+                                    src="/videoEditing.webp"
+                                    srcSet="/videoEditing-640.webp 640w, /videoEditing.webp 1280w"
+                                    sizes="(min-width: 1024px) 60vw, 100vw"
                                     alt="Video Shoot & Editing Showcase"
                                     width="935"
                                     height="695"

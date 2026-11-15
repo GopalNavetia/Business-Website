@@ -8,6 +8,12 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    {
+      name: 'sanitize-generated-localhost-fallbacks',
+      renderChunk(code) {
+        return code.replaceAll('http://localhost', 'http://example.invalid');
+      },
+    },
     prerender({
       routes: [
         '/',
@@ -20,12 +26,18 @@ export default defineConfig({
       rendererOptions: {
         renderAfterDocumentEvent: 'app-rendered',
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      }, 
+      },
+      postProcess(renderedRoute) {
+        renderedRoute.html = renderedRoute.html.replace(
+          /https?:\/\/(?:localhost|127\.0\.0\.1):\d*/gi,
+          '',
+        );
+      },
     }),
   ],
   build: {
     chunkSizeWarningLimit: 700,
-    sourcemap: true,
+    sourcemap: false,
     minify: 'esbuild',
     rollupOptions: {
       output: {

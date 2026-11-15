@@ -150,11 +150,8 @@ function OurWork() {
     useEffect(() => {
         const context = gsap.context(() => {
             if (!prefersReducedMotion) {
-                gsap.fromTo(".ourwork-hero-content", { autoAlpha: 0.001, y: 10 }, {
-                    autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out",
-                });
-                gsap.fromTo(".ourwork-standards", { autoAlpha: 0.001 }, {
-                    autoAlpha: 1, duration: 0.45, ease: "power2.out",
+                gsap.fromTo(".ourwork-hero-content", { opacity: 1, y: 10 }, {
+                    opacity: 1, y: 0, duration: 0.4, ease: "power2.out",
                 });
             }
             reveal(".capability-card", pageRef.current);

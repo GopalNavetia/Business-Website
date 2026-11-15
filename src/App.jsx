@@ -140,15 +140,27 @@ function SiteMotion() {
 function Layout() {
   const location = useLocation();
   const mainRef = useRef(null);
+  const hasMounted = useRef(false);
 
   useEffect(() => {
     if (!location.hash) window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    if (!prefersReducedMotion && mainRef.current) {
+    if (hasMounted.current && !prefersReducedMotion && mainRef.current) {
       gsap.fromTo(mainRef.current, { autoAlpha: 0.001 }, {
         autoAlpha: 1, duration: 0.2, ease: "power1.out", clearProps: "opacity",
       });
     }
+    hasMounted.current = true;
   }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      if (mainRef.current?.querySelector("h1")) {
+        window.clearInterval(timer);
+        document.dispatchEvent(new Event("app-rendered"));
+      }
+    }, 50);
+    return () => window.clearInterval(timer);
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
@@ -181,10 +193,6 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    useEffect(() => {
-    document.dispatchEvent(new Event("app-rendered"));
-  }, []);
-
   return <RouterProvider router={router} />;
 }
 
