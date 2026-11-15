@@ -117,7 +117,7 @@ function HeroMockup({ mockupRef, badgeRef, progressRef }) {
                     <div className="font-mono text-sm font-bold leading-tight text-[#D99B4B]">
                         +<span data-lead-count>0</span>% Avg Lead Surge
                     </div>
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-[#8A857B]">
+                    <div className="font-mono text-xs uppercase tracking-wider text-[#B8B1A5]">
                         Verified performance
                     </div>
                 </div>
@@ -144,10 +144,10 @@ function HeroMockup({ mockupRef, badgeRef, progressRef }) {
                         <div className="h-2 w-full rounded-full bg-[#8A857B]/30" />
                         <div className="h-2 w-4/5 rounded-full bg-[#8A857B]/30" />
                         <div className="flex gap-2.5 pt-2">
-                            <div className="flex h-7 w-24 items-center justify-center rounded-md bg-[#D99B4B] text-[10px] font-bold text-[#131210]">
+                            <div className="flex h-7 w-24 items-center justify-center rounded-md bg-[#D99B4B] text-xs font-bold text-[#131210]">
                                 GET STARTED
                             </div>
-                            <div className="flex h-7 w-20 items-center justify-center rounded-md border border-[#D99B4B]/40 font-mono text-[10px] text-[#D99B4B]/80">
+                            <div className="flex h-7 w-20 items-center justify-center rounded-md border border-[#D99B4B]/40 font-mono text-xs text-[#D99B4B]/80">
                                 AUDIT →
                             </div>
                         </div>
@@ -158,13 +158,13 @@ function HeroMockup({ mockupRef, badgeRef, progressRef }) {
                                 key={value}
                                 className="flex h-24 flex-col justify-between rounded-xl border border-[#D99B4B]/25 bg-[#22201C]/90 p-2.5"
                             >
-                                <span className="font-mono text-[9px] uppercase tracking-wider text-[#8A857B]">
+                                <span className="font-mono text-xs uppercase tracking-wider text-[#B8B1A5]">
                                     {index ? "Speed" : "Conversion"}
                                 </span>
                                 <span className="font-mono text-xl font-bold text-[#D99B4B]">
                                     {value}
                                 </span>
-                                <span className="font-mono text-[8px] text-emerald-400">
+                                <span className="font-mono text-xs text-emerald-400">
                                     ● Verified
                                 </span>
                             </div>
@@ -179,7 +179,7 @@ function HeroMockup({ mockupRef, badgeRef, progressRef }) {
                     <div className="h-4 w-3/4 rounded bg-[#D99B4B]/70" />
                     <div className="flex h-11 items-center justify-center gap-1.5 rounded-lg border border-[#D99B4B]/30 bg-[#22201C]">
                         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-                        <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#D99B4B]">
+                        <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#D99B4B]">
                             Instant Booking
                         </span>
                     </div>
@@ -775,7 +775,7 @@ function HomePage() {
                                 <div className="feature-icon flex h-10 w-10 items-center justify-center rounded-lg border border-[#D99B4B]/30 bg-[#D99B4B]/15 text-[#D99B4B]">
                                     <Icon className="h-5 w-5" />
                                 </div>
-                                <span className="rounded border border-[#D99B4B]/20 bg-[#D99B4B]/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-[#D99B4B]">
+                                <span className="rounded border border-[#D99B4B]/20 bg-[#D99B4B]/10 px-2 py-0.5 font-mono text-xs uppercase tracking-widest text-[#D99B4B]">
                                     {label}
                                 </span>
                             </div>
@@ -836,7 +836,7 @@ function HomePage() {
                                             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F6F1E8] text-[#B87C2B]">
                                                 <Icon className="h-6 w-6" />
                                             </div>
-                                            <span className="rounded border border-[#E8DECB] bg-[#F5EFE6] px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-[#181614]/70">
+                                            <span className="rounded border border-[#E8DECB] bg-[#F5EFE6] px-2.5 py-1 font-mono text-xs uppercase tracking-widest text-[#181614]/70">
                                                 {label}
                                             </span>
                                         </div>
@@ -985,7 +985,7 @@ function HomePage() {
                                     </picture>
                                     <div className="text-left">
                                         <div className="font-serif text-lg font-bold leading-tight">GROWTHONICX</div>
-                                        <div className="font-mono text-[9px] uppercase tracking-wider text-[#8A857B]">
+                                        <div className="font-mono text-xs uppercase tracking-wider text-[#6F685F]">
                                             Digital marketing &amp; growth agency
                                         </div>
                                     </div>
@@ -1010,7 +1010,7 @@ function HomePage() {
                                     <h3 className="font-serif text-2xl font-bold text-[#181614] transition-colors group-hover:text-[#B87C2B]">
                                         Kunal Sahni
                                     </h3>
-                                    <span className="partner-verified inline-flex items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-[10px] font-semibold text-emerald-600">
+                                    <span className="partner-verified inline-flex items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-xs font-semibold text-emerald-600">
                                         <Check className="partner-verified-icon h-3.5 w-3.5" />
                                         Verified partner
                                     </span>

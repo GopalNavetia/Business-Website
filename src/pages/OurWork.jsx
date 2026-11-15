@@ -412,7 +412,7 @@ function OurWork() {
                                     Build standards
                                 </h2>
 
-                                <span className="text-[9px] uppercase tracking-wide text-[#F6F1E8]/40">
+                                <span className="text-xs uppercase tracking-wide text-[#F6F1E8]/60">
                                     Built for growth
                                 </span>
                             </div>
@@ -486,7 +486,7 @@ function OurWork() {
                                             <span className="capability-meta text-[11px] font-semibold uppercase tracking-widest text-[#B8862E]">
                                                 Capability {category.number.split("/")[0]}
                                             </span>
-                                            <span className="capability-meta text-[10px] font-medium tracking-wide text-[#9B8B7E]">
+                                            <span className="capability-meta text-xs font-medium tracking-wide text-[#B8A99A]">
                                                 {category.number}
                                             </span>
                                         </div>
@@ -503,7 +503,7 @@ function OurWork() {
                                             <div className="capability-subblock flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
                                                 <TriangleAlert className="capability-subblock-icon h-5 w-5 shrink-0 text-[#B8862E] mt-0.5" strokeWidth={1.5} />
                                                 <div className="flex-1">
-                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
+                                                    <p className="text-xs font-bold uppercase tracking-widest text-[#8B641D]">
                                                         {category.bottleneck}
                                                     </p>
                                                     <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
@@ -516,7 +516,7 @@ function OurWork() {
                                             <div className="capability-subblock flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
                                                 <SquareTerminal className="capability-subblock-icon h-5 w-5 shrink-0 text-[#B8862E] mt-0.5" strokeWidth={1.5} />
                                                 <div className="flex-1">
-                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
+                                                    <p className="text-xs font-bold uppercase tracking-widest text-[#8B641D]">
                                                         {category.build}
                                                     </p>
                                                     <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
@@ -529,7 +529,7 @@ function OurWork() {
                                             <div className="capability-subblock flex gap-3 rounded-lg border border-[#E8D9C3] bg-[#FBF7F1] p-4">
                                                 <BadgeCheck className="capability-subblock-icon h-5 w-5 shrink-0 text-yellow-600 mt-0.5" strokeWidth={1.5} />
                                                 <div className="flex-1">
-                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#B8862E]">
+                                                    <p className="text-xs font-bold uppercase tracking-widest text-[#8B641D]">
                                                         {category.value}
                                                     </p>
                                                     <p className="mt-1.5 text-xs leading-relaxed text-[#6B6157]">
@@ -579,7 +579,7 @@ function OurWork() {
                                         {description}
                                     </p>
                                     <div className="mt-auto border-t border-[#E8DECB]/70 pt-3">
-                                        <span className="guarantee-pill inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[10px] font-semibold text-emerald-700">
+                                        <span className="guarantee-pill inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-xs font-semibold text-emerald-700">
                                             <Check className="guarantee-check h-3 w-3" />
                                             {proof}
                                         </span>

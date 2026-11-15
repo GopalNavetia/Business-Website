@@ -312,7 +312,7 @@ function Contact() {
 
                 {/* Studio Coordinates */}
                 <div className="contact-info-block pb-6">
-                  <p className="mb-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#a87438]">
+                  <p className="mb-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#815B25]">
                     STUDIO COORDINATES
                   </p>
                   <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#141311]">
@@ -331,7 +331,7 @@ function Contact() {
                         <Mail className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
+                        <p className="font-mono text-xs font-semibold uppercase tracking-widest text-neutral-600">
                           DIRECT STUDIO INBOX
                         </p>
                         <p className="mt-0.5 font-mono text-sm font-semibold tracking-tight text-[#141311]">
@@ -352,7 +352,7 @@ function Contact() {
                           {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                         </button>
                         {copied && (
-                          <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-[#141311] px-2 py-1 text-[10px] font-medium text-white shadow-sm">
+                          <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-[#141311] px-2 py-1 text-xs font-medium text-white shadow-sm">
                             Copied!
                             <span className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-[#141311]" />
                           </span>
@@ -381,7 +381,7 @@ function Contact() {
                       <MessageCircle className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
+                      <p className="font-mono text-xs font-semibold uppercase tracking-widest text-neutral-600">
                         REAL-TIME MESSAGING
                       </p>
                       <h3 className="text-sm font-semibold text-[#141311]">Instant WhatsApp Consult</h3>
@@ -431,7 +431,7 @@ function Contact() {
 
                 {/* The Studio Compact */}
                 <div className="contact-info-block pt-6">
-                  <p className="mb-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#a87438]">
+                  <p className="mb-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#815B25]">
                     OPERATING COMMITMENTS
                   </p>
                   <h2 className="mb-4 font-serif text-xl font-semibold tracking-tight text-[#141311]">
@@ -463,7 +463,7 @@ function Contact() {
             <div id="enquiry-form" className="scroll-mt-40 sm:scroll-mt-20 lg:col-span-7">
               <div className="contact-form-card rounded-2xl border border-[#e8e2d7] bg-white p-7 shadow-sm sm:p-8">
                 <div className="mb-6 border-b border-[#e8e2d7] pb-5">
-                  <p className="contact-form-eyebrow mb-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#a87438]">
+                  <p className="contact-form-eyebrow mb-1.5 font-mono text-xs font-semibold uppercase tracking-widest text-[#815B25]">
                     PROJECT ENQUIRY
                   </p>
                   <h2 className="contact-form-heading font-serif text-3xl font-semibold tracking-tight text-[#141311] sm:text-4xl">
@@ -493,7 +493,7 @@ function Contact() {
                 className="h-full w-full object-cover brightness-[0.75] contrast-[1.05]"
               />
               <div className="absolute bottom-5 left-5 right-5 text-white">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#d99b4b]">
+                <p className="font-mono text-xs font-semibold uppercase tracking-widest text-[#F0B35D]">
                   BUILT WITH INTENTION
                 </p>
                 <p className="mt-0.5 font-serif text-sm italic text-neutral-200">
@@ -502,7 +502,7 @@ function Contact() {
               </div>
             </div>
             <div className="flex flex-col justify-center p-8 sm:p-10 lg:col-span-7">
-              <div className="contact-consult-eyebrow mb-2 flex items-center space-x-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#c58838]">
+              <div className="contact-consult-eyebrow mb-2 flex items-center space-x-2 font-mono text-xs font-semibold uppercase tracking-widest text-[#8B641D]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#d99b4b]" />
                 <span>DIRECT PROJECT CONSULTATION</span>
               </div>
@@ -541,7 +541,7 @@ function Contact() {
       <section className="contact-faq-section bg-[#f6f1e8] px-6 py-14 md:px-12">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center">
-            <div className="contact-faq-eyebrow mb-3 inline-block rounded-full bg-[#e8e2d7]/60 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-neutral-600">
+            <div className="contact-faq-eyebrow mb-3 inline-block rounded-full bg-[#e8e2d7]/60 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-neutral-700">
               QUESTIONS &amp; ANSWERS
             </div>
             <h2 className="font-serif text-3xl font-semibold tracking-tight text-[#141311] sm:text-4xl lg:text-5xl">
