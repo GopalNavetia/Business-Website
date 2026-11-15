@@ -1,12 +1,8 @@
 import ContactForm from '../components/ContactForm';
-import { useState, useLayoutEffect, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Mail, MessageCircle, Phone, Check, ChevronDown, Copy, ArrowUpRight, Send } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { prefersReducedMotion } from '../motion';
+import { gsap, ScrollTrigger, prefersReducedMotion } from '../motion';
 import { useLocation } from 'react-router-dom';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const EMAIL_ADDRESS = import.meta.env.VITE_MY_EMAIL;
 const PHONE_NUMBER = import.meta.env.VITE_MY_NUMBER || '';
@@ -71,7 +67,7 @@ function Contact() {
   const heroRef = useRef(null);
   const spotlightRef = useRef(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let cancelled = false;
     let context;
     let removePointerListener = () => { };
@@ -140,24 +136,29 @@ function Contact() {
         gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
 
         if (hero && spotlightRef.current) {
+          let bounds = hero.getBoundingClientRect();
+          const updateBounds = () => {
+            bounds = hero.getBoundingClientRect();
+          };
+          const moveX = gsap.quickTo(spotlightRef.current, "x", { duration: 0.6, ease: "power2.out" });
+          const moveY = gsap.quickTo(spotlightRef.current, "y", { duration: 0.6, ease: "power2.out" });
           const onPointerMove = (event) => {
-            const bounds = hero.getBoundingClientRect();
-            gsap.to(spotlightRef.current, {
-              x: event.clientX - bounds.left,
-              y: event.clientY - bounds.top,
-              duration: 0.6,
-              ease: "power2.out",
-            });
+            moveX(event.clientX - bounds.left);
+            moveY(event.clientY - bounds.top);
           };
           if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
             hero.addEventListener("pointermove", onPointerMove);
-            removePointerListener = () => hero.removeEventListener("pointermove", onPointerMove);
+            window.addEventListener("resize", updateBounds, { passive: true });
+            removePointerListener = () => {
+              hero.removeEventListener("pointermove", onPointerMove);
+              window.removeEventListener("resize", updateBounds);
+            };
           }
         }
 
         gsap.timeline({ defaults: { ease: "power3.out" } })
           .fromTo(heroBadge, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45 })
-          .fromTo(heroWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" }, "-=0.08")
+          .to(heroWords, { yPercent: 0, duration: 0.42, stagger: 0.05, ease: "power3.out" }, "-=0.08")
           .fromTo(heroItalic, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, "-=0.1")
           .fromTo(heroCopy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.12");
 
@@ -485,6 +486,10 @@ function Contact() {
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyrwihDFblPolE5kobw_gLHG9htyEJG-tXMwSgJqVd-PVgIXY-Pm2bDW-NaaJyvrXrx-x0WVzrxCLSO7FpQ5UbbsADBHr7MpAFjEM_n5YgNdtDKwWgLHaJxZRUqiSW1JnTjz50oX2L9XkAaKJWytxt62XIYC_k4_ZGi_DYyNaWFjlGRHFuCvcV4UtSsPdc6WmGdozp8CEfkqiP2QTzvNAlJoVospT5ur75mgpdnswDBzAB8krcLKHD"
                 alt="Consultation"
+                width="1200"
+                height="800"
+                loading="lazy"
+                decoding="async"
                 className="h-full w-full object-cover brightness-[0.75] contrast-[1.05]"
               />
               <div className="absolute bottom-5 left-5 right-5 text-white">

@@ -1,11 +1,8 @@
-import { useState, useRef, useLayoutEffect, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import { Send, CheckCircle, Lock } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from '../motion';
 import { prefersReducedMotion } from '../motion';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -34,7 +31,7 @@ export default function ContactForm() {
   const formRef = useRef(null);
   const successRef = useRef(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let context;
 
     context = gsap.context(() => {

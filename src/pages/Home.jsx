@@ -1,8 +1,6 @@
-import { useLayoutEffect, useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { prefersReducedMotion } from "../motion";
+import { gsap, prefersReducedMotion } from "../motion";
 import {
     ArrowRight,
     BarChart3,
@@ -16,8 +14,6 @@ import {
     SquareUser,
     Zap,
 } from "lucide-react";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
 
@@ -230,7 +226,7 @@ function HomePage() {
         }
     }, [location]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const hero = heroRef.current;
         let removePointerListener = () => { };
         const context = gsap.context(() => {
@@ -239,17 +235,16 @@ function HomePage() {
             const leadCount = { value: 0 };
 
             if (prefersReducedMotion) {
-                gsap.fromTo(
+                gsap.set(
                     [headlineRef.current, subheadingRef.current, ctasRef.current, quoteRef.current, mockupRef.current],
-                    { autoAlpha: 0 },
-                    { autoAlpha: 1, duration: 0.7, stagger: 0.08, ease: "power3.out" },
+                    { autoAlpha: 1, clearProps: "transform" },
                 );
                 return;
             }
 
             const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
             timeline
-                .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.7, stagger: 0.05, ease: "power3.out" })
+                .to(words, { yPercent: 0, duration: 0.45, stagger: 0.05, ease: "power3.out" })
                 .fromTo(italicHeadlineRef.current, { autoAlpha: 0.65 }, { autoAlpha: 1, duration: 0.55 }, "-=0.15")
                 .fromTo(subheadingRef.current, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, "+=0.15")
                 .fromTo(ctas, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" }, "-=0.2")
@@ -267,13 +262,23 @@ function HomePage() {
             gsap.to(mockupRef.current, { y: -5, rotationZ: 0.5, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: timeline.duration() });
             gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
 
+            let bounds = hero.getBoundingClientRect();
+            const updateBounds = () => {
+                bounds = hero.getBoundingClientRect();
+            };
+            const moveX = gsap.quickTo(spotlightRef.current, "x", { duration: 0.6, ease: "power2.out" });
+            const moveY = gsap.quickTo(spotlightRef.current, "y", { duration: 0.6, ease: "power2.out" });
             const onPointerMove = (event) => {
-                const bounds = hero.getBoundingClientRect();
-                gsap.to(spotlightRef.current, { x: event.clientX - bounds.left, y: event.clientY - bounds.top, duration: 0.6, ease: "power2.out" });
+                moveX(event.clientX - bounds.left);
+                moveY(event.clientY - bounds.top);
             };
             if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
                 hero.addEventListener("pointermove", onPointerMove);
-                removePointerListener = () => hero.removeEventListener("pointermove", onPointerMove);
+                window.addEventListener("resize", updateBounds, { passive: true });
+                removePointerListener = () => {
+                    hero.removeEventListener("pointermove", onPointerMove);
+                    window.removeEventListener("resize", updateBounds);
+                };
             }
         }, heroRef);
 
@@ -283,7 +288,7 @@ function HomePage() {
         };
     }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const context = gsap.context(() => {
             const cards = gsap.utils.toArray(".feature-card");
             const icons = gsap.utils.toArray(".feature-icon");
@@ -333,7 +338,7 @@ function HomePage() {
         return () => context.revert();
     }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const context = gsap.context(() => {
             const badge = teamSectionRef.current.querySelector(".team-badge");
             const words = gsap.utils.toArray(".team-word");
@@ -391,9 +396,8 @@ function HomePage() {
         return () => context.revert();
     }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const context = gsap.context(() => {
-            const panel = partnerSectionRef.current.querySelector(".partner-panel");
             const badge = partnerSectionRef.current.querySelector(".partner-badge");
             const heading = partnerSectionRef.current.querySelector(".partner-heading");
             const copy = partnerSectionRef.current.querySelector(".partner-copy");
@@ -473,7 +477,7 @@ function HomePage() {
         return () => context.revert();
     }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const cta = ctaSectionRef.current;
         let removeMagneticListeners = () => { };
         const context = gsap.context(() => {
@@ -499,14 +503,6 @@ function HomePage() {
                 return;
             }
 
-            gsap.to(cta, {
-                backgroundPosition: "100% 50%",
-                duration: 18,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-            });
-
             const entrance = gsap.timeline({
                 scrollTrigger: {
                     trigger: cta,
@@ -525,11 +521,14 @@ function HomePage() {
             });
 
             const button = startProjectRef.current;
+            const bounds = button.getBoundingClientRect();
+            const moveX = gsap.quickTo(button, "x", { duration: 0.35, ease: "power3.out" });
+            const moveY = gsap.quickTo(button, "y", { duration: 0.35, ease: "power3.out" });
             const onPointerMove = (event) => {
-                const bounds = button.getBoundingClientRect();
                 const offsetX = Math.max(-18, Math.min(18, (event.clientX - (bounds.left + bounds.width / 2)) * 0.22));
                 const offsetY = Math.max(-18, Math.min(18, (event.clientY - (bounds.top + bounds.height / 2)) * 0.22));
-                gsap.to(button, { x: offsetX, y: offsetY, duration: 0.35, ease: "power3.out" });
+                moveX(offsetX);
+                moveY(offsetY);
             };
             const onPointerLeave = () => gsap.to(button, { x: 0, y: 0, duration: 0.6, ease: "power3.out" });
             if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
@@ -567,7 +566,7 @@ function HomePage() {
         });
     };
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const context = gsap.context(() => {
             const words = gsap.utils.toArray(".projects-word");
             const cards = gsap.utils.toArray(".project-card");
@@ -627,7 +626,7 @@ function HomePage() {
         return () => context.revert();
     }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const context = gsap.context(() => {
             const markers = gsap.utils.toArray(".process-marker");
             const dormantOverlays = gsap.utils.toArray(".process-marker-dormant");
@@ -905,11 +904,18 @@ function HomePage() {
                                 className="team-card group rounded-2xl border border-[#E8DECB] bg-white p-5 sm:p-7"
                             >
                                 <div className="team-photo-frame mb-6 aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
-                                    <img
-                                        src={member.image}
-                                        alt={`${member.name} - ${member.role}`}
-                                        className={`team-photo h-full w-full object-cover ${member.name === "Vatsal" ? "scale-[1.06]" : ""}`}
-                                    />
+                                    <picture>
+                                        <source srcSet={member.image.replace(".png", ".webp")} type="image/webp" />
+                                        <img
+                                            src={member.image}
+                                            alt={member.name}
+                                            width="800"
+                                            height="800"
+                                            loading="lazy"
+                                            decoding="async"
+                                            className={`team-photo h-full w-full object-cover ${member.name === "Vatsal Gupta" ? "scale-[1.06]" : ""}`}
+                                        />
+                                    </picture>
                                 </div>
                                 <div className="mb-3 flex items-start justify-between gap-3">
                                     <h3 className="font-serif text-2xl font-bold text-[#181614]">
@@ -965,11 +971,18 @@ function HomePage() {
                         <div className="partner-card-column lg:col-span-3">
                             <div className="partner-card group rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 text-center shadow-sm transition-all duration-300 hover:border-[#B87C2B]/40 hover:shadow-xl">
                                 <div className="partner-logo mb-4 flex items-center justify-center gap-2">
-                                    <img
-                                        src="/partnerLogo.png"
-                                        alt="Partner Logo - Growthonixs"
-                                        className="partner-logo-img h-9 w-9 object-cover rounded-lg shadow-sm"
-                                    />
+                                    <picture>
+                                        <source srcSet="/partnerLogo.webp" type="image/webp" />
+                                        <img
+                                            src="/partnerLogo.png"
+                                            alt=""
+                                            width="72"
+                                            height="65"
+                                            loading="lazy"
+                                            decoding="async"
+                                            className="partner-logo-img h-9 w-9 object-cover rounded-lg shadow-sm"
+                                        />
+                                    </picture>
                                     <div className="text-left">
                                         <div className="font-serif text-lg font-bold leading-tight">GROWTHONICX</div>
                                         <div className="font-mono text-[9px] uppercase tracking-wider text-[#8A857B]">
@@ -979,11 +992,18 @@ function HomePage() {
                                 </div>
                                 <div className="partner-nested-card mb-4 flex aspect-[16/10] w-full flex-col items-center justify-center rounded-xl border border-[#E8DECB] bg-white p-4 shadow-sm">
                                     <div className="partner-photo-frame aspect-square overflow-hidden rounded-xl border border-[#E8DECB] bg-[#F6F1E8]">
-                                        <img
-                                            src="/kunal.png"
-                                            alt="Kunal - Founder & CEO of Growthonixs"
-                                            className="partner-photo h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                                        />
+                                        <picture>
+                                            <source srcSet="/kunal.webp" type="image/webp" />
+                                            <img
+                                                src="/kunal.png"
+                                                alt="Kunal"
+                                                width="800"
+                                                height="800"
+                                                loading="lazy"
+                                                decoding="async"
+                                                className="partner-photo h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                            />
+                                        </picture>
                                     </div>
                                 </div>
                                 <div className="mb-3 flex items-start justify-between gap-3">
@@ -1078,14 +1098,14 @@ function HomePage() {
                         one.
                     </p>
                     <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                        <a
-                            href="/contact#enquiry-form"
+                        <Link
+                            to="/contact#enquiry-form"
                             ref={startProjectRef}
                             onClick={handleStartProjectClick}
                             className="cta-button cta-magnetic relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
                         >
                             Start a project <ArrowRight className="h-5 w-5 text-[#D99B4B]" />
-                        </a>
+                        </Link>
                         <a
                             href={`https://wa.me/${MY_NUMBER}?text=Hello%20Anchorworks,%20I'd%20like%20to%20discuss%20a%20project`}
                             target="_blank"

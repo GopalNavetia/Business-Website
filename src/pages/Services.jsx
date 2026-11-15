@@ -1,8 +1,6 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { prefersReducedMotion } from "../motion";
+import { gsap, ScrollTrigger, prefersReducedMotion } from "../motion";
 import {
     AppWindow,
     BookOpen,
@@ -27,8 +25,6 @@ import ServiceInformationSection from "../components/ServiceInformationSection";
 
 const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
 
-gsap.registerPlugin(ScrollTrigger);
-
 function Services({ groupSlug }) {
     const navigate = useNavigate();
     const serviceGroupsByTitle = Object.fromEntries(services.map((service) => [service.title, service.groupSlug]));
@@ -38,6 +34,9 @@ function Services({ groupSlug }) {
     const heroRef = useRef(null);
     const groupHeroRef = useRef(null);
     const groupSpotlightRef = useRef(null);
+    const groupHeroBoundsRef = useRef(null);
+    const groupSpotlightXRef = useRef(null);
+    const groupSpotlightYRef = useRef(null);
     const serviceInfoRef = useRef(null);
     const spotlightRef = useRef(null);
     const headlineRef = useRef(null);
@@ -52,9 +51,10 @@ function Services({ groupSlug }) {
     const handleGroupHeroPointerMove = (event) => {
         if (prefersReducedMotion || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
-        const bounds = event.currentTarget.getBoundingClientRect();
-        groupSpotlightRef.current.style.left = `${event.clientX - bounds.left}px`;
-        groupSpotlightRef.current.style.top = `${event.clientY - bounds.top}px`;
+        const bounds = groupHeroBoundsRef.current;
+        if (!bounds) return;
+        groupSpotlightXRef.current?.(event.clientX - bounds.left);
+        groupSpotlightYRef.current?.(event.clientY - bounds.top);
     };
 
     // Core Disciplines Section Intro Refs
@@ -91,12 +91,12 @@ function Services({ groupSlug }) {
     // The custom serif font swapping in after fallback-font metrics were used to
     // lay out the page can shift section positions enough to leave every
     // ScrollTrigger's calculated start point stale. Refresh once fonts settle.
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (typeof document === "undefined" || !document.fonts || !document.fonts.ready) return;
         document.fonts.ready.then(() => ScrollTrigger.refresh());
     }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (isOverview) return;
 
         const contexts = [];
@@ -208,7 +208,20 @@ function Services({ groupSlug }) {
         return () => contexts.forEach((context) => context.revert());
     }, [groupSlug, isOverview]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        const hero = groupHeroRef.current;
+        if (!hero) return;
+        const updateBounds = () => {
+            groupHeroBoundsRef.current = hero.getBoundingClientRect();
+        };
+        groupSpotlightXRef.current = gsap.quickTo(groupSpotlightRef.current, "x", { duration: 0.3 });
+        groupSpotlightYRef.current = gsap.quickTo(groupSpotlightRef.current, "y", { duration: 0.3 });
+        updateBounds();
+        window.addEventListener("resize", updateBounds, { passive: true });
+        return () => window.removeEventListener("resize", updateBounds);
+    }, [groupSlug]);
+
+    useEffect(() => {
         if (!isOverview) return;
         const hero = heroRef.current;
         let removePointerListener = () => { };
@@ -249,13 +262,23 @@ function Services({ groupSlug }) {
 
                 gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
 
+                let bounds = hero.getBoundingClientRect();
+                const updateBounds = () => {
+                    bounds = hero.getBoundingClientRect();
+                };
+                const moveX = gsap.quickTo(spotlightRef.current, "x", { duration: 0.6, ease: "power2.out" });
+                const moveY = gsap.quickTo(spotlightRef.current, "y", { duration: 0.6, ease: "power2.out" });
                 const onPointerMove = (event) => {
-                    const bounds = hero.getBoundingClientRect();
-                    gsap.to(spotlightRef.current, { x: event.clientX - bounds.left, y: event.clientY - bounds.top, duration: 0.6, ease: "power2.out" });
+                    moveX(event.clientX - bounds.left);
+                    moveY(event.clientY - bounds.top);
                 };
                 if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
                     hero.addEventListener("pointermove", onPointerMove);
-                    removePointerListener = () => hero.removeEventListener("pointermove", onPointerMove);
+                    window.addEventListener("resize", updateBounds, { passive: true });
+                    removePointerListener = () => {
+                        hero.removeEventListener("pointermove", onPointerMove);
+                        window.removeEventListener("resize", updateBounds);
+                    };
                 }
             }, heroRef);
         };
@@ -277,7 +300,7 @@ function Services({ groupSlug }) {
     }, [isOverview]);
 
     // Core Disciplines Header Scroll-Triggered Animation
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (!isOverview) return;
         let cancelled = false;
         let context;
@@ -350,7 +373,7 @@ function Services({ groupSlug }) {
     }, [isOverview]);
 
     // Discipline 01 (Web Design & Development) Scroll-Triggered Animation
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (groupSlug && groupSlug !== "web-design-development") return;
         const context = gsap.context(() => {
             const container = d1ContainerRef.current;
@@ -458,7 +481,7 @@ function Services({ groupSlug }) {
     }, [groupSlug]);
 
     // Discipline 02 (Search & Digital Marketing) Scroll-Triggered Animation
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (groupSlug && groupSlug !== "search-digital-marketing") return;
         const context = gsap.context(() => {
             const container = d2ContainerRef.current;
@@ -578,7 +601,7 @@ function Services({ groupSlug }) {
     }, [groupSlug]);
 
     // Discipline 03 (Video Shoot & Editing) Scroll-Triggered Animation
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (groupSlug && groupSlug !== "video-production-editing") return;
         const context = gsap.context(() => {
             const container = d3ContainerRef.current;
@@ -686,7 +709,7 @@ function Services({ groupSlug }) {
     }, [groupSlug]);
 
     // Final CTA Section Animations (Word Mask Reveal, Trust Badges, Magnetic Button, Ripple Click)
-    useLayoutEffect(() => {
+    useEffect(() => {
         const cta = ctaSectionRef.current;
         let removeMagneticListeners = () => { };
         let cancelled = false;
@@ -721,14 +744,6 @@ function Services({ groupSlug }) {
                     );
                     return;
                 }
-
-                gsap.to(cta, {
-                    backgroundPosition: "100% 50%",
-                    duration: 18,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: "sine.inOut",
-                });
 
                 const entrance = gsap.timeline({
                     scrollTrigger: {
@@ -1105,6 +1120,10 @@ function Services({ groupSlug }) {
                                     ref={d1ImageRef}
                                     src="/webDev.png"
                                     alt="Web Design & Development Showcase"
+                                    width="2048"
+                                    height="1536"
+                                    loading="lazy"
+                                    decoding="async"
                                     className="h-[320px] w-full rounded-2xl object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015] sm:h-[440px] lg:h-[480px]"
                                 />
                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#120F0C]/80 via-transparent to-transparent" />
@@ -1129,7 +1148,7 @@ function Services({ groupSlug }) {
                                                 <span className="d1-card-icon flex h-10 w-10 items-center justify-center rounded-xl border border-[#B8862E]/25 bg-[#FAF5EC] text-[#B8862E] transition-colors duration-300 group-hover:border-[#B8862E]/50 group-hover:bg-[#B8862E]/20">
                                                     <Icon className="h-5 w-5" strokeWidth={1.8} />
                                                 </span>
-                                                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1B1712]/40">
+                                                <span className="text-xs font-bold uppercase tracking-wider text-[#1B1712]/55">
                                                     {tag}
                                                 </span>
                                             </div>
@@ -1177,6 +1196,10 @@ function Services({ groupSlug }) {
                                         ref={d2ImageRef}
                                         src="/searchDigitalMarketing.png"
                                         alt="Search & Digital Marketing Showcase"
+                                        width="2048"
+                                        height="1536"
+                                        loading="lazy"
+                                        decoding="async"
                                         className="h-full w-full rounded-2xl object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015]"
                                     />
                                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#120F0C]/80 via-transparent to-transparent" />
@@ -1201,7 +1224,7 @@ function Services({ groupSlug }) {
                                                     <span className="d2-card-icon flex h-10 w-10 items-center justify-center rounded-xl border border-[#B8862E]/25 bg-[#FAF5EC] text-[#B8862E] transition-colors duration-300 group-hover:border-[#B8862E]/50 group-hover:bg-[#B8862E]/20">
                                                         <Icon className="h-5 w-5" strokeWidth={1.8} />
                                                     </span>
-                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#1B1712]/40">
+                                                    <span className="text-xs font-bold uppercase tracking-wider text-[#1B1712]/55">
                                                         {tag}
                                                     </span>
                                                 </div>
@@ -1233,7 +1256,7 @@ function Services({ groupSlug }) {
                                                 <span className="d2-card-icon flex h-10 w-10 items-center justify-center rounded-xl border border-[#B8862E]/25 bg-[#FAF5EC] text-[#B8862E] transition-colors duration-300 group-hover:border-[#B8862E]/50 group-hover:bg-[#B8862E]/20">
                                                     <Icon className="h-5 w-5" strokeWidth={1.8} />
                                                 </span>
-                                                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1B1712]/40">
+                                                <span className="text-xs font-bold uppercase tracking-wider text-[#1B1712]/55">
                                                     {tag}
                                                 </span>
                                             </div>
@@ -1274,6 +1297,10 @@ function Services({ groupSlug }) {
                                     ref={d3ImageRef}
                                     src="/videoEditing.png"
                                     alt="Video Shoot & Editing Showcase"
+                                    width="935"
+                                    height="695"
+                                    loading="lazy"
+                                    decoding="async"
                                     className="h-[320px] w-full rounded-2xl object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015] sm:h-[440px] lg:h-[480px]"
                                 />
                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#120F0C]/80 via-transparent to-transparent" />
@@ -1298,7 +1325,7 @@ function Services({ groupSlug }) {
                                                 <span className="d3-card-icon flex h-10 w-10 items-center justify-center rounded-xl border border-[#B8862E]/25 bg-[#FAF5EC] text-[#B8862E] transition-colors duration-300 group-hover:border-[#B8862E]/50 group-hover:bg-[#B8862E]/20">
                                                     <Icon className="h-5 w-5" strokeWidth={1.8} />
                                                 </span>
-                                                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1B1712]/40">
+                                                <span className="text-xs font-bold uppercase tracking-wider text-[#1B1712]/55">
                                                     {tag}
                                                 </span>
                                             </div>

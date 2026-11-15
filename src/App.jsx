@@ -1,17 +1,17 @@
 import "./App.css";
-import { useEffect, useLayoutEffect, useRef } from "react";
-import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-router-dom"; // added useLocation
+import { lazy, Suspense, useEffect, useRef } from "react";
+import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async"; // NEW
-import { gsap } from "gsap";
+import { gsap } from "./motion";
 
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import OurWork from "./pages/OurWork";
-import Services from "./pages/Services";
-import Contact from "./pages/Contact";
+const Home = lazy(() => import("./pages/Home"));
+const OurWork = lazy(() => import("./pages/OurWork"));
+const Services = lazy(() => import("./pages/Services"));
+const Contact = lazy(() => import("./pages/Contact"));
+const ServiceGroup = lazy(() => import("./pages/ServiceGroup"));
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
-import ServiceGroup from "./pages/ServiceGroup";
 import { serviceGroups } from "./data/services";
 import { prefersReducedMotion } from "./motion";
 
@@ -112,7 +112,7 @@ function SiteMotion() {
   const cursorRingRef = useRef(null);
   const overlayRef = useRef(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const progress = progressRef.current;
     const cursorDot = cursorDotRef.current;
     const cursorRing = cursorRingRef.current;
@@ -125,7 +125,7 @@ function SiteMotion() {
     };
 
     const context = gsap.context(() => {
-      gsap.to(overlay, { autoAlpha: 0, duration: 0.5, ease: "power3.out" });
+      gsap.set(overlay, { autoAlpha: 0 });
       updateProgress();
       window.addEventListener("scroll", updateProgress, { passive: true });
 
@@ -173,6 +173,12 @@ function SiteMotion() {
 }
 
 function Layout() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
       <PageMeta />
@@ -180,7 +186,9 @@ function Layout() {
       <Navbar />
 
       <main className="w-full overflow-x-hidden pt-[68px] sm:pt-[76px]">
-        <Outlet />
+        <Suspense fallback={null}>
+          <Outlet />
+        </Suspense>
         <Footer />
       </main>
     </div>

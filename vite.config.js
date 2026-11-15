@@ -25,6 +25,17 @@ export default defineConfig({
   ],
   build: {
     chunkSizeWarningLimit: 700,
+    sourcemap: true,
+    minify: 'esbuild',
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router')) return 'react'
+          if (id.includes('node_modules/gsap')) return 'gsap'
+          if (id.includes('node_modules/lucide-react')) return 'lucide'
+        },
+      },
+    },
   },
   server: { host: true },
 })

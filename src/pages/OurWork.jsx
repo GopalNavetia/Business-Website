@@ -1,11 +1,7 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TriangleAlert, SquareTerminal, BadgeCheck, Check } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { prefersReducedMotion } from "../motion";
-
-gsap.registerPlugin(ScrollTrigger);
+import { gsap, prefersReducedMotion } from "../motion";
 
 const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
 
@@ -152,9 +148,9 @@ function OurWork() {
     const [activeCard, setActiveCard] = useState(null);
     const pageRef = useRef(null);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const hero = pageRef.current.querySelector(".ourwork-hero");
-        let removePointerListener = () => { };
+        const removePointerListeners = [];
         const context = gsap.context(() => {
             const spotlight = pageRef.current.querySelector(".ourwork-hero-spotlight");
             const grid = pageRef.current.querySelector(".ourwork-hero-grid");
@@ -235,7 +231,7 @@ function OurWork() {
 
             gsap.timeline({ defaults: { ease: "power3.out" } })
                 .fromTo(heroBadge, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45 })
-                .fromTo(heroWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" }, "-=0.08")
+                .to(heroWords, { yPercent: 0, duration: 0.42, stagger: 0.05, ease: "power3.out" }, "-=0.08")
                 .fromTo(heroItalic, { autoAlpha: 0, textShadow: "0 0 0 rgba(217, 155, 75, 0)" }, { autoAlpha: 1, duration: 0.45 }, "-=0.1")
                 .fromTo(heroCopy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.12")
                 .fromTo(heroCta, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.55, ease: "back.out(1.7)" }, "-=0.14")
@@ -245,19 +241,17 @@ function OurWork() {
 
             gsap.to(grid, { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
 
+            const heroBounds = hero.getBoundingClientRect();
+            const moveX = gsap.quickTo(spotlight, "x", { duration: 0.6, ease: "power2.out" });
+            const moveY = gsap.quickTo(spotlight, "y", { duration: 0.6, ease: "power2.out" });
             const onPointerMove = (event) => {
-                const bounds = hero.getBoundingClientRect();
-                gsap.to(spotlight, {
-                    x: event.clientX - bounds.left,
-                    y: event.clientY - bounds.top,
-                    duration: 0.6,
-                    ease: "power2.out",
-                });
+                moveX(event.clientX - heroBounds.left);
+                moveY(event.clientY - heroBounds.top);
             };
 
             if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
                 hero.addEventListener("pointermove", onPointerMove);
-                removePointerListener = () => hero.removeEventListener("pointermove", onPointerMove);
+                removePointerListeners.push(() => hero.removeEventListener("pointermove", onPointerMove));
             }
 
             const capabilityIntro = gsap.timeline({
@@ -320,14 +314,6 @@ function OurWork() {
                 .fromTo(guaranteePills, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.38, stagger: 0.11, ease: "power3.out" }, "-=0.2")
                 .fromTo(guaranteeChecks, { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.38, stagger: 0.11, ease: "power3.out" }, "-=0.28");
 
-            gsap.to(ctaSection, {
-                backgroundPosition: "100% 50%",
-                duration: 18,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-            });
-
             gsap.timeline({
                 scrollTrigger: {
                     trigger: ctaHeading,
@@ -350,25 +336,28 @@ function OurWork() {
                 .fromTo(ctaLabels, { x: -6, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.35, stagger: 0.15, ease: "power3.out" }, "-=0.2");
 
             const magneticButton = startProjectRef.current;
+            const buttonBounds = magneticButton.getBoundingClientRect();
+            const magneticX = gsap.quickTo(magneticButton, "x", { duration: 0.35, ease: "power3.out" });
+            const magneticY = gsap.quickTo(magneticButton, "y", { duration: 0.35, ease: "power3.out" });
             const onMagneticMove = (event) => {
-                const bounds = magneticButton.getBoundingClientRect();
-                const offsetX = Math.max(-18, Math.min(18, (event.clientX - (bounds.left + bounds.width / 2)) * 0.22));
-                const offsetY = Math.max(-18, Math.min(18, (event.clientY - (bounds.top + bounds.height / 2)) * 0.22));
-                gsap.to(magneticButton, { x: offsetX, y: offsetY, duration: 0.35, ease: "power3.out" });
+                const offsetX = Math.max(-18, Math.min(18, (event.clientX - (buttonBounds.left + buttonBounds.width / 2)) * 0.22));
+                const offsetY = Math.max(-18, Math.min(18, (event.clientY - (buttonBounds.top + buttonBounds.height / 2)) * 0.22));
+                magneticX(offsetX);
+                magneticY(offsetY);
             };
             const onMagneticLeave = () => gsap.to(magneticButton, { x: 0, y: 0, duration: 0.6, ease: "power3.out" });
             if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
                 magneticButton.addEventListener("pointermove", onMagneticMove);
                 magneticButton.addEventListener("pointerleave", onMagneticLeave);
-                removePointerListener = () => {
+                removePointerListeners.push(() => {
                     magneticButton.removeEventListener("pointermove", onMagneticMove);
                     magneticButton.removeEventListener("pointerleave", onMagneticLeave);
-                };
+                });
             }
         }, pageRef);
 
         return () => {
-            removePointerListener();
+            removePointerListeners.forEach((removeListener) => removeListener());
             context.revert();
         };
     }, []);
