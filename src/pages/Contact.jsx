@@ -1,7 +1,7 @@
 import ContactForm from '../components/ContactForm';
 import { useState, useRef, useEffect } from 'react';
 import { Mail, MessageCircle, Phone, Check, ChevronDown, Copy, ArrowUpRight, Send } from 'lucide-react';
-import { gsap, pauseWhenHidden, ScrollTrigger, prefersReducedMotion } from '../motion';
+import { gsap, reveal, ScrollTrigger } from '../motion';
 import { useLocation } from 'react-router-dom';
 
 const EMAIL_ADDRESS = import.meta.env.VITE_MY_EMAIL;
@@ -65,226 +65,40 @@ function Contact() {
   const [openFaqId, setOpenFaqId] = useState(null);
   const pageRef = useRef(null);
   const heroRef = useRef(null);
-  const spotlightRef = useRef(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    let context;
-    let removePointerListener = () => { };
-    let stopGrid = () => { };
-    let stopGlow = () => { };
-
-    const run = () => {
-      if (cancelled) return;
-      const hero = heroRef.current;
-      context = gsap.context(() => {
-        const heroGlow = pageRef.current.querySelector(".contact-hero-glow");
-        const heroBadge = pageRef.current.querySelector(".ourwork-hero-badge");
-        const heroWords = gsap.utils.toArray(".contact-hero-word");
-        const heroItalic = pageRef.current.querySelector(".contact-hero-italic");
-        const heroCopy = pageRef.current.querySelector(".contact-hero-copy");
-
-        const infoCard = pageRef.current.querySelector(".contact-info-card");
-        const infoBlocks = gsap.utils.toArray(".contact-info-block");
-        const compactItems = gsap.utils.toArray(".compact-item");
-        const compactChecks = gsap.utils.toArray(".compact-check-badge");
-        const compactTrigger = pageRef.current.querySelector(".contact-info-block:last-child");
-
-        const formCard = pageRef.current.querySelector(".contact-form-card");
-        const formEyebrow = pageRef.current.querySelector(".contact-form-eyebrow");
-        const formHeading = pageRef.current.querySelector(".contact-form-heading");
-
-        const consultCard = pageRef.current.querySelector(".contact-consult-card");
-        const consultImage = pageRef.current.querySelector(".contact-consult-image");
-        const consultEyebrow = pageRef.current.querySelector(".contact-consult-eyebrow");
-        const consultHeading = pageRef.current.querySelector(".contact-consult-heading");
-        const consultCopy = pageRef.current.querySelector(".contact-consult-copy");
-        const consultCtas = gsap.utils.toArray(".contact-consult-cta");
-
-        const faqSection = pageRef.current.querySelector(".contact-faq-section");
-        const faqEyebrow = pageRef.current.querySelector(".contact-faq-eyebrow");
-        const faqWords = gsap.utils.toArray(".faq-word");
-        const faqDescription = pageRef.current.querySelector(".contact-faq-description");
-        const faqList = pageRef.current.querySelector(".contact-faq-list");
-        const faqItems = gsap.utils.toArray(".faq-item");
-
-        if (prefersReducedMotion) {
-          gsap.set([
-            heroBadge,
-            ...heroWords,
-            heroItalic,
-            heroCopy,
-            infoCard,
-            ...infoBlocks,
-            ...compactItems,
-            ...compactChecks,
-            formCard,
-            formEyebrow,
-            formHeading,
-            consultCard,
-            consultImage,
-            consultEyebrow,
-            consultHeading,
-            consultCopy,
-            ...consultCtas,
-            faqEyebrow,
-            ...faqWords,
-            faqDescription,
-            ...faqItems,
-          ], { autoAlpha: 1, clearProps: "transform" });
-          return;
-        }
-
-        const gridTween = gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
-        stopGrid = pauseWhenHidden(gridTween, hero);
-
-        if (hero && spotlightRef.current) {
-          let bounds = hero.getBoundingClientRect();
-          const updateBounds = () => {
-            bounds = hero.getBoundingClientRect();
-          };
-          const moveX = gsap.quickTo(spotlightRef.current, "x", { duration: 0.6, ease: "power2.out" });
-          const moveY = gsap.quickTo(spotlightRef.current, "y", { duration: 0.6, ease: "power2.out" });
-          const onPointerMove = (event) => {
-            moveX(event.clientX - bounds.left);
-            moveY(event.clientY - bounds.top);
-          };
-          if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-            hero.addEventListener("pointermove", onPointerMove);
-            window.addEventListener("resize", updateBounds, { passive: true });
-            removePointerListener = () => {
-              hero.removeEventListener("pointermove", onPointerMove);
-              window.removeEventListener("resize", updateBounds);
-            };
-          }
-        }
-
-        gsap.timeline({ defaults: { ease: "power3.out" } })
-          .fromTo(heroBadge, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45 })
-          .to(heroWords, { yPercent: 0, duration: 0.42, stagger: 0.05, ease: "power3.out" }, "-=0.08")
-          .fromTo(heroItalic, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, "-=0.1")
-          .fromTo(heroCopy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.12");
-
-        if (heroGlow) {
-          const glowTween = gsap.to(heroGlow, { scale: 1.15, duration: 7, repeat: -1, yoyo: true, ease: "sine.inOut" });
-          stopGlow = pauseWhenHidden(glowTween, hero);
-        }
-
-        gsap.timeline({
-          scrollTrigger: { trigger: infoCard, start: "top 80%", toggleActions: "play none none none" },
-        })
-          .fromTo(infoCard, { x: -24, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.55 })
-          .fromTo(infoBlocks, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.12, ease: "power3.out" }, "-=0.3");
-
-        gsap.timeline({
-          scrollTrigger: { trigger: compactTrigger, start: "top 82%", toggleActions: "play none none none" },
-        })
-          .fromTo(compactItems, { x: -10, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.4, stagger: 0.1, ease: "power3.out" })
-          .fromTo(compactChecks, { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.3");
-
-        gsap.timeline({
-          scrollTrigger: { trigger: formCard, start: "top 80%", toggleActions: "play none none none" },
-        })
-          .fromTo(formCard, { x: 24, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.55 })
-          .fromTo(formEyebrow, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, "-=0.3")
-          .fromTo(formHeading, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: "power3.out" }, "-=0.25");
-
-        gsap.timeline({
-          scrollTrigger: { trigger: consultCard, start: "top 80%", toggleActions: "play none none none" },
-        })
-          .fromTo(consultCard, { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.55 })
-          .fromTo(consultImage, { scale: 1.06, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, ease: "power3.out" }, "-=0.5")
-          .fromTo([consultEyebrow, consultHeading, consultCopy], { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42, stagger: 0.06, ease: "power3.out" }, "-=0.3")
-          .fromTo(consultCtas, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42, stagger: 0.1, ease: "power3.out" }, "-=0.2");
-
-        gsap.timeline({
-          scrollTrigger: { trigger: faqSection, start: "top 78%", toggleActions: "play none none none" },
-        })
-          .fromTo(faqEyebrow, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42, ease: "power3.out" })
-          .fromTo(faqWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.2")
-          .fromTo(faqDescription, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, "-=0.25");
-
-        gsap.fromTo(faqItems, { y: 16, autoAlpha: 0 }, {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.45,
-          stagger: 0.06,
-          ease: "power3.out",
-          scrollTrigger: { trigger: faqList, start: "top 82%", toggleActions: "play none none none" },
-        });
-      }, pageRef);
-    };
-
-    if (typeof document !== "undefined" && document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(run);
-    } else {
-      run();
-    }
-
-    return () => {
-      cancelled = true;
-      removePointerListener();
-      stopGrid?.();
-      stopGlow?.();
-      if (context) context.revert();
-    };
-  }, []);
 
   const copyEmail = () => {
-    const email = EMAIL_ADDRESS;
-    const fallback = () => {
-      const el = document.createElement('textarea');
-      el.value = email;
-      el.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    };
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(email)
-        .then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); })
-        .catch(fallback);
-    } else {
-      fallback();
-    }
+    navigator.clipboard?.writeText(EMAIL_ADDRESS).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      },
+      () => setCopied(false),
+    );
   };
 
   const copyPhone = () => {
-    const fallback = () => {
-      const el = document.createElement('textarea');
-      el.value = DISPLAY_PHONE_NUMBER;
-      el.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      setPhoneCopied(true);
-      setTimeout(() => setPhoneCopied(false), 2000);
-    };
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(DISPLAY_PHONE_NUMBER)
-        .then(() => { setPhoneCopied(true); setTimeout(() => setPhoneCopied(false), 2000); })
-        .catch(fallback);
-    } else {
-      fallback();
-    }
+    navigator.clipboard?.writeText(DISPLAY_PHONE_NUMBER).then(
+      () => {
+        setPhoneCopied(true);
+        setTimeout(() => setPhoneCopied(false), 2000);
+      },
+      () => setPhoneCopied(false),
+    );
   };
+
+  useEffect(() => {
+    const context = gsap.context(() => {
+      reveal(".contact-info-card, .contact-info-block, .contact-form-card, .contact-consult-card, .faq-item", pageRef.current);
+    }, pageRef);
+    return () => context.revert();
+  }, []);
 
   return (
     <div ref={pageRef}>
 
       {/* ===== HERO ===== */}
       <section ref={heroRef} className="wireframe-grid hero-section contact-hero relative overflow-hidden border-b border-[#23211e] bg-[#131210] px-5 py-14 pb-16 text-white sm:px-8 sm:py-20 md:pb-24">
-        <div ref={spotlightRef} className="hero-spotlight pointer-events-none absolute left-0 top-0 z-0" />
-        <div className="hero-grid-drift pointer-events-none absolute inset-0 z-0" />
-        <div className="pointer-events-none absolute left-1/2 top-1/4 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-[#D99B4B]/10 blur-[130px]" />
-        <div className="contact-hero-glow pointer-events-none absolute right-1/4 top-0 h-96 w-96 rounded-full bg-[#d99b4b]/5 blur-3xl" />
-        <div className="relative z-10 mx-auto max-w-6xl">
+                                        <div className="relative z-10 mx-auto max-w-6xl">
           <span className="ourwork-hero-badge mb-5 inline-flex items-center gap-2 rounded-full border border-[#D99B4B]/40 bg-[#D99B4B]/10 px-3.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#D99B4B]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#D99B4B]" />
             DIRECT FOUNDER AVAILABILITY · 24H RESPONSE SLA · DELHI &amp; WORLDWIDE

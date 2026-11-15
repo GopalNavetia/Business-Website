@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import { gsap, pauseWhenHidden, prefersReducedMotion } from "../motion";
+import { useLocation, Link } from "react-router-dom";
+import { gsap, reveal, prefersReducedMotion } from "../motion";
 import {
     ArrowRight,
     BarChart3,
@@ -105,12 +105,12 @@ const processSteps = [
     },
 ];
 
-function HeroMockup({ mockupRef, badgeRef, progressRef }) {
+function HeroMockup({ mockupRef }) {
     return (
-        <div ref={mockupRef} className="hero-mockup-float pointer-events-none relative mx-auto max-w-2xl select-none pt-8">
+        <div ref={mockupRef} className="pointer-events-none relative mx-auto max-w-2xl select-none pt-8">
             <div className="absolute -left-3 top-0 z-10 flex items-center gap-3 rounded-xl border border-[#D99B4B]/50 bg-[#1E1C18]/95 px-4 py-2.5 shadow-xl sm:-left-8">
-                <div ref={badgeRef} className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[#D99B4B]/20 text-[#D99B4B]">
-                    <span ref={progressRef} className="hero-badge-progress absolute inset-0 rounded-lg" />
+                <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[#D99B4B]/20 text-[#D99B4B]">
+                    <span className="hero-badge-progress absolute inset-0 rounded-lg" />
                     <BarChart3 className="h-4 w-4" />
                 </div>
                 <div>
@@ -133,7 +133,7 @@ function HeroMockup({ mockupRef, badgeRef, progressRef }) {
                         anchorworks.live / preview
                     </span>
                     <span className="flex items-center gap-1.5 font-mono text-xs text-[#D99B4B]/80">
-                        <span className="h-2 w-2 animate-ping rounded-full bg-emerald-400" />
+                        <span className="h-2 w-2 rounded-full bg-emerald-400" />
                         100% SEO Score
                     </span>
                 </div>
@@ -178,7 +178,7 @@ function HeroMockup({ mockupRef, badgeRef, progressRef }) {
                     <div className="h-2 w-1/2 rounded-full bg-[#D99B4B]/40" />
                     <div className="h-4 w-3/4 rounded bg-[#D99B4B]/70" />
                     <div className="flex h-11 items-center justify-center gap-1.5 rounded-lg border border-[#D99B4B]/30 bg-[#22201C]">
-                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                         <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#D99B4B]">
                             Instant Booking
                         </span>
@@ -192,25 +192,20 @@ function HeroMockup({ mockupRef, badgeRef, progressRef }) {
 
 function HomePage() {
     const location = useLocation();
-    const navigate = useNavigate();
     const heroRef = useRef(null);
-    const spotlightRef = useRef(null);
-    const headlineRef = useRef(null);
+        const headlineRef = useRef(null);
     const italicHeadlineRef = useRef(null);
     const subheadingRef = useRef(null);
     const ctasRef = useRef(null);
     const quoteRef = useRef(null);
     const mockupRef = useRef(null);
-    const badgeRef = useRef(null);
-    const progressRef = useRef(null);
-    const featureSectionRef = useRef(null);
+            const featureSectionRef = useRef(null);
     const projectsSectionRef = useRef(null);
     const teamSectionRef = useRef(null);
     const partnerSectionRef = useRef(null);
     const processSectionRef = useRef(null);
     const ctaSectionRef = useRef(null);
-    const startProjectRef = useRef(null);
-
+    
     useEffect(() => {
         if (location.hash === "#process") {
             setTimeout(() => {
@@ -227,462 +222,32 @@ function HomePage() {
     }, [location]);
 
     useEffect(() => {
-        const hero = heroRef.current;
-        let removePointerListener = () => { };
-        let stopMockup = () => { };
-        let stopGrid = () => { };
         const context = gsap.context(() => {
-            const words = gsap.utils.toArray(".hero-word");
-            const ctas = gsap.utils.toArray(".hero-cta");
+            const count = heroRef.current?.querySelector("[data-lead-count]");
+            if (prefersReducedMotion) {
+                if (count) count.textContent = "184";
+                return;
+            }
+            gsap.fromTo(".hero-content", { autoAlpha: 0.001, y: 10 }, {
+                autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out",
+            });
+            gsap.fromTo(".hero-content .pointer-events-none", { autoAlpha: 0.001 }, {
+                autoAlpha: 1, duration: 0.5, ease: "power2.out",
+            });
             const leadCount = { value: 0 };
-
-            if (prefersReducedMotion) {
-                gsap.set(
-                    [headlineRef.current, subheadingRef.current, ctasRef.current, quoteRef.current, mockupRef.current],
-                    { autoAlpha: 1, clearProps: "transform" },
-                );
-                return;
-            }
-
-            const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-            timeline
-                .to(words, { yPercent: 0, duration: 0.45, stagger: 0.05, ease: "power3.out" })
-                .fromTo(italicHeadlineRef.current, { autoAlpha: 0.65 }, { autoAlpha: 1, duration: 0.55 }, "-=0.15")
-                .fromTo(subheadingRef.current, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, "+=0.15")
-                .fromTo(ctas, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" }, "-=0.2")
-                .fromTo(quoteRef.current, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6 }, "-=0.2")
-                .fromTo(mockupRef.current, { y: 40, rotateX: 8, autoAlpha: 0, transformPerspective: 900 }, { y: 0, rotateX: 0, autoAlpha: 1, duration: 0.7, ease: "power3.out" }, "-=0.1")
-                .to(leadCount, {
-                    value: 184, duration: 0.7, ease: "power3.out", onUpdate: () => {
-                        const value = Math.round(leadCount.value);
-                        const count = mockupRef.current?.querySelector("[data-lead-count]");
-                        if (count) count.textContent = value;
-                        if (progressRef.current) progressRef.current.style.setProperty("--progress", `${(value / 184) * 100}%`);
-                    }
-                }, "-=0.35");
-
-            const mockupTween = gsap.to(mockupRef.current, { y: -5, rotationZ: 0.5, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: timeline.duration() });
-            const gridTween = gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
-            stopMockup = pauseWhenHidden(mockupTween, hero);
-            stopGrid = pauseWhenHidden(gridTween, hero);
-
-            let bounds = hero.getBoundingClientRect();
-            const updateBounds = () => {
-                bounds = hero.getBoundingClientRect();
-            };
-            const moveX = gsap.quickTo(spotlightRef.current, "x", { duration: 0.6, ease: "power2.out" });
-            const moveY = gsap.quickTo(spotlightRef.current, "y", { duration: 0.6, ease: "power2.out" });
-            const onPointerMove = (event) => {
-                moveX(event.clientX - bounds.left);
-                moveY(event.clientY - bounds.top);
-            };
-            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-                hero.addEventListener("pointermove", onPointerMove);
-                window.addEventListener("resize", updateBounds, { passive: true });
-                removePointerListener = () => {
-                    hero.removeEventListener("pointermove", onPointerMove);
-                    window.removeEventListener("resize", updateBounds);
-                };
-            }
+            gsap.to(leadCount, { value: 184, duration: 0.6, ease: "power2.out", onUpdate: () => {
+                const currentCount = heroRef.current?.querySelector("[data-lead-count]");
+                if (currentCount) currentCount.textContent = Math.round(leadCount.value);
+            }});
         }, heroRef);
-
-        return () => {
-            stopMockup?.();
-            stopGrid?.();
-            removePointerListener();
-            context.revert();
-        };
-    }, []);
-
-    useEffect(() => {
-        const context = gsap.context(() => {
-            const cards = gsap.utils.toArray(".feature-card");
-            const icons = gsap.utils.toArray(".feature-icon");
-
-            if (prefersReducedMotion) {
-                gsap.fromTo(cards, { autoAlpha: 0 }, {
-                    autoAlpha: 1, duration: 0.55, stagger: 0.15, ease: "power3.out", scrollTrigger: {
-                        trigger: featureSectionRef.current,
-                        start: "top 82%",
-                        toggleActions: "play none none none",
-                    }
-                });
-                return;
-            }
-
-            gsap.fromTo(
-                cards,
-                { y: 34, rotateX: 9, scale: 0.97, autoAlpha: 0, transformPerspective: 900 },
-                {
-                    y: 0,
-                    rotateX: 0,
-                    scale: 1,
-                    autoAlpha: 1,
-                    duration: 0.7,
-                    stagger: 0.14,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: featureSectionRef.current,
-                        start: "top 82%",
-                        toggleActions: "play none none none",
-                    },
-                },
-            );
-            gsap.fromTo(
-                icons,
-                { rotation: -8, scale: 0.78, autoAlpha: 0 },
-                {
-                    rotation: 0, scale: 1, autoAlpha: 1, duration: 0.65, stagger: 0.14, ease: "power3.out", scrollTrigger: {
-                        trigger: featureSectionRef.current,
-                        start: "top 82%",
-                        toggleActions: "play none none none",
-                    }
-                },
-            );
-        }, featureSectionRef);
-
         return () => context.revert();
     }, []);
 
     useEffect(() => {
         const context = gsap.context(() => {
-            const badge = teamSectionRef.current.querySelector(".team-badge");
-            const words = gsap.utils.toArray(".team-word");
-            const italic = teamSectionRef.current.querySelector(".team-italic");
-            const subheading = teamSectionRef.current.querySelector(".team-subheading");
-            const cards = gsap.utils.toArray(".team-card");
-            const photos = gsap.utils.toArray(".team-photo");
-            const directBadges = gsap.utils.toArray(".team-direct-badge");
-            const roles = gsap.utils.toArray(".team-role");
-            const bios = gsap.utils.toArray(".team-bio");
-
-            if (prefersReducedMotion) {
-                gsap.set(italic, { autoAlpha: 1, clearProps: "textShadow" });
-                gsap.set([photos, directBadges, roles, bios], { clearProps: "clipPath,filter,transform" });
-                gsap.set(photos, { autoAlpha: 1 });
-                gsap.set(directBadges, { autoAlpha: 1 });
-                gsap.fromTo(
-                    [badge, teamSectionRef.current.querySelector(".team-heading"), subheading, ...cards],
-                    { autoAlpha: 0 },
-                    {
-                        autoAlpha: 1,
-                        duration: 0.55,
-                        stagger: 0.1,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: teamSectionRef.current,
-                            start: "top 78%",
-                            toggleActions: "play none none none",
-                        },
-                    },
-                );
-                return;
-            }
-
-            const timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: teamSectionRef.current,
-                    start: "top 78%",
-                    toggleActions: "play none none none",
-                },
-            });
-
-            timeline
-                .fromTo(badge, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" })
-                .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.42, stagger: 0.035, ease: "power3.out" }, "+=0.04")
-                .fromTo(italic, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.28, ease: "power3.out" }, "-=0.06")
-                .fromTo(subheading, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.32, ease: "power3.out" }, "+=0.06")
-                .fromTo(cards, { y: 14, scale: 0.94, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 0.48, stagger: 0.1, ease: "power3.out" }, "+=0.06")
-                .fromTo(photos, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, stagger: 0.06, ease: "power3.out" }, "-=0.28")
-                .fromTo(directBadges, { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.34, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.08")
-                .fromTo(roles, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, stagger: 0.1, ease: "power3.out" }, "-=0.12")
-                .fromTo(bios, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, stagger: 0.1, ease: "power3.out" }, "-=0.1");
-        }, teamSectionRef);
-
-        return () => context.revert();
-    }, []);
-
-    useEffect(() => {
-        const context = gsap.context(() => {
-            const badge = partnerSectionRef.current.querySelector(".partner-badge");
-            const heading = partnerSectionRef.current.querySelector(".partner-heading");
-            const copy = partnerSectionRef.current.querySelector(".partner-copy");
-            const checks = gsap.utils.toArray(".partner-check");
-            const checkIcons = gsap.utils.toArray(".partner-check-icon");
-            const checkLabels = gsap.utils.toArray(".partner-check-label");
-            const partnerCard = partnerSectionRef.current.querySelector(".partner-card");
-            const logo = partnerSectionRef.current.querySelector(".partner-logo");
-            const nestedCard = partnerSectionRef.current.querySelector(".partner-nested-card");
-            const partnerPhoto = partnerSectionRef.current.querySelector(".partner-photo");
-            const partnerRole = partnerSectionRef.current.querySelector(".partner-role");
-            const verified = partnerSectionRef.current.querySelector(".partner-verified");
-            const verifiedIcon = partnerSectionRef.current.querySelector(".partner-verified-icon");
-
-            if (prefersReducedMotion) {
-                gsap.set([...checkIcons, verifiedIcon], { strokeDashoffset: 0 });
-                gsap.set(partnerPhoto, { autoAlpha: 1, clearProps: "clipPath,filter,transform" });
-                gsap.fromTo(
-                    [badge, heading, copy, ...checks, partnerCard],
-                    { autoAlpha: 0 },
-                    {
-                        autoAlpha: 1,
-                        duration: 0.55,
-                        stagger: 0.1,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: partnerSectionRef.current,
-                            start: "top 78%",
-                            toggleActions: "play none none none",
-                        },
-                    },
-                );
-                return;
-            }
-
-            const timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: partnerSectionRef.current,
-                    start: "top 78%",
-                    toggleActions: "play none none none",
-                },
-            });
-            timeline
-                .fromTo(badge, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" })
-                .fromTo(heading, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.36, ease: "power3.out" }, "+=0.04")
-                .fromTo(copy, { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.32, ease: "power3.out" }, "-=0.16")
-                .fromTo(partnerCard, { y: 22, rotationY: 6, autoAlpha: 0, transformPerspective: 900 }, { y: 0, rotationY: 0, autoAlpha: 1, duration: 0.48, ease: "power3.out" }, "-=0.3")
-                .fromTo(logo, { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.32")
-                .fromTo(nestedCard, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.36, ease: "power3.out" }, "-=0.12")
-                .fromTo(partnerPhoto, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, "-=0.2")
-                .fromTo(partnerRole, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, ease: "power3.out" }, "-=0.1");
-
-            checks.forEach((check, index) => {
-                timeline
-                    .fromTo(checkIcons[index], { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.28, ease: "power3.out" }, `-=${index ? 0.12 : 0.04}`)
-                    .fromTo(checkLabels[index], { y: 4, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.24, ease: "power3.out" }, "-=0.12");
-            });
-
-            timeline
-                .fromTo(verified, { scale: 1.15, rotation: -4, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.34, ease: "back.out(1.8)" }, "+=0.02")
-                .fromTo(verifiedIcon, { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.24, ease: "power3.out" }, "-=0.2");
-        }, partnerSectionRef);
-
-        return () => context.revert();
-    }, []);
-
-    useEffect(() => {
-        const cta = ctaSectionRef.current;
-        let removeMagneticListeners = () => { };
-        const context = gsap.context(() => {
-            const words = gsap.utils.toArray(".cta-word");
-            const buttons = gsap.utils.toArray(".cta-button");
-            const checks = gsap.utils.toArray(".cta-check");
-            const labels = gsap.utils.toArray(".cta-badge-label");
-            const badges = gsap.utils.toArray(".cta-trust-badge");
-
-            if (prefersReducedMotion) {
-                gsap.set(checks, { strokeDashoffset: 0 });
-                gsap.fromTo(
-                    [cta.querySelector(".cta-heading"), cta.querySelector(".cta-copy"), ...buttons, ...badges],
-                    { autoAlpha: 0 },
-                    {
-                        autoAlpha: 1, duration: 0.65, stagger: 0.1, ease: "power3.out", scrollTrigger: {
-                            trigger: cta,
-                            start: "top 78%",
-                            toggleActions: "play none none none",
-                        }
-                    },
-                );
-                return;
-            }
-
-            const entrance = gsap.timeline({
-                scrollTrigger: {
-                    trigger: cta,
-                    start: "top 78%",
-                    toggleActions: "play none none none",
-                },
-            });
-            entrance
-                .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.7, stagger: 0.05, ease: "power3.out" })
-                .fromTo(cta.querySelector(".cta-copy"), { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: "power3.out" }, "-=0.15")
-                .fromTo(buttons, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.55, stagger: 0.1, ease: "power3.out" }, "-=0.2");
-            badges.forEach((badge, index) => {
-                entrance
-                    .fromTo(checks[index], { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, `+=${index ? 0.15 : 0.1}`)
-                    .fromTo(labels[index], { x: -6, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.12");
-            });
-
-            const button = startProjectRef.current;
-            const bounds = button.getBoundingClientRect();
-            const moveX = gsap.quickTo(button, "x", { duration: 0.35, ease: "power3.out" });
-            const moveY = gsap.quickTo(button, "y", { duration: 0.35, ease: "power3.out" });
-            const onPointerMove = (event) => {
-                const offsetX = Math.max(-18, Math.min(18, (event.clientX - (bounds.left + bounds.width / 2)) * 0.22));
-                const offsetY = Math.max(-18, Math.min(18, (event.clientY - (bounds.top + bounds.height / 2)) * 0.22));
-                moveX(offsetX);
-                moveY(offsetY);
-            };
-            const onPointerLeave = () => gsap.to(button, { x: 0, y: 0, duration: 0.6, ease: "power3.out" });
-            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-                button.addEventListener("pointermove", onPointerMove);
-                button.addEventListener("pointerleave", onPointerLeave);
-                removeMagneticListeners = () => {
-                    button.removeEventListener("pointermove", onPointerMove);
-                    button.removeEventListener("pointerleave", onPointerLeave);
-                };
-            }
-        }, ctaSectionRef);
-
-        return () => {
-            removeMagneticListeners();
-            context.revert();
-        };
-    }, []);
-
-    const handleStartProjectClick = (event) => {
-        if (prefersReducedMotion) return;
-
-        event.preventDefault();
-        const button = event.currentTarget;
-        const bounds = button.getBoundingClientRect();
-        const ripple = document.createElement("span");
-        ripple.className = "cta-ripple";
-        ripple.style.left = `${event.clientX - bounds.left}px`;
-        ripple.style.top = `${event.clientY - bounds.top}px`;
-        button.appendChild(ripple);
-        gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, {
-            scale: 16, autoAlpha: 0, duration: 0.3, ease: "power2.out", onComplete: () => ripple.remove(),
-        });
-        navigate('/contact#enquiry-form');
-    };
-
-    useEffect(() => {
-        const context = gsap.context(() => {
-            const words = gsap.utils.toArray(".projects-word");
-            const cards = gsap.utils.toArray(".project-card");
-
-            if (prefersReducedMotion) {
-                gsap.fromTo(
-                    [...words, ...cards],
-                    { autoAlpha: 0 },
-                    {
-                        autoAlpha: 1,
-                        duration: 0.55,
-                        stagger: 0.08,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: projectsSectionRef.current,
-                            start: "top 78%",
-                            toggleActions: "play none none none",
-                        },
-                    },
-                );
-                return;
-            }
-
-            gsap.fromTo(words, { yPercent: 110 }, {
-                yPercent: 0,
-                duration: 0.65,
-                stagger: 0.05,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: projectsSectionRef.current,
-                    start: "top 78%",
-                    toggleActions: "play none none none",
-                },
-            });
-            gsap.fromTo(cards, {
-                y: (index) => (index % 2 === 0 ? 10 : 2),
-                scale: 0.92,
-                autoAlpha: 0,
-                rotateX: 6,
-                transformPerspective: 900,
-            }, {
-                y: 0,
-                scale: 1,
-                autoAlpha: 1,
-                rotateX: 0,
-                duration: 0.75,
-                stagger: { each: 0.18, grid: "auto", from: "start" },
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: projectsSectionRef.current.querySelector(".project-grid"),
-                    start: "top 82%",
-                    toggleActions: "play none none none",
-                },
-            });
-        }, projectsSectionRef);
-
-        return () => context.revert();
-    }, []);
-
-    useEffect(() => {
-        const context = gsap.context(() => {
-            const markers = gsap.utils.toArray(".process-marker");
-            const dormantOverlays = gsap.utils.toArray(".process-marker-dormant");
-            const pings = gsap.utils.toArray(".process-ping");
-            const cards = gsap.utils.toArray(".process-card");
-            const badges = gsap.utils.toArray(".process-badge");
-            const deliverables = gsap.utils.toArray(".process-deliverable");
-
-            if (prefersReducedMotion) {
-                gsap.set(markers, { autoAlpha: 1 });
-                gsap.set(dormantOverlays, { autoAlpha: 0 });
-                gsap.fromTo(
-                    cards,
-                    { y: 12, autoAlpha: 0 },
-                    {
-                        y: 0,
-                        autoAlpha: 1,
-                        duration: 0.55,
-                        stagger: 0.12,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: processSectionRef.current,
-                            start: "top 78%",
-                            toggleActions: "play none none none",
-                        },
-                    },
-                );
-                return;
-            }
-
-            gsap.fromTo(cards, {
-                yPercent: (index) => (index % 2 === 0 ? -1.5 : 1.5),
-            }, {
-                yPercent: 0,
-                duration: 0.6,
-                stagger: 0.1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: processSectionRef.current,
-                    start: "top 72%",
-                    toggleActions: "play none none none",
-                },
-            });
-
-            const timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: processSectionRef.current,
-                    start: "top 72%",
-                    end: "bottom 78%",
-                    scrub: 0.5,
-                },
-            });
-
-            markers.forEach((marker, index) => {
-                const point = index / markers.length;
-                timeline.to(marker, { autoAlpha: 1, scale: 1.08, duration: 0.08, ease: "power2.out" }, point);
-                timeline.to(dormantOverlays[index], { autoAlpha: 0, duration: 0.08, ease: "power2.out" }, point);
-                timeline.to(marker, { scale: 1, duration: 0.12, ease: "power2.out" }, point + 0.08);
-                timeline.fromTo(pings[index], { scale: 0.65, autoAlpha: 0.75 }, { scale: 2.2, autoAlpha: 0, duration: 0.28, ease: "power2.out" }, point);
-                timeline.fromTo(cards[index], { x: -30, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.18, ease: "power3.out" }, point + 0.06);
-                timeline.fromTo(badges[index], { rotationX: -75, scale: 0.8, autoAlpha: 0 }, { rotationX: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out" }, point + 0.12);
-                timeline.fromTo(deliverables[index], { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.14, ease: "power3.out" }, point + 0.3);
-            });
-        }, processSectionRef);
-
+            [".feature-card", ".project-card", ".team-card", ".partner-card", ".process-card",
+            ".projects-heading", ".team-heading"].forEach((selector) => reveal(selector, document));
+        }, heroRef);
         return () => context.revert();
     }, []);
 
@@ -690,10 +255,7 @@ function HomePage() {
         <div className="bg-[#131210] text-[#F6F1E8]">
             {/* Hero Section */}
             <section ref={heroRef} className="wireframe-grid hero-section relative overflow-hidden bg-[#131210] px-5 pb-14 pt-14 sm:px-8 md:pb-20 md:pt-20">
-                <div ref={spotlightRef} className="hero-spotlight pointer-events-none absolute left-0 top-0 z-0" />
-                <div className="hero-grid-drift pointer-events-none absolute inset-0 z-0" />
-                <div className="pointer-events-none absolute left-1/2 top-1/4 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-[#D99B4B]/10 blur-[130px]" />
-                <div className="relative z-10 mx-auto max-w-4xl text-center">
+                                                                <div className="hero-content relative z-10 mx-auto max-w-4xl text-center">
                     <h1 ref={headlineRef} className="font-serif text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-[4.5rem]">
                         <span className="hero-word-clip"><span className="hero-word">Custom</span></span>{" "}
                         <span className="hero-word-clip"><span className="hero-word">Websites</span></span>{" "}
@@ -728,7 +290,7 @@ function HomePage() {
                         “We learn how your business actually makes money first, then build a
                         custom online engine to help you scale it.”
                     </p>
-                    <HeroMockup mockupRef={mockupRef} badgeRef={badgeRef} progressRef={progressRef} />
+                    <HeroMockup mockupRef={mockupRef} />
                 </div>
             </section >
 
@@ -1041,8 +603,6 @@ function HomePage() {
                                 className="process-card relative rounded-2xl border border-[#E8DECB] bg-[#FBF8F3] p-6 shadow-sm transition-all hover:border-[#B87C2B] hover:shadow-lg sm:p-7"
                             >
                                 <div className="process-marker mb-4 flex h-8 w-8 items-center justify-center rounded-full border-4 border-[#F0EBD9] font-mono text-xs font-bold text-white sm:absolute sm:-left-10 sm:top-8 sm:mb-0">
-                                    <span className="process-marker-dormant absolute inset-0 rounded-full bg-[#8A857B]" />
-                                    <span className="process-ping absolute inset-0 rounded-full border-2 border-[#D4923A]" />
                                     <span className="relative z-10">0{index + 1}</span>
                                 </div>
                                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
@@ -1091,8 +651,6 @@ function HomePage() {
                     <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                         <Link
                             to="/contact#enquiry-form"
-                            ref={startProjectRef}
-                            onClick={handleStartProjectClick}
                             className="cta-button cta-magnetic relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
                         >
                             Start a project <ArrowRight className="h-5 w-5 text-[#D99B4B]" />

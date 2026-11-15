@@ -1,6 +1,5 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(500, 33);
@@ -18,49 +17,29 @@ if (typeof window !== "undefined") {
 
 export { gsap, ScrollTrigger };
 
-export function setupSmoothScroll() {
-    if (typeof window === "undefined") return () => {};
+export const reveal = (selector, scope) => {
+    const items = gsap.utils.toArray(selector, scope);
+    if (!items.length) return;
+    if (prefersReducedMotion) {
+        gsap.set(items, { autoAlpha: 1, clearProps: "transform" });
+        return;
+    }
 
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const touchQuery = window.matchMedia("(hover: none), (pointer: coarse)");
-    let lenis = null;
-    let raf = null;
-
-    const stop = () => {
-        if (!lenis) return;
-        lenis.off("scroll", ScrollTrigger.update);
-        gsap.ticker.remove(raf);
-        lenis.destroy();
-        lenis = null;
-        raf = null;
-        gsap.ticker.lagSmoothing(500, 33);
-    };
-
-    const start = () => {
-        if (lenis || motionQuery.matches || touchQuery.matches) return;
-
-        lenis = new Lenis({ autoRaf: false });
-        lenis.on("scroll", ScrollTrigger.update);
-        raf = (time) => lenis?.raf(time * 1000);
-        gsap.ticker.add(raf);
-        gsap.ticker.lagSmoothing(0);
-    };
-
-    const update = () => {
-        stop();
-        start();
-    };
-
-    start();
-    motionQuery.addEventListener?.("change", update);
-    touchQuery.addEventListener?.("change", update);
-
-    return () => {
-        stop();
-        motionQuery.removeEventListener?.("change", update);
-        touchQuery.removeEventListener?.("change", update);
-    };
-}
+    gsap.set(items, { autoAlpha: 0, y: 14 });
+    ScrollTrigger.batch(items, {
+        start: "top 88%",
+        once: true,
+        onEnter: (batch) => gsap.to(batch, {
+            autoAlpha: 1,
+            y: 0,
+            duration: window.matchMedia("(max-width: 767px)").matches ? 0.4 : 0.5,
+            ease: "power2.out",
+            stagger: window.matchMedia("(max-width: 767px)").matches ? 0.04 : 0.06,
+            overwrite: true,
+            clearProps: "transform",
+        }),
+    });
+};
 
 export function pauseWhenHidden(tween, element) {
     if (!tween || !element || typeof window === "undefined") return () => {};

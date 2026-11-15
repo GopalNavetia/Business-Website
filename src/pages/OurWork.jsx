@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { TriangleAlert, SquareTerminal, BadgeCheck, Check } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { gsap, pauseWhenHidden, prefersReducedMotion } from "../motion";
+import { gsap, reveal, prefersReducedMotion } from "../motion";
 
 const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
 
 function OurWork() {
     const location = useLocation();
-    const startProjectRef = useRef(null);
 
     useEffect(() => {
         const targetId = location.hash.slice(1);
@@ -149,230 +148,27 @@ function OurWork() {
     const pageRef = useRef(null);
 
     useEffect(() => {
-        const hero = pageRef.current.querySelector(".ourwork-hero");
-        const removePointerListeners = [];
-        let stopGrid = () => { };
         const context = gsap.context(() => {
-            const spotlight = pageRef.current.querySelector(".ourwork-hero-spotlight");
-            const grid = pageRef.current.querySelector(".ourwork-hero-grid");
-            const heroBadge = pageRef.current.querySelector(".ourwork-hero-badge");
-            const heroHeading = pageRef.current.querySelector(".ourwork-hero-heading");
-            const heroWords = gsap.utils.toArray(".ourwork-hero-word");
-            const heroItalic = pageRef.current.querySelector(".ourwork-hero-italic");
-            const heroCopy = pageRef.current.querySelector(".ourwork-hero-copy");
-            const heroCta = pageRef.current.querySelector(".ourwork-hero-cta");
-            const standards = pageRef.current.querySelector(".ourwork-standards");
-            const standardItems = gsap.utils.toArray(".ourwork-standard-item");
-            const standardBadges = gsap.utils.toArray(".ourwork-standard-badge");
-            const capabilitySection = pageRef.current.querySelector(".capabilities-section");
-            const capabilityEyebrow = pageRef.current.querySelector(".capability-eyebrow");
-            const capabilityHeading = pageRef.current.querySelector(".capability-heading");
-            const capabilityWords = gsap.utils.toArray(".capability-word");
-            const capabilityCopy = pageRef.current.querySelector(".capability-copy");
-            const capabilityRows = gsap.utils.toArray(".capability-row");
-            const capabilityCards = gsap.utils.toArray(".capability-card");
-            const capabilityBlocks = gsap.utils.toArray(".capability-subblock");
-            const capabilityIcons = gsap.utils.toArray(".capability-subblock-icon");
-            const guaranteeSection = pageRef.current.querySelector(".guarantee-section");
-            const guaranteeHeading = pageRef.current.querySelector(".guarantee-heading");
-            const guaranteeDescription = pageRef.current.querySelector(".guarantee-description");
-            const guaranteeCards = gsap.utils.toArray(".guarantee-card");
-            const guaranteeTags = gsap.utils.toArray(".guarantee-tag");
-            const guaranteePills = gsap.utils.toArray(".guarantee-pill");
-            const guaranteeChecks = gsap.utils.toArray(".guarantee-check");
-            const ctaSection = pageRef.current.querySelector(".ourwork-cta-section");
-            const ctaHeading = pageRef.current.querySelector(".ourwork-cta-heading");
-            const ctaWords = gsap.utils.toArray(".ourwork-cta-word");
-            const ctaCopy = pageRef.current.querySelector(".ourwork-cta-copy");
-            const ctaButtons = gsap.utils.toArray(".ourwork-cta-button");
-            const ctaBadges = gsap.utils.toArray(".ourwork-cta-badge");
-            const ctaChecks = gsap.utils.toArray(".ourwork-cta-check");
-            const ctaLabels = gsap.utils.toArray(".ourwork-cta-label");
-
-            if (prefersReducedMotion) {
-                gsap.set([
-                    hero,
-                    heroBadge,
-                    heroHeading,
-                    ...heroWords,
-                    heroItalic,
-                    heroCopy,
-                    heroCta,
-                    standards,
-                    ...standardItems,
-                    ...standardBadges,
-                    capabilitySection,
-                    capabilityEyebrow,
-                    capabilityHeading,
-                    ...capabilityWords,
-                    capabilityCopy,
-                    ...capabilityCards,
-                    ...capabilityBlocks,
-                    ...capabilityIcons,
-                    guaranteeSection,
-                    guaranteeHeading,
-                    guaranteeDescription,
-                    ...guaranteeCards,
-                    ...guaranteeTags,
-                    ...guaranteePills,
-                    ...guaranteeChecks,
-                    ctaSection,
-                    ctaHeading,
-                    ...ctaWords,
-                    ctaCopy,
-                    ...ctaButtons,
-                    ...ctaBadges,
-                    ...ctaChecks,
-                    ...ctaLabels,
-                ], { autoAlpha: 1, clearProps: "transform,textShadow" });
-                gsap.set(guaranteeChecks, { strokeDashoffset: 0 });
-                gsap.set(ctaChecks, { strokeDashoffset: 0 });
-                return;
-            }
-
-            gsap.timeline({ defaults: { ease: "power3.out" } })
-                .fromTo(heroBadge, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45 })
-                .to(heroWords, { yPercent: 0, duration: 0.42, stagger: 0.05, ease: "power3.out" }, "-=0.08")
-                .fromTo(heroItalic, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, "-=0.1")
-                .fromTo(heroCopy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.12")
-                .fromTo(heroCta, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.55, ease: "back.out(1.7)" }, "-=0.14")
-                .fromTo(standards, { x: 30, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.55 }, "-=0.2")
-                .fromTo(standardItems, { scale: 0.94, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45, stagger: 0.08 }, "-=0.25")
-                .fromTo(standardBadges, { scale: 0.72, rotation: -8, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.5, stagger: 0.08, ease: "back.out(1.8)" }, "-=0.38");
-
-            const gridTween = gsap.to(grid, { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
-            stopGrid = pauseWhenHidden(gridTween, hero);
-
-            const heroBounds = hero.getBoundingClientRect();
-            const moveX = gsap.quickTo(spotlight, "x", { duration: 0.6, ease: "power2.out" });
-            const moveY = gsap.quickTo(spotlight, "y", { duration: 0.6, ease: "power2.out" });
-            const onPointerMove = (event) => {
-                moveX(event.clientX - heroBounds.left);
-                moveY(event.clientY - heroBounds.top);
-            };
-
-            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-                hero.addEventListener("pointermove", onPointerMove);
-                removePointerListeners.push(() => hero.removeEventListener("pointermove", onPointerMove));
-            }
-
-            const capabilityIntro = gsap.timeline({
-                scrollTrigger: {
-                    trigger: capabilitySection,
-                    start: "top 78%",
-                    toggleActions: "play none none none",
-                },
-            });
-            capabilityIntro
-                .fromTo(capabilityEyebrow, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: "power3.out" })
-                .fromTo(capabilityCopy, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: "power3.out" }, "-=0.2")
-                .fromTo(capabilityWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" }, "-=0.18");
-
-            capabilityRows.forEach((row) => {
-                const cards = gsap.utils.toArray(".capability-card", row);
-                gsap.fromTo(cards,
-                    { y: 24, autoAlpha: 0 },
-                    {
-                        y: 0,
-                        autoAlpha: 1,
-                        duration: 0.55,
-                        stagger: 0.15,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: row,
-                            start: "top 82%",
-                            toggleActions: "play none none none",
-                        },
-                    },
-                );
-            });
-
-            capabilityCards.forEach((card) => {
-                const blocks = gsap.utils.toArray(".capability-subblock", card);
-                const icons = gsap.utils.toArray(".capability-subblock-icon", card);
-                const cardTimeline = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "top 80%",
-                        toggleActions: "play none none none",
-                    },
+            if (!prefersReducedMotion) {
+                gsap.fromTo(".ourwork-hero-content", { autoAlpha: 0.001, y: 10 }, {
+                    autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out",
                 });
-                cardTimeline
-                    .fromTo(blocks, { x: -10, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.45, stagger: 0.1, ease: "power3.out" })
-                    .fromTo(icons, { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, stagger: 0.1, ease: "back.out(1.6)" }, "-=0.35");
-            });
-
-            const guaranteeTimeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: guaranteeSection,
-                    start: "top 80%",
-                    toggleActions: "play none none none",
-                },
-            });
-            guaranteeTimeline
-                .fromTo([guaranteeHeading, guaranteeDescription], { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42, stagger: 0.04, ease: "power3.out" })
-                .fromTo(guaranteeCards, { y: 20, scale: 0.95, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 0.45, stagger: 0.11, ease: "power3.out" }, "-=0.12")
-                .fromTo(guaranteeTags, { scale: 0.72, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, stagger: 0.11, ease: "back.out(1.7)" }, "-=0.3")
-                .fromTo(guaranteePills, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.38, stagger: 0.11, ease: "power3.out" }, "-=0.2")
-                .fromTo(guaranteeChecks, { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.38, stagger: 0.11, ease: "power3.out" }, "-=0.28");
-
-            gsap.timeline({
-                scrollTrigger: {
-                    trigger: ctaHeading,
-                    start: "top 82%",
-                    toggleActions: "play none none none",
-                },
-            })
-                .fromTo(ctaWords, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.52, stagger: 0.05, ease: "power3.out" })
-                .fromTo(ctaCopy, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: "power3.out" }, "-=0.18")
-                .fromTo(ctaButtons, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.1, ease: "power3.out" }, "-=0.15");
-
-            gsap.timeline({
-                scrollTrigger: {
-                    trigger: ctaSection,
-                    start: "top 78%",
-                    toggleActions: "play none none none",
-                },
-            })
-                .fromTo(ctaChecks, { strokeDashoffset: 20, autoAlpha: 0 }, { strokeDashoffset: 0, autoAlpha: 1, duration: 0.38, stagger: 0.15, ease: "power3.out" }, "-=0.05")
-                .fromTo(ctaLabels, { x: -6, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.35, stagger: 0.15, ease: "power3.out" }, "-=0.2");
-
-            const magneticButton = startProjectRef.current;
-            const buttonBounds = magneticButton.getBoundingClientRect();
-            const magneticX = gsap.quickTo(magneticButton, "x", { duration: 0.35, ease: "power3.out" });
-            const magneticY = gsap.quickTo(magneticButton, "y", { duration: 0.35, ease: "power3.out" });
-            const onMagneticMove = (event) => {
-                const offsetX = Math.max(-18, Math.min(18, (event.clientX - (buttonBounds.left + buttonBounds.width / 2)) * 0.22));
-                const offsetY = Math.max(-18, Math.min(18, (event.clientY - (buttonBounds.top + buttonBounds.height / 2)) * 0.22));
-                magneticX(offsetX);
-                magneticY(offsetY);
-            };
-            const onMagneticLeave = () => gsap.to(magneticButton, { x: 0, y: 0, duration: 0.6, ease: "power3.out" });
-            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-                magneticButton.addEventListener("pointermove", onMagneticMove);
-                magneticButton.addEventListener("pointerleave", onMagneticLeave);
-                removePointerListeners.push(() => {
-                    magneticButton.removeEventListener("pointermove", onMagneticMove);
-                    magneticButton.removeEventListener("pointerleave", onMagneticLeave);
+                gsap.fromTo(".ourwork-standards", { autoAlpha: 0.001 }, {
+                    autoAlpha: 1, duration: 0.45, ease: "power2.out",
                 });
             }
+            reveal(".capability-card", pageRef.current);
+            reveal(".guarantee-card", pageRef.current);
+            reveal(".capabilities-heading, .guarantee-heading, .ourwork-cta-heading", pageRef.current);
         }, pageRef);
-
-        return () => {
-            stopGrid?.();
-            removePointerListeners.forEach((removeListener) => removeListener());
-            context.revert();
-        };
+        return () => context.revert();
     }, []);
 
     return (
         <div ref={pageRef}>
             <section className="ourwork-hero relative overflow-hidden bg-[#131210] text-[#F6F1E8]">
-                <div className="ourwork-hero-spotlight hero-spotlight pointer-events-none absolute left-0 top-0 z-0" />
-                <div className="ourwork-hero-grid hero-grid-drift pointer-events-none absolute inset-0 z-0" />
-                <div className="pointer-events-none absolute left-1/2 top-1/4 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-[#D99B4B]/10 blur-[130px]" />
-                {/* Hero Section */}
-                <div className="relative z-10 mx-auto max-w-7xl px-5 py-14 pb-16 sm:px-8 sm:py-20 md:pb-24">
+                                                                {/* Hero Section */}
+                <div className="ourwork-hero-content relative z-10 mx-auto max-w-7xl px-5 py-14 pb-16 sm:px-8 sm:py-20 md:pb-24">
                     <div className="grid grid-cols-1 items-center gap-9 md:grid-cols-[1.05fr_0.95fr] md:gap-14">
                         {/* Copy Column */}
                         <div>
@@ -615,7 +411,6 @@ function OurWork() {
                         <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                             <Link
                                 to="/contact#enquiry-form"
-                                ref={startProjectRef}
                                 className="ourwork-cta-button ourwork-cta-primary relative isolate flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#181614] px-9 py-4 font-bold text-[#F6F1E8] transition-colors hover:bg-black sm:w-auto"
                             >
                                 Start a project <span className="text-[#D99B4B]">→</span>

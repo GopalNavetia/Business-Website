@@ -14,14 +14,6 @@ a {
     touch-action: manipulation;
 }
 
-.page-load-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    display: none;
-    pointer-events: none;
-}
-
 .site-scroll-progress {
     position: fixed;
     left: 0;
@@ -33,29 +25,6 @@ a {
     transform: scaleX(0);
     transform-origin: left center;
     pointer-events: none;
-}
-
-.site-cursor {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 120;
-    pointer-events: none;
-    opacity: 0.45;
-}
-
-.site-cursor-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #D4923A;
-}
-
-.site-cursor-ring {
-    width: 28px;
-    height: 28px;
-    border: 1px solid rgba(212, 146, 58, 0.7);
-    border-radius: 50%;
 }
 
 .wireframe-grid {
@@ -70,17 +39,10 @@ a {
     opacity: 0.9;
 }
 
-.hero-spotlight {
-    width: 420px;
-    height: 420px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(212, 146, 58, 0.14), rgba(212, 146, 58, 0) 68%);
-}
-
 .hero-word-clip {
     display: inline-block;
     vertical-align: bottom;
+    overflow: visible;
 }
 
 .hero-word {
@@ -88,7 +50,7 @@ a {
 }
 
 .hero-badge-progress {
-    background: conic-gradient(#D99B4B var(--progress, 0%), transparent 0);
+    background: conic-gradient(#D99B4B 100%, transparent 0);
     opacity: 0.7;
     -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
     mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
@@ -113,7 +75,6 @@ a {
 
 .cta-word-clip {
     display: inline-block;
-    overflow: hidden;
     vertical-align: bottom;
 }
 
@@ -123,18 +84,11 @@ a {
 
 .team-word-clip {
     display: inline-block;
-    overflow: hidden;
     vertical-align: bottom;
 }
 
 .team-word {
     display: inline-block;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .team-italic {
-        opacity: 0;
-    }
 }
 
 .team-card {
@@ -144,25 +98,29 @@ a {
         box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.team-card:hover {
-    transform: translateY(-6px);
-    border-color: #D4923A;
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
+@media (hover: hover) and (pointer: fine) {
+    .team-card:hover {
+        transform: translateY(-3px);
+        border-color: #D4923A;
+    }
 }
 
 .team-photo {
-    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), filter 600ms ease;
+    transition: transform 200ms ease;
 }
 
-.team-card:hover .team-photo {
-    transform: scale(1.04);
+@media (hover: hover) and (pointer: fine) {
+    .team-card:hover .team-photo {
+        transform: scale(1.02);
+    }
 }
 
 .partner-check-icon,
 .partner-verified-icon {
     fill: none;
     stroke-dasharray: 20;
-    stroke-dashoffset: 20;
+    stroke-dashoffset: 0;
+    opacity: 1;
 }
 
 .partner-card {
@@ -172,18 +130,8 @@ a {
 .cta-check {
     fill: none;
     stroke-dasharray: 20;
-    stroke-dashoffset: 20;
-}
-
-.cta-ripple {
-    position: absolute;
-    z-index: 0;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 999px;
-    background: rgba(212, 146, 58, 0.7);
-    transform: translate(-50%, -50%) scale(0);
-    pointer-events: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
 }
 
 .cta-consult {
@@ -192,14 +140,14 @@ a {
         background-color 300ms ease;
 }
 
-.cta-consult:hover {
-    transform: scale(1.03);
-    border-color: rgba(24, 22, 20, 0.78);
+@media (hover: hover) and (pointer: fine) {
+    .cta-consult:hover {
+        border-color: rgba(24, 22, 20, 0.78);
+    }
 }
 
 .projects-word-clip {
     display: inline-block;
-    overflow: hidden;
     vertical-align: bottom;
 }
 
@@ -213,10 +161,11 @@ a {
         box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.project-card:hover {
-    transform: translateY(-6px);
-    border-color: #D4923A;
-    box-shadow: 0 0 20px rgba(212, 146, 58, 0.24);
+@media (hover: hover) and (pointer: fine) {
+    .project-card:hover {
+        transform: translateY(-3px);
+        border-color: #D4923A;
+    }
 }
 
 .project-arrow {
@@ -234,26 +183,26 @@ a {
         box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.capability-card:hover {
-    transform: translateY(-4px);
-    border-color: #D4923A;
-    box-shadow: 0 0 20px rgba(212, 146, 58, 0.2);
+@media (hover: hover) and (pointer: fine) {
+    .capability-card:hover {
+        transform: translateY(-3px);
+        border-color: #D4923A;
+    }
 }
 
 .guarantee-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 26px rgba(24, 22, 20, 0.1);
 }
 
 .guarantee-check {
     fill: none;
     stroke-dasharray: 20;
-    stroke-dashoffset: 20;
+    stroke-dashoffset: 0;
+    opacity: 1;
 }
 
 .capability-word-clip {
     display: inline-block;
-    overflow: hidden;
     vertical-align: bottom;
 }
 
@@ -281,7 +230,6 @@ a {
 
 .ourwork-hero-word-clip {
     display: inline-block;
-    overflow: hidden;
     vertical-align: bottom;
 }
 
@@ -322,11 +270,12 @@ a {
         background-color 400ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.feature-card:hover {
-    transform: translateY(-5px) rotateX(1deg);
-    border-color: #D4923A;
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
-    background-color: #23211D;
+@media (hover: hover) and (pointer: fine) {
+    .feature-card:hover {
+        transform: translateY(-3px);
+        border-color: #D4923A;
+        background-color: #23211D;
+    }
 }
 
 .feature-icon {
@@ -334,46 +283,30 @@ a {
         background-color 300ms ease, border-color 300ms ease;
 }
 
-.feature-card:hover .feature-icon {
-    transform: translateY(-2px) rotate(8deg) scale(1.06);
-    border-color: #D4923A;
-    background-color: rgba(212, 146, 58, 0.24);
+@media (hover: hover) and (pointer: fine) {
+    .feature-card:hover .feature-icon {
+        border-color: #D4923A;
+        background-color: rgba(212, 146, 58, 0.24);
+    }
 }
 
 .process-marker {
     position: relative;
-    transform: scale(0.9);
+    transform: scale(1);
     transform-origin: center;
-    opacity: 0.38;
+    opacity: 1;
     background: linear-gradient(145deg, #E5B15E, #B86F1D);
 }
 
 .process-ping {
-    opacity: 0;
-    transform: scale(0.65);
+    opacity: 1;
+    transform: scale(1);
     pointer-events: none;
-}
-
-.process-card {
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .hero-mockup-float {
-    }
 }
 
 @media (prefers-reduced-motion: reduce),
 (hover: none),
 (pointer: coarse) {
-
-    .site-cursor {
-        display: none;
-    }
-
-    .hero-spotlight,
-    .hero-grid-drift {
-        display: none;
-    }
 
     .feature-card,
     .feature-card:hover,
@@ -401,18 +334,9 @@ a {
         transition: none;
     }
 
-    .team-photo {
-        clip-path: inset(0 0 0 0);
-        filter: grayscale(0);
-    }
-
     .process-marker {
         transform: none;
         opacity: 1;
-    }
-
-    .process-marker-dormant {
-        opacity: 0;
     }
 
     .process-ping {

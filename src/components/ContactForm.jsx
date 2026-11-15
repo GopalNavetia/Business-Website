@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import { Send, CheckCircle, Lock } from 'lucide-react';
-import { gsap } from '../motion';
-import { prefersReducedMotion } from '../motion';
+import { gsap, reveal, prefersReducedMotion } from '../motion';
 
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -32,61 +31,28 @@ export default function ContactForm() {
   const successRef = useRef(null);
 
   useEffect(() => {
-    let context;
-
-    context = gsap.context(() => {
-      const groups = gsap.utils.toArray('.form-field-group');
-
-      if (prefersReducedMotion) {
-        gsap.set(groups, { autoAlpha: 1, clearProps: 'transform' });
-        return;
-      }
-
-      gsap.fromTo(
-        groups,
-        { y: 16, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.45,
-          stagger: 0.08,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: formRef.current,
-            start: 'top 82%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }, formRef);
-
+    const context = gsap.context(() => reveal('.form-field-group', formRef.current), formRef);
     return () => context.revert();
   }, []);
 
   useEffect(() => {
     if (!showSuccess || !successRef.current) return;
-
     if (prefersReducedMotion) {
-      gsap.set(successRef.current, {
-        autoAlpha: 1,
-        clearProps: 'transform',
-      });
+      gsap.set(successRef.current, { autoAlpha: 1, clearProps: 'transform' });
       return;
     }
 
     gsap.fromTo(
       successRef.current,
       {
-        scale: 0.95,
-        y: -6,
-        autoAlpha: 0,
+        autoAlpha: 0.001,
+        y: 14,
       },
       {
-        scale: 1,
         y: 0,
         autoAlpha: 1,
-        duration: 0.4,
-        ease: 'back.out(1.4)',
+        duration: 0.5,
+        ease: 'power2.out',
       }
     );
   }, [showSuccess]);
