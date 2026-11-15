@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { gsap, ScrollTrigger, prefersReducedMotion } from "../motion";
+import { gsap, pauseWhenHidden, ScrollTrigger, prefersReducedMotion } from "../motion";
 import {
     AppWindow,
     BookOpen,
@@ -225,6 +225,7 @@ function Services({ groupSlug }) {
         if (!isOverview) return;
         const hero = heroRef.current;
         let removePointerListener = () => { };
+        let stopGrid = () => { };
         let cancelled = false;
         let context;
 
@@ -236,10 +237,9 @@ function Services({ groupSlug }) {
                 const ctas = gsap.utils.toArray(".hero-cta");
 
                 if (prefersReducedMotion) {
-                    gsap.fromTo(
+                    gsap.set(
                         [pill, headlineRef.current, subheadingRef.current, ctasRef.current],
-                        { autoAlpha: 0 },
-                        { autoAlpha: 1, duration: 0.7, stagger: 0.08, ease: "power3.out" },
+                        { autoAlpha: 1, clearProps: "transform" },
                     );
                     return;
                 }
@@ -253,14 +253,17 @@ function Services({ groupSlug }) {
                     { scale: 1, autoAlpha: 1, duration: 0.4, ease: "power3.out" }
                 );
 
-                const timeline = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
+                const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
                 timeline
-                    .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.65, stagger: 0.045, ease: "power3.out" })
+                    .to(words, { yPercent: 0, duration: 0.42, stagger: 0.045, ease: "power3.out" })
                     .fromTo(italicHeadlineRef.current, { autoAlpha: 0.65 }, { autoAlpha: 1, duration: 0.45 }, "-=0.15")
                     .fromTo(subheadingRef.current, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.05")
                     .fromTo(ctas, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, stagger: 0.1, ease: "power3.out" }, "-=0.2");
 
-                gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+                stopGrid = pauseWhenHidden(
+                    gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" }),
+                    hero,
+                );
 
                 let bounds = hero.getBoundingClientRect();
                 const updateBounds = () => {
@@ -294,6 +297,7 @@ function Services({ groupSlug }) {
 
         return () => {
             cancelled = true;
+            stopGrid();
             removePointerListener();
             if (context) context.revert();
         };
@@ -753,7 +757,7 @@ function Services({ groupSlug }) {
                     },
                 });
                 entrance
-                    .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.6, stagger: 0.045, ease: "power3.out" })
+                    .to(words, { yPercent: 0, duration: 0.42, stagger: 0.045, ease: "power3.out" })
                     .fromTo(cta.querySelector(".cta-copy"), { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42, ease: "power3.out" }, "-=0.2")
                     .fromTo(buttons, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.1, ease: "power3.out" }, "-=0.25")
                     .addLabel("badges", "+=0.05");
@@ -779,11 +783,14 @@ function Services({ groupSlug }) {
                 });
 
                 const button = startProjectRef.current;
+                const buttonBounds = button.getBoundingClientRect();
+                const moveX = gsap.quickTo(button, "x", { duration: 0.25, ease: "power3.out" });
+                const moveY = gsap.quickTo(button, "y", { duration: 0.25, ease: "power3.out" });
                 const onPointerMove = (event) => {
-                    const bounds = button.getBoundingClientRect();
-                    const offsetX = Math.max(-18, Math.min(18, (event.clientX - (bounds.left + bounds.width / 2)) * 0.22));
-                    const offsetY = Math.max(-18, Math.min(18, (event.clientY - (bounds.top + bounds.height / 2)) * 0.22));
-                    gsap.to(button, { x: offsetX, y: offsetY, duration: 0.35, ease: "power3.out" });
+                    const offsetX = Math.max(-18, Math.min(18, (event.clientX - (buttonBounds.left + buttonBounds.width / 2)) * 0.22));
+                    const offsetY = Math.max(-18, Math.min(18, (event.clientY - (buttonBounds.top + buttonBounds.height / 2)) * 0.22));
+                    moveX(offsetX);
+                    moveY(offsetY);
                 };
                 const onPointerLeave = () => gsap.to(button, { x: 0, y: 0, duration: 0.6, ease: "power3.out" });
                 if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {

@@ -131,10 +131,16 @@ function SiteMotion() {
 
       if (!prefersReducedMotion && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
         gsap.set([cursorDot, cursorRing], { xPercent: -50, yPercent: -50 });
+        const moveDot = gsap.quickTo(cursorDot, "x", { duration: 0.12, ease: "power3.out" });
+        const moveDotY = gsap.quickTo(cursorDot, "y", { duration: 0.12, ease: "power3.out" });
+        const moveRing = gsap.quickTo(cursorRing, "x", { duration: 0.28, ease: "power3.out" });
+        const moveRingY = gsap.quickTo(cursorRing, "y", { duration: 0.28, ease: "power3.out" });
         let hoveringClickable = false;
         const onPointerMove = (event) => {
-          gsap.to(cursorDot, { x: event.clientX, y: event.clientY, duration: 0.12, ease: "power3.out" });
-          gsap.to(cursorRing, { x: event.clientX, y: event.clientY, duration: 0.28, ease: "power3.out" });
+        moveDot(event.clientX);
+        moveDotY(event.clientY);
+        moveRing(event.clientX);
+        moveRingY(event.clientY);
           const isClickable = Boolean(event.target.closest("a, button, [role=button], .project-card, .feature-card"));
           if (isClickable !== hoveringClickable) {
             hoveringClickable = isClickable;

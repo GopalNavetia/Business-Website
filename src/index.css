@@ -76,7 +76,6 @@ a {
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(circle, rgba(212, 146, 58, 0.14), rgba(212, 146, 58, 0) 68%);
-    will-change: transform;
 }
 
 .hero-word-clip {
@@ -110,7 +109,6 @@ a {
     z-index: -1;
     background: inherit;
     transform: translate3d(0, 0, 0);
-    will-change: transform;
 }
 
 .cta-word-clip {
@@ -357,12 +355,10 @@ a {
 }
 
 .process-card {
-    will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: no-preference) {
     .hero-mockup-float {
-        will-change: transform;
     }
 }
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { TriangleAlert, SquareTerminal, BadgeCheck, Check } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { gsap, prefersReducedMotion } from "../motion";
+import { gsap, pauseWhenHidden, prefersReducedMotion } from "../motion";
 
 const MY_NUMBER = import.meta.env.VITE_MY_NUMBER;
 
@@ -151,6 +151,7 @@ function OurWork() {
     useEffect(() => {
         const hero = pageRef.current.querySelector(".ourwork-hero");
         const removePointerListeners = [];
+        let stopGrid = () => { };
         const context = gsap.context(() => {
             const spotlight = pageRef.current.querySelector(".ourwork-hero-spotlight");
             const grid = pageRef.current.querySelector(".ourwork-hero-grid");
@@ -232,14 +233,15 @@ function OurWork() {
             gsap.timeline({ defaults: { ease: "power3.out" } })
                 .fromTo(heroBadge, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45 })
                 .to(heroWords, { yPercent: 0, duration: 0.42, stagger: 0.05, ease: "power3.out" }, "-=0.08")
-                .fromTo(heroItalic, { autoAlpha: 0, textShadow: "0 0 0 rgba(217, 155, 75, 0)" }, { autoAlpha: 1, duration: 0.45 }, "-=0.1")
+                .fromTo(heroItalic, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, "-=0.1")
                 .fromTo(heroCopy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.12")
                 .fromTo(heroCta, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.55, ease: "back.out(1.7)" }, "-=0.14")
                 .fromTo(standards, { x: 30, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.55 }, "-=0.2")
                 .fromTo(standardItems, { scale: 0.94, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45, stagger: 0.08 }, "-=0.25")
                 .fromTo(standardBadges, { scale: 0.72, rotation: -8, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.5, stagger: 0.08, ease: "back.out(1.8)" }, "-=0.38");
 
-            gsap.to(grid, { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+            const gridTween = gsap.to(grid, { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+            stopGrid = pauseWhenHidden(gridTween, hero);
 
             const heroBounds = hero.getBoundingClientRect();
             const moveX = gsap.quickTo(spotlight, "x", { duration: 0.6, ease: "power2.out" });
@@ -357,6 +359,7 @@ function OurWork() {
         }, pageRef);
 
         return () => {
+            stopGrid?.();
             removePointerListeners.forEach((removeListener) => removeListener());
             context.revert();
         };

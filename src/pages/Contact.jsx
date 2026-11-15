@@ -1,7 +1,7 @@
 import ContactForm from '../components/ContactForm';
 import { useState, useRef, useEffect } from 'react';
 import { Mail, MessageCircle, Phone, Check, ChevronDown, Copy, ArrowUpRight, Send } from 'lucide-react';
-import { gsap, ScrollTrigger, prefersReducedMotion } from '../motion';
+import { gsap, pauseWhenHidden, ScrollTrigger, prefersReducedMotion } from '../motion';
 import { useLocation } from 'react-router-dom';
 
 const EMAIL_ADDRESS = import.meta.env.VITE_MY_EMAIL;
@@ -71,6 +71,8 @@ function Contact() {
     let cancelled = false;
     let context;
     let removePointerListener = () => { };
+    let stopGrid = () => { };
+    let stopGlow = () => { };
 
     const run = () => {
       if (cancelled) return;
@@ -133,7 +135,8 @@ function Contact() {
           return;
         }
 
-        gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+        const gridTween = gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+        stopGrid = pauseWhenHidden(gridTween, hero);
 
         if (hero && spotlightRef.current) {
           let bounds = hero.getBoundingClientRect();
@@ -163,7 +166,8 @@ function Contact() {
           .fromTo(heroCopy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, "-=0.12");
 
         if (heroGlow) {
-          gsap.to(heroGlow, { scale: 1.15, duration: 7, repeat: -1, yoyo: true, ease: "sine.inOut" });
+          const glowTween = gsap.to(heroGlow, { scale: 1.15, duration: 7, repeat: -1, yoyo: true, ease: "sine.inOut" });
+          stopGlow = pauseWhenHidden(glowTween, hero);
         }
 
         gsap.timeline({
@@ -220,6 +224,8 @@ function Contact() {
     return () => {
       cancelled = true;
       removePointerListener();
+      stopGrid?.();
+      stopGlow?.();
       if (context) context.revert();
     };
   }, []);

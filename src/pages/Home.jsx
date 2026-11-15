@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { gsap, prefersReducedMotion } from "../motion";
+import { gsap, pauseWhenHidden, prefersReducedMotion } from "../motion";
 import {
     ArrowRight,
     BarChart3,
@@ -229,6 +229,8 @@ function HomePage() {
     useEffect(() => {
         const hero = heroRef.current;
         let removePointerListener = () => { };
+        let stopMockup = () => { };
+        let stopGrid = () => { };
         const context = gsap.context(() => {
             const words = gsap.utils.toArray(".hero-word");
             const ctas = gsap.utils.toArray(".hero-cta");
@@ -259,8 +261,10 @@ function HomePage() {
                     }
                 }, "-=0.35");
 
-            gsap.to(mockupRef.current, { y: -5, rotationZ: 0.5, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: timeline.duration() });
-            gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+            const mockupTween = gsap.to(mockupRef.current, { y: -5, rotationZ: 0.5, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: timeline.duration() });
+            const gridTween = gsap.to(".hero-grid-drift", { x: 32, y: 32, duration: 22, repeat: -1, ease: "none" });
+            stopMockup = pauseWhenHidden(mockupTween, hero);
+            stopGrid = pauseWhenHidden(gridTween, hero);
 
             let bounds = hero.getBoundingClientRect();
             const updateBounds = () => {
@@ -283,6 +287,8 @@ function HomePage() {
         }, heroRef);
 
         return () => {
+            stopMockup?.();
+            stopGrid?.();
             removePointerListener();
             context.revert();
         };
@@ -384,10 +390,10 @@ function HomePage() {
             timeline
                 .fromTo(badge, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" })
                 .fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 0.42, stagger: 0.035, ease: "power3.out" }, "+=0.04")
-                .fromTo(italic, { autoAlpha: 0, textShadow: "0 0 0 rgba(217, 155, 75, 0)" }, { autoAlpha: 1, textShadow: "0 0 20px rgba(217, 155, 75, 0.28)", duration: 0.32, ease: "power3.out" }, "-=0.06")
+                .fromTo(italic, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.28, ease: "power3.out" }, "-=0.06")
                 .fromTo(subheading, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.32, ease: "power3.out" }, "+=0.06")
                 .fromTo(cards, { y: 14, scale: 0.94, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 0.48, stagger: 0.1, ease: "power3.out" }, "+=0.06")
-                .fromTo(photos, { clipPath: "inset(100% 0 0 0)", filter: "grayscale(1)" }, { clipPath: "inset(0% 0 0 0)", filter: "grayscale(0)", duration: 0.42, stagger: 0.1, ease: "power3.out" }, "-=0.38")
+                .fromTo(photos, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, stagger: 0.06, ease: "power3.out" }, "-=0.28")
                 .fromTo(directBadges, { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.34, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.08")
                 .fromTo(roles, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, stagger: 0.1, ease: "power3.out" }, "-=0.12")
                 .fromTo(bios, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, stagger: 0.1, ease: "power3.out" }, "-=0.1");
@@ -447,20 +453,7 @@ function HomePage() {
                 .fromTo(partnerCard, { y: 22, rotationY: 6, autoAlpha: 0, transformPerspective: 900 }, { y: 0, rotationY: 0, autoAlpha: 1, duration: 0.48, ease: "power3.out" }, "-=0.3")
                 .fromTo(logo, { y: 8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.32")
                 .fromTo(nestedCard, { scale: 0.95, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.36, ease: "power3.out" }, "-=0.12")
-                .fromTo(
-                    partnerPhoto,
-                    { clipPath: "inset(100% 0 0 0)", filter: "grayscale(1)" },
-                    {
-                        clipPath: "inset(0% 0 0 0)",
-                        filter: "grayscale(0)",
-                        duration: 0.42,
-                        ease: "power3.out",
-                        onComplete: () => {
-                            gsap.set(partnerPhoto, { clearProps: "clipPath,filter,transform" });
-                        }
-                    },
-                    "-=0.2"
-                )
+                .fromTo(partnerPhoto, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, "-=0.2")
                 .fromTo(partnerRole, { y: 6, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, ease: "power3.out" }, "-=0.1");
 
             checks.forEach((check, index) => {
@@ -559,11 +552,9 @@ function HomePage() {
         ripple.style.top = `${event.clientY - bounds.top}px`;
         button.appendChild(ripple);
         gsap.fromTo(ripple, { scale: 0, autoAlpha: 0.45 }, {
-            scale: 16, autoAlpha: 0, duration: 0.42, ease: "power2.out", onComplete: () => {
-                ripple.remove();
-                navigate('/contact#enquiry-form');
-            }
+            scale: 16, autoAlpha: 0, duration: 0.3, ease: "power2.out", onComplete: () => ripple.remove(),
         });
+        navigate('/contact#enquiry-form');
     };
 
     useEffect(() => {
@@ -676,7 +667,7 @@ function HomePage() {
                     trigger: processSectionRef.current,
                     start: "top 72%",
                     end: "bottom 78%",
-                    scrub: true,
+                    scrub: 0.5,
                 },
             });
 
