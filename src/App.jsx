@@ -2,7 +2,7 @@ import "./App.css";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async"; // NEW
-import { gsap } from "./motion";
+import { gsap, setupSmoothScroll } from "./motion";
 
 import Navbar from "./components/Navbar";
 const Home = lazy(() => import("./pages/Home"));
@@ -118,6 +118,7 @@ function SiteMotion() {
     const cursorRing = cursorRingRef.current;
     const overlay = overlayRef.current;
     let removeCursorListeners = () => { };
+    const removeSmoothScroll = setupSmoothScroll();
 
     const updateProgress = () => {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -164,6 +165,7 @@ function SiteMotion() {
     return () => {
       window.removeEventListener("scroll", updateProgress);
       removeCursorListeners();
+      removeSmoothScroll();
       context.revert();
     };
   }, []);
